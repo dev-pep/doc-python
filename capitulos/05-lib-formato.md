@@ -44,20 +44,20 @@ Los argumentos del método ***format()*** sirven para dar valor a los
 campos de reemplazo de la *format string*, que es, de hecho, la
 instancia de ***str*** que llama al método.
 
-\'My name is {0}\'.format(\'Fred\')
+\'My name is {0}\'.format(\'Fred\')
 
 produce
 
-\'My name is Fred\'
+\'My name is Fred\'
 
 Si queremos especificar los caracteres llave, hay que indicarlos
 doblados:
 
-\'Hola, {0}. Esto son llaves: {{ y }}\'.format(\'Fred\')
+\'Hola, {0}. Esto son llaves: {{ y }}\'.format(\'Fred\')
 
 produce
 
-\'Hola, Fred. Esto son llaves: { y }\'
+\'Hola, Fred. Esto son llaves: { y }\'
 
 Cuando los campos de reemplazo siguen un orden estricto, del tipo
 ***\'\...{0}\...{1}\...{2}\...{3}\...\'***, se pueden omitir estos, con
@@ -82,7 +82,7 @@ del objeto en el primer argumento posicional, mientras que
 *keyword argument* \'x\'. Por ejemplo, para acceder a un elemento de un
 diccionario:
 
-\"My name is {0\[name\]}\".format(dict(name=\'Fred\'))
+\"My name is {0\[name\]}\".format(dict(name=\'Fred\'))
 
 Como circunstancia especial, el acceso al elemento no se puede hacer con
 la llave entre comillas. ***{0****\[\'name\'\]****}*** sería incorrecto.
@@ -202,9 +202,9 @@ Se coloca antes de los especificadores de formato, y se aplica antes que
 estos. Actualmente, existen dos tipos: ***!r*** aplica ***repr()***, y
 ***!s*** aplica ***str()***.
 
-\>\>\> \"{0!r:20}\".format(\"Hello\")
+\>\>\> \"{0!r:20}\".format(\"Hello\")
 
-\"\'Hello\'             \"
+\"\'Hello\'             \"
 
 En este ejemplo se aplica primero ***repr()*** al *string* \'Hello\' (le
 coloca las comillas simples alrededor). Luego se aplica el resto de

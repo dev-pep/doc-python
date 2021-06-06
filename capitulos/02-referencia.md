@@ -59,11 +59,11 @@ coincidencia con la expresión regular:
 
 Ejemplo, reconocido por *emacs*:
 
-\# -\*- coding: utf-16 -\*-
+\# -\*- coding: utf-16 -\*-
 
 Reconocido por *Vim*:
 
-\# vim:fileencoding=latin-1
+\# vim:fileencoding=latin-1
 
 La codificación concreta indicada tiene que ser reconocida por *Python*.
 
@@ -512,7 +512,7 @@ Métodos con funcionalidades especiales.
 
 Métodos que puede implementar una clase.
 
-\_\_new\_\_(clase\[, args\])
+\_\_new\_\_(clase\[, args\])
 
 Es un *static method* (aunque en este caso no hace falta declararlo como
 tal). Se llama a la hora de crear una nueva instancia de \'clase\' si
@@ -548,7 +548,7 @@ automática y se llama a **\_\_init\_\_()** (si está definido). Siempre
 habrá un **\_\_new\_\_()**, aunque sea heredado (como mínimo de
 **object**).
 
-\_\_init\_\_(self\[, args\])
+\_\_init\_\_(self\[, args\])
 
 Inicializador. Los argumentos son los que pasamos al constructor al
 llamar a la clase para crear la instancia. Es llamado después de la
@@ -632,9 +632,9 @@ Es buena idea coger todos los componentes del objeto que intervengan en
 las comparaciones de objetos, empaquetarlos en un una tupla y devolver
 el *hash* de esa tupla como *hash* del objeto:
 
-def \_\_hash\_\_(self):
+def \_\_hash\_\_(self):
 
-    return hash((self.name, self.nick, self.color))
+    return hash((self.name, self.nick, self.color))
 
 Si una clase no define **\_\_eq\_\_()**, no debería definir tampoco
 **\_\_hash\_\_()**.
@@ -704,11 +704,11 @@ base (o desde cualquier otra clase u otro lado), pasándole la instancia
 actual como parámetro, que lo único que hará será devolver el valor de
 ese atributo existente:
 
-Base.\_\_getattribute\_\_(self, nombre)
+Base.\_\_getattribute\_\_(self, nombre)
 
 Si no tiene clases base, se puede hacer desde la clase **object**:
 
-object.\_\_getattribute\_\_(self, nombre)
+object.\_\_getattribute\_\_(self, nombre)
 
 Recordemos que aunque el atributo no esté definido en la clase base, el
 valor será bien devuelto, porque lo extrae de \'self\', que se le pasa
@@ -761,7 +761,7 @@ debe definir un atributo de tipo descriptor o debe definirlo una de sus
 clases base. En resumen, la clase propietaria debe tener una instancia
 del descriptor.
 
-\_\_get\_\_(self, instance, owner)
+\_\_get\_\_(self, instance, owner)
 
 \'self\' es el objeto (instancia) descriptor, \'instance\' es la
 instancia de la clase *owner*, y \'owner\' es la clase *owner*. Si
@@ -774,12 +774,12 @@ Si p.e. \'Descrip\' es una clase que implementa **\_\_get\_\_()**, y
 diseñamos otra clase \'Own\' que tiene un data attribute \'a\' de tipo
 \'Descrip\', entonces **Own.a** invocará a dicha función.
 
-\_\_set\_\_(self, instance, valor)
+\_\_set\_\_(self, instance, valor)
 
 Cambia el valor del atributo (la instancia del descriptor) al que se
 refiere el descriptor.
 
-\_\_delete\_\_(self, instance)
+\_\_delete\_\_(self, instance)
 
 Se invoca cuando eliminamos el atributo (instancia del descriptor) de la
 instancia de la clase propietaria.
@@ -1135,9 +1135,9 @@ estado global, etc. Son dos métodos que se invocan al ejecutarse la
 sentencia **with**, pero también pueden ser llamados directamente. Por
 ejemplo, para files:
 
-with open('/tmp/workfile', 'r') as f:
+with open('/tmp/workfile', 'r') as f:
 
-    \# hacer cosas con el objeto f
+    \# hacer cosas con el objeto f
 
 Cuando termina la sentencia **with,** cierra el archivo automáticamente,
 con lo que no hay que hacer **f.close()**.
@@ -1331,7 +1331,7 @@ caso contrario.
 
 También llamado *ternary operator*. Es del tipo:
 
-\<expr1\> if \<cond\> else \<expr2\>
+\<expr1\> if \<cond\> else \<expr2\>
 
 Retorna \'expr1\' si \'cond\' es verdadero, o \'expr2\' en caso
 contrario.
@@ -1342,17 +1342,17 @@ contrario.
 *Python* evalúa las expresiones de izquierda a derecha. En el ejemplo,
 el número indica el orden:
 
-expr1, expr2, expr3, expr4
+expr1, expr2, expr3, expr4
 
-(expr1, expr2, expr3, expr4)
+(expr1, expr2, expr3, expr4)
 
-{expr1: expr2, expr3: expr4}
+{expr1: expr2, expr3: expr4}
 
-expr1 + expr2 \* (expr3 - expr4)
+expr1 + expr2 \* (expr3 - expr4)
 
-expr1(expr2, expr3, \*expr4, \*\*expr5)
+expr1(expr2, expr3, \*expr4, \*\*expr5)
 
-expr3, expr4 = expr1, expr2
+expr3, expr4 = expr1, expr2
 
 []{#anchor-63}6.17 Operator precedence
 --------------------------------------
@@ -1413,15 +1413,15 @@ Prioridad de los operadores en *Python*, de menor a mayor:
 En cuanto al operador de exponente (su prioridad es distinta en
 operadores unarios de uno y otro lado):
 
-\>\>\> n=-1\*\*2
+\>\>\> n=-1\*\*2
 
-\>\>\> n
+\>\>\> n
 
 -1
 
-\>\>\> n=2\*\*-1
+\>\>\> n=2\*\*-1
 
-\>\>\> n
+\>\>\> n
 
 0.5
 
@@ -1433,23 +1433,23 @@ operadores unarios de uno y otro lado):
 
 La sentencia:
 
-assert \<expr\>
+assert \<expr\>
 
 equivale a:
 
-if \_\_debug\_\_:
+if \_\_debug\_\_:
 
-    if not \<expr\>: raise AssertionError
+    if not \<expr\>: raise AssertionError
 
 En cuanto a la versión extendida:
 
-assert \<expr1\>, \<expr2\>
+assert \<expr1\>, \<expr2\>
 
 equivale a:
 
-if \_\_debug\_\_:
+if \_\_debug\_\_:
 
-    if not \<expr1\>: raise AssertionError(\<expr2\>)
+    if not \<expr1\>: raise AssertionError(\<expr2\>)
 
 **\_\_debug\_\_** es **True** en circunstancias normales. Será **False**
 cuando indiquemos que la compilación se haga con optimización (*command
@@ -1463,7 +1463,7 @@ Operación nula.
 []{#anchor-67}7.5 The del statement
 -----------------------------------
 
-del \<lista de objetos\>
+del \<lista de objetos\>
 
 Elimina el nombre (o nombres) especificados en la lista, de la tabla de
 nombres local o global, dependiendo de si están declarados como
@@ -1473,7 +1473,7 @@ nombres local o global, dependiendo de si están declarados como
 []{#anchor-68}7.6 The return statement
 --------------------------------------
 
-return \<lista de expresiones\>
+return \<lista de expresiones\>
 
 Retorna una expresión o lista de expresiones, o **None** si no se
 especifica. Si una función no termina en **return** también retorna
@@ -1491,11 +1491,11 @@ En un iterador, indica que este ha terminado las iteraciones y levanta
 
 En un generador:
 
-yield \<expr\>
+yield \<expr\>
 
 o:
 
-yield from \<expr\>
+yield from \<expr\>
 
 donde la expresión es un sub-iterador, de donde el generador irá
 extrayendo los sucesivos valores para irlos *yielding*.
@@ -1508,7 +1508,7 @@ raise
 *re-raises* la última excepción que estaba activa en el *scope* actual.
 Si no había ninguna, se levanta **RuntimeError**.
 
-raise \<excep\>
+raise \<excep\>
 
 levanta la excepción \'excep\', que debe ser una subclase o una
 instancia de **BaseException**. Si es una clase, se construirá
@@ -1521,14 +1521,14 @@ se añade a la instancia de la excepción levantada, en su atributo
 **\_\_traceback\_\_**. Este atributo es *writable*, a través del método
 **with\_traceback()**:
 
-raise \<excep\>(\'Texto de error\').with\_traceback(\<obj\_traceback\>)
+raise \<excep\>(\'Texto de error\').with\_traceback(\<obj\_traceback\>)
 
 En este caso, hemos levantado una excepción del tipo \'excep\',
 pasándole el texto del error al constructor, y aportando nuestro propio
 objeto *traceback*. Lo podemos hacer así porque el método
 **with\_traceback()** retorna el objeto (instancia) excepción.
 
-raise \<excep1\> from \<excep2\>
+raise \<excep1\> from \<excep2\>
 
 En este caso, estamos indicando que levantamos la excepción de tipo
 \'excep1\', que se ha producido a causa de otra excepción \'excep2\'. Si
@@ -1568,13 +1568,13 @@ iniciar la nueva iteración.
 
 Para importar módulos.
 
-import A as C, B
+import A as C, B
 
 equivale a:
 
-import A as C
+import A as C
 
-import B
+import B
 
 []{#anchor-74}7.12 The global statement
 ---------------------------------------
@@ -1625,17 +1625,17 @@ sintaxis de *decorators* es:
 
 \@deco
 
-def fun:
+def fun:
 
-    pass
+    pass
 
 Esto equivale a:
 
-def fun:
+def fun:
 
-    pass
+    pass
 
-fun = deco(fun)
+fun = deco(fun)
 
 ¿Cómo se construye un *decorator*? En primer lugar, sabemos que es una
 función (\'deco\') que acepta una función como entrada (\'fun\'), y
@@ -1646,57 +1646,57 @@ porque envuelve \'fun\'.
 
 Vamos a hacer un *decorator* que duplica las acciones de una función:
 
-[]{#anchor-78}def deco\_duplica(f):
+[]{#anchor-78}def deco\_duplica(f):
 
-    def wrapper\_duplica():
+    def wrapper\_duplica():
 
-        f()
+        f()
 
-        f()
+        f()
 
-    return wrapper\_duplica
+    return wrapper\_duplica
 
 \@deco\_duplica
 
-def fun():
+def fun():
 
-    print(\'¡Buenos días!\')
+    print(\'¡Buenos días!\')
 
 fun()
 
 Resultado:
 
-¡Buenos días!
+¡Buenos días!
 
-¡Buenos días!
+¡Buenos días!
 
 ¿Y si queremos decorar una función \'fun\' que tiene parámetros? Para
 que no nos dé error y el *decorator* acepte todo tipo de listas de
 parámetros, haremos:
 
-[]{#anchor-79}[]{#anchor-80}def deco\_duplica(f):
+[]{#anchor-79}[]{#anchor-80}def deco\_duplica(f):
 
-    def wrapper\_duplica(\*args, \*\*kwargs):
+    def wrapper\_duplica(\*args, \*\*kwargs):
 
-        f(\*args, \*\*kwargs)
+        f(\*args, \*\*kwargs)
 
-        f(\*args, \*\*kwargs)
+        f(\*args, \*\*kwargs)
 
-    return wrapper\_duplica
+    return wrapper\_duplica
 
 \@deco\_duplica
 
-def fun(nombre):
+def fun(nombre):
 
-    print(f\'¡Buenos días, {nombre}!\')
+    print(f\'¡Buenos días, {nombre}!\')
 
 fun(\'Pepe\')
 
 Resultado:
 
-¡Buenos días, Pepe!
+¡Buenos días, Pepe!
 
-¡Buenos días, Pepe!
+¡Buenos días, Pepe!
 
 Esto es así, porque si nos fijamos, \'deco\_duplica\' nos retorna y
 asigna a \'fun\' el objeto función \'wrapper\_duplica\'. Es decir, al
@@ -1709,7 +1709,7 @@ hacer la llamada **fun(\'Pepe\')** estamos, de hecho, llamando a
 
 \@deco2
 
-def foo: pass
+def foo: pass
 
 Esto equivale a **foo=deco1(deco2(foo))**.
 
@@ -1717,50 +1717,50 @@ A veces podemos querer darle argumentos a nuestro decorator. Imaginemos
 que queremos pasarle el número de veces que queremos repetir la función
 original. Para definir un *decorator* con argumentos se hace así:
 
-def deco\_duplica\_n(n):
+def deco\_duplica\_n(n):
 
-    def deco\_duplica(f):
+    def deco\_duplica(f):
 
-        def wrapper\_duplica(\*args, \*\*kwargs):
+        def wrapper\_duplica(\*args, \*\*kwargs):
 
-            for i in range(n):
+            for i in range(n):
 
-                f(\*args, \*\*kwargs)
+                f(\*args, \*\*kwargs)
 
-        return wrapper\_duplica
+        return wrapper\_duplica
 
-    return deco\_duplica
+    return deco\_duplica
 
 \@deco\_duplica\_n(4)
 
-def fun(nombre):
+def fun(nombre):
 
-    print(f\'¡Buenos días, {nombre}!\')
+    print(f\'¡Buenos días, {nombre}!\')
 
 fun(\'Pepe\')
 
 Resultado:
 
-¡Buenos días, Pepe!
+¡Buenos días, Pepe!
 
-¡Buenos días, Pepe!
+¡Buenos días, Pepe!
 
-¡Buenos días, Pepe!
+¡Buenos días, Pepe!
 
-¡Buenos días, Pepe!
+¡Buenos días, Pepe!
 
 Vamos a estudiarlo: **deco\_duplica\_n(4)**, de hecho, nos está
 retornando esta función:
 
-def deco\_duplica(f):
+def deco\_duplica(f):
 
-    def wrapper\_duplica(\*args, \*\*kwargs):
+    def wrapper\_duplica(\*args, \*\*kwargs):
 
-        for i in range(4):
+        for i in range(4):
 
-            f(\*args, \*\*kwargs)
+            f(\*args, \*\*kwargs)
 
-    return wrapper\_duplica
+    return wrapper\_duplica
 
 Que es algo similar a lo que teníamos con la versión que duplicaba. Esta
 función retornada es la que se usa como decorador, es decir,
@@ -1773,7 +1773,7 @@ Generalizando, tenemos que, por ejemplo:
 
 \@deco2(A,B)
 
-def foo: pass
+def foo: pass
 
 Esto equivale a **foo=deco1(N)(deco2(A,B)(foo))**.
 
@@ -1781,7 +1781,7 @@ Para finalizar, hay que tener en cuenta que si queremos que nuestra
 función «tuneada» por el *decorator* siga retornando el mismo valor que
 antes de pasarla por el *decorator*, la función *wrapper* debe incluir:
 
-return f(\*args,\*\*kwargs)
+return f(\*args,\*\*kwargs)
 
 Aunque también puede modificar ese valor de retorno.
 
@@ -1791,15 +1791,15 @@ un atributo (de tipo función) \'decfoo\', se puede hacer:
 
 \@lst\[0\].decfoo
 
-def fooA():
+def fooA():
 
-    \...
+    \...
 
 \@lst\[1\].decfoo
 
-def fooB():
+def fooB():
 
-    \...
+    \...
 
 []{#anchor-81}8.7 Class definitions
 -----------------------------------
@@ -1814,13 +1814,13 @@ lo demás, el mecanismo es similar a los *decorators* de funciones.
 
 \@deco
 
-class MiClase:
+class MiClase:
 
-    pass
+    pass
 
 Equivale a:
 
-MiClase = deco(MiClase)
+MiClase = deco(MiClase)
 
 Un *decorator* de un método es, en la práctica, lo mismo que vimos para
 funciones. En cambio, un *decorator* de clase es una función que recibe
@@ -1830,31 +1830,31 @@ Veamos un ejemplo: una clase simple que solo dice hola. Un decorator que
 añade un método para decir adiós. Además, el decorator admite un
 parámetro que indica cuántas veces se dirá \'¡Adiós!\' al despedirse:
 
-def complicaN(n):
+def complicaN(n):
 
-    def complica(cls):
+    def complica(cls):
 
-        cls\_complic = cls
+        cls\_complic = cls
 
-        def adios(self):
+        def adios(self):
 
-            print(\'¡Adiós!\' \* n)
+            print(\'¡Adiós!\' \* n)
 
-        cls\_complic.adios = adios
+        cls\_complic.adios = adios
 
-        return cls\_complic
+        return cls\_complic
 
-    return complica
+    return complica
 
 \@complicaN(4)
 
-class Simple:
+class Simple:
 
-    def hola(self):
+    def hola(self):
 
-        print(\'¡Hola!\')
+        print(\'¡Hola!\')
 
-a = Simple()
+a = Simple()
 
 a.hola()
 

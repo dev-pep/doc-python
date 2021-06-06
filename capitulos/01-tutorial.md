@@ -22,7 +22,7 @@ Cuando la entrada al intérprete es la entrada estándar.
 
 Un *script* se trata por defecto como codificado con *UTF-8*. Se puede codificar el *script* de otro modo, pero deberemos indicarlo, poniendo en la *primera línea* del archivo:
 
-`# -*- coding: <encoding> -*-`
+`# -*- coding: <encoding> -*-`
 
 Donde 'encoding' es el denominador de la codificación concreta (códec válido soportado por *Python*). Esta línea podría ser la segunda si la primera es la línea *shebang* de los *scripts* ejecutables.
 
@@ -43,11 +43,11 @@ Las expresiones con enteros y *floats*, convierten los enteros a *float* antes d
 En modo interactivo, la variable guión bajo (***_***) se refiere al resultado anterior:
 
 ```python
->>> 11 * 3.5
+>>> 11 * 3.5
 38.5
->>> 5 + _
+>>> 5 + _
 43.5
->>> round(_,2)
+>>> round(_,2)
 43.5
 ```
 
@@ -70,11 +70,11 @@ De todas formas, si el último carácter de una línea es '***\\***', la línea 
 El operador ***+*** se puede usar para concatenar *strings*, y ***\**** para duplicarlos, triplicarlos, etc.:
 
 ```python
->>> letter = 'A'
->>> word = 'Help' + letter
->>> word
+>>> letter = 'A'
+>>> word = 'Help' + letter
+>>> word
 'HelpA'
->>> '<' + word * 5 + '>'
+>>> '<' + word * 5 + '>'
 '<HelpAHelpAHelpAHelpAHelpA>'
 ```
 
@@ -89,10 +89,10 @@ Un índice negativo contará desde la derecha: -1 es el último carácter, -2 el
 En el *subscripting* (`st[N]`), especificar un índice *out of bounds* dará error, tanto si es positivo como negativo. En *slicing* no da error:
 
 ```python
->>> word='Python'
->>> word[4:42]
+>>> word='Python'
+>>> word[4:42]
 'on'
->>> word[42:]
+>>> word[42:]
 ''
 ```
 
@@ -109,44 +109,44 @@ Un índice devuelve un elemento de la lista, mientras que un *slice* devolverá 
 Las listas son mutables, con lo que se puede cambiar su contenido. Otra cosa sería cambiar el contenido de sus elementos, que solo será posible si el elemento en cuestión es, a su vez, mutable:
 
 ```python
->>> letters=['a','b','c','d','e','f','g']
+>>> letters=['a','b','c','d','e','f','g']
 ```
 
 Añadir elementos al final:
 
 ```python
->>> letters.append('h')  # append() es un método del tipo lista
->>> letters
-['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
+>>> letters.append('h')  # append() es un método del tipo lista
+>>> letters
+['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
 ```
 Cambiar elementos:
 
 ```python
->>> letters[0]=['A']
->>> letters[2:5]=['C','D','E']
->>> letters
-['A', 'b', 'C', 'D', 'E', 'f', 'g', 'h']
+>>> letters[0]=['A']
+>>> letters[2:5]=['C','D','E']
+>>> letters
+['A', 'b', 'C', 'D', 'E', 'f', 'g', 'h']
 ```
 
 Eliminar elementos:
 ```python
->>> letters[2:5]=[]
->>> letters
-['A', 'b', 'f', 'g', 'h']
+>>> letters[2:5]=[]
+>>> letters
+['A', 'b', 'f', 'g', 'h']
 ```
 
 La built-in function ***len()*** también se aplica a listas, devolviendo el número de elementos de primer nivel (un elemento lista con varios elementos a su vez, contará como uno).
 
 ```python
->>> len(letters)
+>>> len(letters)
 5
 ```
 
 Borrar todos los elementos
 
 ```python
->>> letters[:]=[]
->>> letters
+>>> letters[:]=[]
+>>> letters
 []
 ```
 
@@ -161,14 +161,14 @@ Para ver si un elemento 'e' existe en una lista 'L', `e in L` devuelve ***True**
 ***letters[0]*** se refiere al primer elemento; ***letters[0:1]*** se refiere a una sublista que contiene el primer elemento:
 
 ```python
->>> letters = ['a', 'b', 'c', 'd', 'e']
->>> letters[2] = [1, 2, 3]  # letters[2] era 'c'
->>> letters
-['a', 'b', [1, 2, 3], 'd', 'e']
->>> letters = ['a', 'b', 'c', 'd', 'e']
->>> letters[2:3] = [1, 2, 3]  # letters[2:3] era ['c']
->>> letters
-['a', 'b', 1, 2, 3, 'd', 'e']
+>>> letters = ['a', 'b', 'c', 'd', 'e']
+>>> letters[2] = [1, 2, 3]  # letters[2] era 'c'
+>>> letters
+['a', 'b', [1, 2, 3], 'd', 'e']
+>>> letters = ['a', 'b', 'c', 'd', 'e']
+>>> letters[2:3] = [1, 2, 3]  # letters[2:3] era ['c']
+>>> letters
+['a', 'b', 1, 2, 3, 'd', 'e']
 ```
 
 Si queremos borrar un solo elemento, `letters[2] = []` sustituirá el elemento por una lista vacía; en cambio `letters[2:3] = []` elimina el elemento.
@@ -176,36 +176,36 @@ Si queremos borrar un solo elemento, `letters[2] = []` sustituirá el elemento p
 Para añadir uno o más elementos a una lista sin usar `append()`, se puede hacer con cualquier *slice* que empiece *out of bounds* por la derecha:
 
 ```python
->>> a = [1, 2, 3]
->>> a[len(a):] = [4, 5]
->>> a
-[1, 2, 3, 4, 5]
+>>> a = [1, 2, 3]
+>>> a[len(a):] = [4, 5]
+>>> a
+[1, 2, 3, 4, 5]
 ```
 Para sustituir *n* elementos por *m* elementos, seleccionar los elementos a sustituir en el *slice*, y asignarle la nueva lista. Por ejemplo, para sustituir 2 elementos (3º y 4º) por uno solo:
 
 ```python
->>> a = [1, 2, 3, 4, 5]
->>> a[2:4] = ['tres y cuatro']
->>> a
-[1, 2, 'tres y cuatro', 5]
+>>> a = [1, 2, 3, 4, 5]
+>>> a[2:4] = ['tres y cuatro']
+>>> a
+[1, 2, 'tres y cuatro', 5]
 ```
 
 Para insertar uno o más elementos en la posición *n*, insertar una lista en un *slice* que inicie en la posición deseada (*n*) y termine antes de esa, por ejemplo mediante el *slice* ***[n:n]***:
 
 ```python
->>> a = [1, 2, 3, 4, 5]
->>> a[3:3] = [3.25, 3.5, 3.75]
->>> a
-[1, 2, 3, 3.25, 3.5, 3.75, 4, 5]
+>>> a = [1, 2, 3, 4, 5]
+>>> a[3:3] = [3.25, 3.5, 3.75]
+>>> a
+[1, 2, 3, 3.25, 3.5, 3.75, 4, 5]
 ```
 
 Para insertar uno o más elementos por el principio, usar un *slice* que inicie en el primero o antes, y termine antes del primero:
 
 ```python
->>> a = [1, 2, 3]
->>> a[:0]=['a', 'b', 'c']
->>> a
-['a', 'b', 'c', 1, 2, 3]
+>>> a = [1, 2, 3]
+>>> a[:0]=['a', 'b', 'c']
+>>> a
+['a', 'b', 'c', 1, 2, 3]
 ```
 
 #### Organización interna de los datos
@@ -221,17 +221,17 @@ Algunos objetos *inmutables* (números, *strings*, etc.) pueden tener un ID fijo
 El operador asignación (***=***) simplemente asigna un ID o referencia a la variable.
 
 ```python
->>> a = [[1, 2, 3], [11, 22, 33], [111, 222, 333]]
->>> b=a
->>> a is b
+>>> a = [[1, 2, 3], [11, 22, 33], [111, 222, 333]]
+>>> b=a
+>>> a is b
 True
 ```
 
 Ambos objetos apuntan al mismo lugar, por tanto:
 
 ```python
->>> b[0] = 99  # afectará también al objeto a
->>> a
+>>> b[0] = 99  # afectará también al objeto a
+>>> a
 [99, [11, 22, 33], [111, 222, 333]]
 ```
 
@@ -248,59 +248,59 @@ Siguiendo con el ejemplo anterior, y una vez definido 'a', podemos hacer una *sh
 Después de ejecutar una de estas acciones:
 
 ```python
->>> a is b
+>>> a is b
 False
 ```
 
 Ahora ***a*** y ***b*** son objetos distintos. Sin embargo al ser una copia superficial, a pesar de ser dos listas en zonas distintas de memoria, comparten las referencias a sus elementos. Si esos elementos son mutables, entonces cambiar su contenido en uno de ellos afectará al otro objeto.
 
 ```python
->>> a = [[1, 2, 3], [11, 22, 33], [111, 222, 333]]
->>> b = a[:]
->>> a is b
+>>> a = [[1, 2, 3], [11, 22, 33], [111, 222, 333]]
+>>> b = a[:]
+>>> a is b
 False
->>> b[0]=99  # no afectará al objeto a
->>> a
+>>> b[0]=99  # no afectará al objeto a
+>>> a
 [[1, 2, 3], [11, 22, 33], [111, 222, 333]]
->>> a[0] is b[0]
+>>> a[0] is b[0]
 True
->>> a[1] is b[1]
+>>> a[1] is b[1]
 True
->>> a[2] is b[2]
+>>> a[2] is b[2]
 True
->>> b[1][0]=99  # sí afectará al 2º elemento de a
->>> a
+>>> b[1][0]=99  # sí afectará al 2º elemento de a
+>>> a
 [[1, 2, 3], [99, 22, 33], [111, 222, 333]]
 ```
 
 Si lo que queremos es hacer una copia profunda (*deep copy*), solo hay una forma:
 
 ```python
->>> b = copy.deepcopy(a)
->>> a is b
+>>> b = copy.deepcopy(a)
+>>> a is b
 False
->>> a[0] is b[0]
+>>> a[0] is b[0]
 False
 ```
 
 A no ser que el elemento sea inmutable, en cuyo caso puede devolver ***True***. Esto se ve fácilmente con este ejemplo:
 
 ```python
->>> a = 33
->>> b = 33
->>> a is b  # ambos objetos apuntan al hash del número 33
+>>> a = 33
+>>> b = 33
+>>> a is b  # ambos objetos apuntan al hash del número 33
 True
 ```
 
 ### 3.2 First Steps Towards Programming
 
 ```python
->>> # Fibonacci series:
-... # the sum of two elements defines the next
-... a, b = 0, 1
->>> while b < 10:
-...     print(b)
-...     a, b = b, a+b
+>>> # Fibonacci series:
+... # the sum of two elements defines the next
+... a, b = 0, 1
+>>> while b < 10:
+...     print(b)
+...     a, b = b, a+b
 ...
 1
 1
@@ -323,17 +323,17 @@ En cuanto a la evaluación de condiciones, cualquier entero distinto de 0 es ver
 ### 4.1 if Statements
 
 ```python
->>> x = int(input("Please enter an integer: "))
-Please enter an integer: 42
->>> if x < 0:
-...     x = 0
-...     print('Negative changed to zero')
-... elif x == 0:
-...     print('Zero')
-... elif x == 1:
-...     print('Single')
-... else:
-...     print('More')
+>>> x = int(input("Please enter an integer: "))
+Please enter an integer: 42
+>>> if x < 0:
+...     x = 0
+...     print('Negative changed to zero')
+... elif x == 0:
+...     print('Zero')
+... elif x == 1:
+...     print('Single')
+... else:
+...     print('More')
 ...
 More
 ```
@@ -345,13 +345,13 @@ Puede haber 0 o más secciones `elif`, y 0 o 1 secciones `else`.
 La sentencia `for` itera sobre una secuencia:
 
 ```python
->>> a = ['cat', 'window', 'defenestrate']
->>> for x in a:
-...     print(x, len (x))
+>>> a = ['cat', 'window', 'defenestrate']
+>>> for x in a:
+...     print(x, len (x))
 ...
-cat 3
-window 6
-defenestrate 12
+cat 3
+window 6
+defenestrate 12
 ```
 
 Un código que modifique la secuencia original dentro de las iteraciones, puede ser muy difícil de depurar. En ese caso es mejor iterar sobre una copia de la secuencia o crear una nueva para realizar las operaciones.
@@ -361,17 +361,17 @@ Veamos un ejemplo con un diccionario (se verá este concepto más adelante):
 Itera sobre una copia:
 
 ```python
->>> for user, status in users.copy().items():
-...     if status == 'inactive':
-...         del users[user]
+>>> for user, status in users.copy().items():
+...     if status == 'inactive':
+...         del users[user]
 ```
 
 Usa una secuencia nueva:
 ```python
->>> active_users = {}  # el nuevo diccionario
->>> for user, status in users.items():
-...     if status == 'active':
-...         active_users[user] = status
+>>> active_users = {}  # el nuevo diccionario
+>>> for user, status in users.items():
+...     if status == 'active':
+...         active_users[user] = status
 ```
 
 ### 4.3 The range() Function
@@ -389,8 +389,8 @@ Genera una secuencia con una progresión aritmética:
 Es un iterable, pero no crea los elementos en memoria, ahorrando espacio. Para crear una lista a partir de cualquier iterable, se usa la función `list()` (construye una lista a partir de un iterable):
 
 ```python
->>> list(range(10))
-[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+>>> list(range(10))
+[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 ```
 
 ### 4.4 break and continue Statements, and else Clauses on Loops
@@ -409,16 +409,16 @@ La sentencia `pass` no hace nada: para bucles infinitos (vacíos), clases vacía
 ### 4.6 Defining Functions
 
 ```python
->>> def fib(n):  # write Fibonacci series up to n
-...     """Print a Fibonacci series up to n."""    # docstring
-...     a, b = 0, 1
-...     while a < n:
-...         print(a, end=' ')
-...         a, b = b, a+b
-...     print()
+>>> def fib(n):  # write Fibonacci series up to n
+...     """Print a Fibonacci series up to n."""    # docstring
+...     a, b = 0, 1
+...     while a < n:
+...         print(a, end=' ')
+...         a, b = b, a+b
+...     print()
 ...
->>> fib(2000)
-0 1 1 2 3 5 8 13 21 34 55 89 144 233 377 610 987 1597
+>>> fib(2000)
+0 1 1 2 3 5 8 13 21 34 55 89 144 233 377 610 987 1597
 ```
 
 Definición de la función, con nombre y lista de *formal parameters*. En la llamada, se denominan *arguments* o *actual parameters*.
@@ -433,11 +433,11 @@ Al pasar una variable como argumento, se pasa el valor de esa variable; como ese
 La definición de una función almacena al identificador de la misma en la tabla de nombres actual (como si fuese una asignación). Es decir, el identificador es un apuntador a un objeto función.
 
 ```python
->>> fib
-<function fib at 10042ed0>
->>> f = fib
->>> f(100)  # o fib(100)
-0 1 1 2 3 5 8 13 21 34 55 89
+>>> fib
+<function fib at 10042ed0>
+>>> f = fib
+>>> f(100)  # o fib(100)
+0 1 1 2 3 5 8 13 21 34 55 89
 ```
 
 Todas las funciones retornan un valor. Si no tiene sentencia `return` (o vuelve con `return` sin argumento), devuelve ***None*** (valor *built-in*).
@@ -451,7 +451,7 @@ La sintaxis es `return <valor>`.
 En la definición, no puede haber un *default parameter* (con valor por defecto) antes de un *non-default parameter*.
 
 ```python
-def ask_ok(prompt, retries=4, complaint='Yes or no, please!'):
+def ask_ok(prompt, retries=4, complaint='Yes or no, please!'):
 ```
 
 En este caso podemos pasar 1, 2 o 3 argumentos en la llamada. Si le damos 2, irá asignando en orden, es decir, el segundo argumento se asignará a ***retries***.
@@ -461,19 +461,19 @@ Los valores por defecto de los parámetros pueden ser constantes o variables, qu
 El valor por defecto se evalúa una sola vez. Si ese valor es mutable, mantendrá las modificaciones entre llamadas. Para solucionarlo:
 
 ```python
-def f(a, L=None):
-    if L is None:
-        L = []
-    L.append(a)
-    return L
+def f(a, L=None):
+    if L is None:
+        L = []
+    L.append(a)
+    return L
 ```
 
 Inicializamos la variable cada vez que no le pasamos valor, en el resto de ocasiones mantiene su valor; lo hacemos en lugar de:
 
 ```python
-def f(a, L=[]):
-    L.append(a)
-    return L
+def f(a, L=[]):
+    L.append(a)
+    return L
 ```
 
 Que iría añadiendo valores a la lista vacía inicial o la dejaría igual.
@@ -481,25 +481,25 @@ Que iría añadiendo valores a la lista vacía inicial o la dejaría igual.
 #### 4.7.2 Keyword Arguments
 
 ```python
-def parrot(voltage, state='stiff', action='voom', type='Bluish'):
+def parrot(voltage, state='stiff', action='voom', type='Bluish'):
 ```
 
 **En la llamada**, podemos usar *keyword arguments* ('nombre=valor') o *positional arguments* o una mezcla de ambos, pero **primero van los positional arguments y luego los keyword arguments** (la posición de estos últimos entre sí no es importante). Hay que tener en cuenta que usemos el modo que usemos, debemos dar valor a todos los *non-default parameters*. Llamadas válidas:
 
 ```python
 parrot(1000)
-parrot(action = 'VOOOOOM', voltage = 1000000)
-parrot('a thousand', state = 'pushing up the daisies')
-parrot('a million', 'bereft of life', 'jump')
+parrot(action = 'VOOOOOM', voltage = 1000000)
+parrot('a thousand', state = 'pushing up the daisies')
+parrot('a million', 'bereft of life', 'jump')
 ```
 
 Estas son incorrectas:
 
 ```python
-parrot()    # voltage missing
-parrot(voltage=5.0, 'dead')    # non-keyword following keyword
-parrot(110, voltage=220)    # duplicate voltage
-parrot(actor='John Cleese')    # what's 'actor'?
+parrot()    # voltage missing
+parrot(voltage=5.0, 'dead')    # non-keyword following keyword
+parrot(110, voltage=220)    # duplicate voltage
+parrot(actor='John Cleese')    # what's 'actor'?
 ```
 
 **En la definición**, se puede incluir opcionalmente un *final formal parameter*, del tipo ***\*\*parm*** (tiene que ser el último de todos los parámetros), el cual recoge *en un diccionario* todos los *keyword arguments* que se pasen en la llamada y que no correspondan a ningún parámetro de la definición. El orden en el que estarán en el diccionario será el mismo que en la llamada.
@@ -523,8 +523,8 @@ Si ambos están definidos, los argumentos entre ellos son *positional-or-keyword
 Por ejemplo, si definimos:
 
 ```python
-def foo(name, **parms):
-    pass
+def foo(name, **parms):
+    pass
 ```
 
 Esta llamada dará error:
@@ -536,8 +536,8 @@ foo('Pepe', name = 'Pep')
 Pero si la definimos así:
 
 ```python
-def foo(name, /, **parms):
-    pass
+def foo(name, /, **parms):
+    pass
 ```
 
 La llamada ya no da error:
@@ -567,14 +567,14 @@ Se pueden combinar ambos métodos, incluso varias veces, en una llamada.
 Es una manera de crear objetos función de forma muy simple sintácticamente. Son pequeñas funciones sin nombre. Debe limitarse a una sola expresión, y es mucho más sencillo de definir que con `def`.
 
 ```python
-foo = lambda x, y: 3*(x + y)
+foo = lambda x, y: 3*(x + y)
 ```
 
 Equivale a:
 
 ```python
-def foo(x, y):
-    return 3*(x + y)
+def foo(x, y):
+    return 3*(x + y)
 ```
 
 #### 4.7.7 Documentation Strings
@@ -595,13 +595,13 @@ La información del tipo de parámetro se define mediante '***:***', después de
 expresión que dé la información que estimemos oportuna.
 
 ```python
-def f(pr:'precio/kg - int', gr:int=100) -> 'precio total, int':
-    return pr * gr / 1000
+def f(pr:'precio/kg - int', gr:int=100) -> 'precio total, int':
+    return pr * gr / 1000
 print(f(45))
 print(f.__annotations__)
 
 4.5
-{'pr': 'precio/kg - int', 'gr': <class 'int'>, 'return': 'precio total, int'}
+{'pr': 'precio/kg - int', 'gr': <class 'int'>, 'return': 'precio total, int'}
 ```
 
 En caso de incluir esta información, no es necesario definirla para cada parámetro y/o el valor de retorno.
@@ -650,8 +650,8 @@ Modo de crear listas a partir de secuencias o iterables. *Brackets* encerrando u
 tomando.
 
 ```python
->>> [(x, y) for x in [1, 2, 3] for y in [3, 1, 4] if x != y]
-[(1, 3), (1, 4), (2, 3), (2, 1), (2, 4), (3, 1), (3, 4)]
+>>> [(x, y) for x in [1, 2, 3] for y in [3, 1, 4] if x != y]
+[(1, 3), (1, 4), (2, 3), (2, 1), (2, 4), (3, 1), (3, 4)]
 ```
 
 En el ejemplo, obtenemos una lista de tuplas de 2 elementos.
@@ -661,16 +661,16 @@ Cuando hay más de un `for`, se anidan en el orden que aparecen escritos, siendo
 La expresión inicial, que marca la forma general de cada elemento, puede ser a su vez una lista:
 
 ```python
->>> [[x, x ** 2, x ** 3] for x in range(10) if x==(x // 2) * 2]
-[[0, 0, 0], [2, 4, 8], [4, 16, 64], [6, 36, 216], [8, 64, 512]]
+>>> [[x, x ** 2, x ** 3] for x in range(10) if x==(x // 2) * 2]
+[[0, 0, 0], [2, 4, 8], [4, 16, 64], [6, 36, 216], [8, 64, 512]]
 ```
 
 Aplanar una lista:
 
 ```python
->>> vec = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
->>> [num for elem in vec for num in elem]
-[1, 2, 3, 4, 5, 6, 7, 8, 9]
+>>> vec = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+>>> [num for elem in vec for num in elem]
+[1, 2, 3, 4, 5, 6, 7, 8, 9]
 ```
 
 Se entendería así: para cada elemento en ***vec***, hacer: para cada número en el elemento, hacer: devolver ***num*** (expresión inicial).
@@ -680,12 +680,12 @@ Se entendería así: para cada elemento en ***vec***, hacer: para cada número e
 La expresión puede ser incluso una *list comprehension* a su vez. Un modo de trasponer filas/columnas de una matriz:
 
 ```python
->>> matrix = [
-...     [1, 2, 3, 4],
-...     [5, 6, 7, 8],
-...     [9, 10, 11, 12] ]
->>> [ [row[i] for row in matrix] for i in range(4)]
-[[1, 5, 9], [2, 6, 10], [3, 7, 11], [4, 8, 12]]
+>>> matrix = [
+...     [1, 2, 3, 4],
+...     [5, 6, 7, 8],
+...     [9, 10, 11, 12] ]
+>>> [ [row[i] for row in matrix] for i in range(4)]
+[[1, 5, 9], [2, 6, 10], [3, 7, 11], [4, 8, 12]]
 ```
 
 ### 5.2 The del statement
@@ -697,44 +697,44 @@ Como método `pop()`, pero no devuelve valor (`del a[N]`), y además puede elimi
 A parte de los *strings* y listas, hay otros tipos de *secuencias*. Uno de ellos es la *tupla*.
 
 ```python
->>> t = 12345, 67.5, 'hello'
->>> t[0]
+>>> t = 12345, 67.5, 'hello'
+>>> t[0]
 12345
->>> t
-(12345, 54321, 'hello!')
->>> # Pueden ser anidadas:
-... u = t, (1, 2, 3, 4, 5)
->>> u
-((12345, 54321, 'hello!'), (1, 2, 3, 4, 5))
->>> # Son inmutables:
-... t[0] = 88888
-Traceback (most recent call last):
-  File "<stdin>", line 1, in <module>
-TypeError: 'tuple' object does not support item assignment
->>> # Pero pueden contener objetos mutables:
-... v = ([1, 2, 3], [3, 2, 1])
->>> v
-([1, 2, 3], [3, 2, 1])
+>>> t
+(12345, 54321, 'hello!')
+>>> # Pueden ser anidadas:
+... u = t, (1, 2, 3, 4, 5)
+>>> u
+((12345, 54321, 'hello!'), (1, 2, 3, 4, 5))
+>>> # Son inmutables:
+... t[0] = 88888
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+TypeError: 'tuple' object does not support item assignment
+>>> # Pero pueden contener objetos mutables:
+... v = ([1, 2, 3], [3, 2, 1])
+>>> v
+([1, 2, 3], [3, 2, 1])
 ```
 
 Los paréntesis no son obligatorios al *definir* la tupla. Aunque en muchos lugares, como en la expresión de una *list comprehension*, se deben incluir. En todo caso, si deseamos definir una tupla de 0 elementos, deberemos incluirlos obligatoriamente. Para una tupla de 1 elemento hay que incluir una *trailing comma*, ya que aunque incluyamos los paréntesis, lo tomará como una expresión de un solo elemento.
 
 ```python
->>> empty = ()
->>> singleton = 'hello',  # obsérvese la trailing comma
->>> len(empty)
+>>> empty = ()
+>>> singleton = 'hello',  # obsérvese la trailing comma
+>>> len(empty)
 0
->>> len(singleton)
+>>> len(singleton)
 1
->>> singleton
+>>> singleton
 ('hello',)
 ```
 
 *Packing*/*unpacking* data:
 
 ```python
->>> t = 12345, 54321, 'hello!'  # packing
->>> x, y, z = t  # unpacking
+>>> t = 12345, 54321, 'hello!'  # packing
+>>> x, y, z = t  # unpacking
 ```
 
 Las tuplas se suelen usar para este *packing*/*unpacking*, aunque también se puede hacer con listas.
@@ -744,38 +744,38 @@ Las tuplas se suelen usar para este *packing*/*unpacking*, aunque también se pu
 Los *sets* no tienen elementos duplicados. Se crean con `set()` o mediante llaves ***{}***. Se pueden hacer operaciones como unión, intersección, diferencia o diferencia simétrica.
 
 ```python
->>> basket = {'apple', 'orange', 'apple', 'pear', 'orange', 'banana'}
->>> print(basket)  # se han eliminado los duplicados
-{'orange', 'banana', 'pear', 'apple'}
->>> 'orange' in basket  # test rápido de pertenencia al conjunto
+>>> basket = {'apple', 'orange', 'apple', 'pear', 'orange', 'banana'}
+>>> print(basket)  # se han eliminado los duplicados
+{'orange', 'banana', 'pear', 'apple'}
+>>> 'orange' in basket  # test rápido de pertenencia al conjunto
 True
->>> 'crabgrass' in basket
+>>> 'crabgrass' in basket
 False
 ```
 
 Admiten operaciones matemáticas de conjuntos:
 
 ```python
->>> a = set('abracadabra')  # equivale a set(['a', 'b', 'r', 'a', 'c', 'a', 'd', 'a', 'b', 'r', 'a'])
->>> b = set('alacazam')
->>> a
-{'a', 'r', 'b', 'c', 'd'}
->>> a - b # letras en a pero no en b
-{'r', 'd', 'b'}
->>> a | b # letras en a o b
-{'a', 'c', 'r', 'd', 'b', 'm', 'z', 'l'}
->>> a & b # letras in ambos conjuntos a la vez
-{'a', 'c'}
->>> a ^ b # letras en a o b pero no en ambos
-{'r', 'd', 'b', 'm', 'z', 'l'}
+>>> a = set('abracadabra')  # equivale a set(['a', 'b', 'r', 'a', 'c', 'a', 'd', 'a', 'b', 'r', 'a'])
+>>> b = set('alacazam')
+>>> a
+{'a', 'r', 'b', 'c', 'd'}
+>>> a - b # letras en a pero no en b
+{'r', 'd', 'b'}
+>>> a | b # letras en a o b
+{'a', 'c', 'r', 'd', 'b', 'm', 'z', 'l'}
+>>> a & b # letras in ambos conjuntos a la vez
+{'a', 'c'}
+>>> a ^ b # letras en a o b pero no en ambos
+{'r', 'd', 'b', 'm', 'z', 'l'}
 ```
 
 También se pueden hacer *set comprehensions* (elimina los repetidos):
 
 ```python
->>> a = {x for x in 'abracadabra' if x not in 'abc'}
->>> a
-{'r', 'd'}
+>>> a = {x for x in 'abracadabra' if x not in 'abc'}
+>>> a
+{'r', 'd'}
 ```
 
 ### 5.5 Dictionaries
@@ -791,45 +791,45 @@ Si tenemos un diccionario d, haciendo `list(d)` obtenemos una lista con las clav
 Para saber si una clave existe en el diccionario se puede mirar mediante `'clave' in d`.
 
 ```python
->>> tel = {'jack': 4098, 'sape': 4139}
->>> tel['guido'] = 4127
->>> tel
-{'jack': 4098, 'sape': 4139, 'guido': 4127}
->>> tel['jack']
+>>> tel = {'jack': 4098, 'sape': 4139}
+>>> tel['guido'] = 4127
+>>> tel
+{'jack': 4098, 'sape': 4139, 'guido': 4127}
+>>> tel['jack']
 4098
->>> del tel['sape']
->>> tel['irv'] = 4127
->>> tel
-{'jack': 4098, 'guido': 4127, 'irv': 4127}
->>> list(tel)
-['jack', 'guido', 'irv']
->>> sorted(tel)
-['guido', 'irv', 'jack']
->>> 'guido' in tel
+>>> del tel['sape']
+>>> tel['irv'] = 4127
+>>> tel
+{'jack': 4098, 'guido': 4127, 'irv': 4127}
+>>> list(tel)
+['jack', 'guido', 'irv']
+>>> sorted(tel)
+['guido', 'irv', 'jack']
+>>> 'guido' in tel
 True
->>> 'jack' not in tel
+>>> 'jack' not in tel
 False
 ```
 
 Se puede usar el constructor `dict()` para crear un diccionario, pasándole una secuencia que contenga a su vez secuencias de dos elementos (clave y valor):
 
 ```python
->>> dict([('sape', 4139), ('guido', 4127), ('jack', 4098)])
-{'sape': 4139, 'jack': 4098, 'guido': 4127}
+>>> dict([('sape', 4139), ('guido', 4127), ('jack', 4098)])
+{'sape': 4139, 'jack': 4098, 'guido': 4127}
 ```
 
 Aunque el constructor también acepta parámetros con nombre, cuyos nombres convierte en *strings* para actuar como claves:
 
 ```python
->>> dict(sape=4139, guido=4127, jack=4098)
-{'sape': 4139, 'guido': 4127, 'jack': 4098}
+>>> dict(sape=4139, guido=4127, jack=4098)
+{'sape': 4139, 'guido': 4127, 'jack': 4098}
 ```
 
 Se pueden crear *dict comprehensions*:
 
 ```python
->>> {x: x ** 2 for x in (2, 4, 6)}
-{2: 4, 4: 16, 6: 36}
+>>> {x: x ** 2 for x in (2, 4, 6)}
+{2: 4, 4: 16, 6: 36}
 ```
 
 ### 5.6 Looping Techniques
@@ -837,12 +837,12 @@ Se pueden crear *dict comprehensions*:
 Método `items()` de un *diccionario* devuelve lista de parejas *key*:*value*:
 
 ```python
->>> knights = {'gallahad': 'the pure', 'robin': 'the brave'}
->>> for k, v in knights.items():
-... print(k, v)
+>>> knights = {'gallahad': 'the pure', 'robin': 'the brave'}
+>>> for k, v in knights.items():
+... print(k, v)
 ...
-gallahad the pure
-robin the brave
+gallahad the pure
+robin the brave
 ```
 
 El método `enumerate()`, de cualquier *secuencia*, itera sobre la misma, devolviendo parejas formadas por el número de índice y el valor.
@@ -863,30 +863,30 @@ Se puede usar `and`, `or` y `not`; `not` tiene la máxima prioridad, y `or` la m
 `or` se evalúan de izquierda a derecha, y cortocircuitan. El resultado de una expresión lógica se puede asignar a una variable. No siempre devolverán ***True*** o ***False***.
 
 ```python
->>> 5 and not 4
+>>> 5 and not 4
 False
->>> 6 and 3
+>>> 6 and 3
 3
->>> 6 or 3
+>>> 6 or 3
 6
->>> 0 or not 5
+>>> 0 or not 5
 False
->>> 0 or 5
+>>> 0 or 5
 5
->>> 0 and True
+>>> 0 and True
 0
 ```
 
 No se puede utilizar el operador de asignación (como en *C*) en medio de una expresión. Pero sí se puede hacer como en *C* utilizando en su lugar el operador morsa `:=`. La subexpresión devuelve el valor asignado.
 
 ```python
->>> a = 3 + ( b = 5)
-  File "<stdin>", line 1
-    a=3+(b=5)
-          ^
-SyntaxError: invalid syntax
->>> a=3+(b:=5)
->>> a
+>>> a = 3 + ( b = 5)
+  File "<stdin>", line 1
+    a=3+(b=5)
+          ^
+SyntaxError: invalid syntax
+>>> a=3+(b:=5)
+>>> a
 8
 ```
 
@@ -897,13 +897,13 @@ Se pueden comparar entre sí secuencias *del mismo tipo*. Si son de distinto tip
 Ejemplos que devuelven verdadero:
 
 ```python
-(1, 2, 3) < (1, 2, 4)
-[1, 2, 3] < [1, 2, 4]
-'ABC' < 'C' < 'Pascal' < 'Python'
-(1, 2, 3, 4) < (1, 2, 4)
-(1, 2) < (1, 2, -1)
-(1, 2, 3) == (1.0, 2.0, 3.0)
-(1, 2, ('aa', 'ab')) < (1, 2, ('abc', 'a'), 4)
+(1, 2, 3) < (1, 2, 4)
+[1, 2, 3] < [1, 2, 4]
+'ABC' < 'C' < 'Pascal' < 'Python'
+(1, 2, 3, 4) < (1, 2, 4)
+(1, 2) < (1, 2, -1)
+(1, 2, 3) == (1.0, 2.0, 3.0)
+(1, 2, ('aa', 'ab')) < (1, 2, ('abc', 'a'), 4)
 ```
 
 ## 6. MODULES
@@ -924,13 +924,13 @@ El módulo se puede ejecutar también como *script* si así se le invoca. Las va
 Un módulo (o *script*) puede importar otros módulos. Cada módulo tiene su tabla global, donde coloca los nombres de los módulos que importa. A parte, cada función del módulo tendrá su tabla local.
 
 ```python
->>> from fibo import fib, fib2
+>>> from fibo import fib, fib2
 ```
 
 Esto añade los nombres (objetos) especificados directamente en la tabla del módulo importador, sin añadir el nombre del módulo importado en ella.
 
 ```python
->>> from fibo import *
+>>> from fibo import *
 ```
 
 Esto último importa todas las definiciones menos las empezadas por '***\_***'. No se debería usar este tipo de importación, porque importa a la tabla local nombres desconocidos, que podrían ocultar los nuestros.
@@ -938,13 +938,13 @@ Esto último importa todas las definiciones menos las empezadas por '***\_***'. 
 Para modificar los nombres en el momento de añadirlos a nuestra tabla, podemos usar:
 
 ```python
-import <módulo> as <minombre>
+import <módulo> as <minombre>
 ```
 
 En este caso, el nombre importado será ***minombre***, y contendrá el módulo original. Para modificar el nombre de los elementos del módulo al importarlos:
 
 ```python
-from <módulo> import <foo> as <mifun1>, <fee> as <mifun2>
+from <módulo> import <foo> as <mifun1>, <fee> as <mifun2>
 ```
 
 Y así tantas como queramos.
@@ -952,7 +952,7 @@ Y así tantas como queramos.
 Para recargar un módulo (ya que si no solo lo importa/ejecuta una vez):
 
 ```python
-import importlib
+import importlib
 importlib.reload(nombremodulo)
 ```
 
@@ -961,7 +961,7 @@ importlib.reload(nombremodulo)
 Desde el *shell*:
 
 ```python
-python m1.py <argumentos>
+python m1.py <argumentos>
 ```
 
 Cuando un módulo se está ejecutando en el nivel superior, el valor de ***\_\_name__*** es ***'__main\_\_'***. Este es el modo de saber si nuestro módulo está funcionando como un *script* invocado directamente (nivel superior), o está siendo importado para que otro módulo utilice sus funciones.
@@ -992,7 +992,7 @@ Esta función *built-in* muestra los nombres definidos (funciones, variables, m�
 No muestra los nombres *built-in*. Para ello tendríamos que hacer:
 
 ```python
-import builtins
+import builtins
 dir(builtins)
 ```
 
@@ -1009,26 +1009,26 @@ Si incluimos código en ***\_\_init__.py***, al importar el paquete se ejecuta (
 Veamos una posible estructura de directorios definiendo un paquete de utilidades de sonido:
 
 ```
-sound/                 (paquete nivel superior)
-    __init__.py        (inic. paquete sonido)
-    install.py
-    unistall.py
-    formats/           (subpaquete convers. formato)
-        __init__.py    (inic. subpaquete)
-        wavread.py
-        wavwrite.py
-        aiffread.py
-        aiffwrite.py
-    effects/           (subpaquete efectos)
-        __init__.py    (inic. subpaquete)
-        echo.py
-        surround.py
-        reverse.py
-    filters/           (subpaquete filtros)
-        __init__.py    (inic. subpaquete)
-        equalizer.py
-        vocoder.py
-        karaoke.py
+sound/                 (paquete nivel superior)
+    __init__.py        (inic. paquete sonido)
+    install.py
+    unistall.py
+    formats/           (subpaquete convers. formato)
+        __init__.py    (inic. subpaquete)
+        wavread.py
+        wavwrite.py
+        aiffread.py
+        aiffwrite.py
+    effects/           (subpaquete efectos)
+        __init__.py    (inic. subpaquete)
+        echo.py
+        surround.py
+        reverse.py
+    filters/           (subpaquete filtros)
+        __init__.py    (inic. subpaquete)
+        equalizer.py
+        vocoder.py
+        karaoke.py
 ```
 
 En este ejemplo, el paquete se llama 'sound' (***import sound***), y contiene dos módulos (***install.py***, ***uninstall.py***) y tres subpaquetes (***formats***, ***effects*** y ***filters***), los cuales contienen varios módulos cada uno.
@@ -1036,7 +1036,7 @@ En este ejemplo, el paquete se llama 'sound' (***import sound***), y contiene do
 Ejemplos:
 
 ```python
-import sound.effects.echo    # importa el módulo 'echo.py'
+import sound.effects.echo    # importa el módulo 'echo.py'
 ```
 
 Para llamar a una posible función ***foo()*** deberemos usar el nombre completo:
@@ -1048,7 +1048,7 @@ sound.effects.echo.foo()
 Podemos importar lo mismo así:
 
 ```python
-from sound.effects import echo
+from sound.effects import echo
 ```
 
 Pero en este caso, aunque también importa el módulo ***echo.py***, se puede llamar a la función así:
@@ -1060,7 +1060,7 @@ echo.foo()
 También podemos hacer:
 
 ```python
-from soud.effects.echo import foo
+from soud.effects.echo import foo
 ```
 
 Y entonces podemos llamar así: `foo()`.
@@ -1121,7 +1121,7 @@ Sin embargo, podemos definir fácilmente el contenido del *package* mediante la 
 <pack> import \****:
 
 ```python
-__all__ = ['install', 'uninstall', 'formats', 'foo']
+__all__ = ['install', 'uninstall', 'formats', 'foo']
 ```
 
 Podemos incluir nombres de submódulos, subpaquetes y elementos definidos en el mismo paquete (en ***\_\_init__.py***). Cuando ***\_\_all__*** no está incluido, pues, solo se importarán los elementos definidos en ***\_\_init__.py***; sin embargo, si ***\_\_all__*** está definido, dichos elementos no se cargan si no están explícitamente incluidos, uno a uno, en ***\_\_all__*** (siempre hablando en relación a ***from <pack> import \****).
@@ -1133,15 +1133,15 @@ Solo se pueden incluir en ***\_\_all__*** cosas que pertenezcan directamente al 
 Podemos hacer referencia a otros paquetes o módulos de la jerarquía del paquete actual en la sentencia ***from-import***. Por ejemplo, desde el paquete ***effects***, podríamos escribir:
 
 ```python
-from . import echo    # . se refiere al mismo 'effects'
-from .. import formats    # .. es el paquete padre
-from ..filters import equalizer    # subimos y bajamos
+from . import echo    # . se refiere al mismo 'effects'
+from .. import formats    # .. es el paquete padre
+from ..filters import equalizer    # subimos y bajamos
 ```
 
 Un punto (***.***) es el paquete actual, dos (***..***) el superior, tres (***...***) el superior a este, etc. Tras los puntos, podemos bajar opcionalmente uno o más niveles, hasta ir a parar a un paquete concreto (o módulo). Por ejemplo, desde cualquier archivo de ***effects*** (ya sea desde uno de los módulos o desde dentro de ***\_\_init__.py***):
 
 ```python
-from ..filters.equalizer import foo    # sube, luego baja 2
+from ..filters.equalizer import foo    # sube, luego baja 2
 ```
 
 Este mecanismo no funciona desde los módulos que se estén ejecutando en el nivel superior, y su nombre sea ***\_\_main__***.
@@ -1157,10 +1157,10 @@ Los packages tienen una variable tipo lista ***\_\_path__*** que especifica el d
 Para formatear *strings* se puede hacer mediante *strings* con formato (llamadas también *f-strings*):
 
 ```python
->>> year = 2016
->>> event = 'Referendum'
->>> f'Results of the {year} {event}'
-'Results of the 2016 Referendum'
+>>> year = 2016
+>>> event = 'Referendum'
+>>> f'Results of the {year} {event}'
+'Results of the 2016 Referendum'
 ```
 
 Pueden ser del tipo ***f'...'*** o ***F'...'***, y se puede prefijar a comillas simples, dobles o *triple-quoted strings*. Dentro de las llaves puede ir cualquier expresión válida.
@@ -1172,23 +1172,23 @@ Y una tercera es haciéndolo todo manualmente, con *slices*, concatenaciones, et
 Las funciones *built-in* `str()` y `repr()` retornan representaciones en *string* del valor que les pasamos, de forma *human-readable* la primera, y con forma de *string* literal comprensible al intérprete la segunda.
 
 ```python
->>> s = 'Hello, world.'
->>> str(s)
-'Hello, world.'
->>> repr(s)
-"'Hello, world.'"
->>> str(1/7)
+>>> s = 'Hello, world.'
+>>> str(s)
+'Hello, world.'
+>>> repr(s)
+"'Hello, world.'"
+>>> str(1/7)
 '0.14285714285714285'
->>> x = 10 * 3.25
->>> y = 200 * 200
->>> s = 'x value is ' + repr(x) + ', and y is ' + repr(y) + '.'
->>> print(s)
-x value is 32.5, and y is 40000.
->>> hello='hello, world\\n'
->>> print(hello)
-hello, world
->>> print(repr(hello))
-'hello, world\\n'
+>>> x = 10 * 3.25
+>>> y = 200 * 200
+>>> s = 'x value is ' + repr(x) + ', and y is ' + repr(y) + '.'
+>>> print(s)
+x value is 32.5, and y is 40000.
+>>> hello='hello, world\\n'
+>>> print(hello)
+hello, world
+>>> print(repr(hello))
+'hello, world\\n'
 ```
 
 Muchos tipos de datos tienen la misma representación con
@@ -1219,9 +1219,9 @@ La función `open(<filename> [,mode])` retorna un objeto archivo. El modo puede 
 Es buena idea usar `with` para manipular archivos, ya que lo cerrará automáticamente una vez haya terminado el trabajo, incluso si se produce una excepción:
 
 ```python
->>> with open('workfile') as f:
-...     read_data = f.read()
->>> f.closed
+>>> with open('workfile') as f:
+...     read_data = f.read()
+>>> f.closed
 True
 ```
 
@@ -1236,9 +1236,9 @@ El método `readline()` devuelve la siguiente línea de texto, hasta el ***\\n**
 Para leer línea a línea un archivo, se puede iterar sobre el objeto archivo:
 
 ```python
->>> f=open('archivo.txt')
->>> for linea in f:
-...     print(linea)
+>>> f=open('archivo.txt')
+>>> for linea in f:
+...     print(linea)
 ```
 
 El método `readlines()` devuelve una lista de *strings* con todas las líneas del archivo de texto (también podemos usar `list(f)`).
@@ -1272,11 +1272,11 @@ Cláusula `try`:
 
 ```python
 try:
-    <sentencias>
-except <error1>:
-    <sentencias>
-except <error2>:
-    <sentencias>
+    <sentencias>
+except <error1>:
+    <sentencias>
+except <error2>:
+    <sentencias>
 ```
 
 Esta es la secuencia de acciones:
@@ -1291,24 +1291,24 @@ Esta es la secuencia de acciones:
 La cláusula `except` puede tener como argumento un tipo de excepción, o varios en una tupla, que serán recogidos todos:
 
 ```python
-except (<error1>, <error2>, <error3>, <error4>):
+except (<error1>, <error2>, <error3>, <error4>):
 ```
 
 Dado que un tipo de excepción es una clase, una excepción es recogida por una cláusula `except` de ese tipo o de un tipo base. Por ejemplo, si ***ExBase*** es una clase excepción, y ***ExDeriv*** una clase derivada de esta, y definimos nuestras cláusulas `except` en este orden:
 
 ```python
-except ExBase:
+except ExBase:
 ...
-except ExDeriv:
+except ExDeriv:
 ...
 ```
 
 Cada vez que se produzca una excepción del tipo ***ExBase*** o ***ExDeriv***, será recogida por la cláusula `except ExBase`, de tal modo que la cláusula `except ExDeriv` no se ejecutará nunca. Si queremos manejar diferentes excepciones con relaciones jerárquicas, debemos siempre incluirlas desde la más específica e ir ascendiendo por la jerarquía:
 
 ```python
-except ExDeriv:
+except ExDeriv:
 ...
-except ExBase:
+except ExBase:
 ...
 ```
 
@@ -1319,21 +1319,21 @@ Después de las cláusulas `except` puede haber opcionalmente una cláusula `els
 Si escribimos por ejemplo `except <error> as err:` podemos acceder al contenido del error mediante la variable ***err***, una instancia de la excepción, de tipo ***error***. Si la excepción se ha levantado con argumentos, podemos acceder a ellos mediante `err.args`. El objeto (instancia) de la excepción concreta también define ***\_\_str__*** que contiene los argumentos, con lo que se pueden imprimir estos sin pasar por ***args***:
 
 ```python
->>> try:
-...     raise Exception('spam', 'eggs')
-... except Exception as inst:
-...     print(type(inst))    # la instancia
-...     print(inst.args)    # argumentos en .args
-...     print(inst)    # __str__ contiene los argumentos
-...     x, y = inst.args    # unpack args
-...     print('x =', x)
-...     print('y =', y)
+>>> try:
+...     raise Exception('spam', 'eggs')
+... except Exception as inst:
+...     print(type(inst))    # la instancia
+...     print(inst.args)    # argumentos en .args
+...     print(inst)    # __str__ contiene los argumentos
+...     x, y = inst.args    # unpack args
+...     print('x =', x)
+...     print('y =', y)
 ...
-<class 'Exception'>
-('spam', 'eggs')
-('spam', 'eggs')
-x = spam
-y = eggs
+<class 'Exception'>
+('spam', 'eggs')
+('spam', 'eggs')
+x = spam
+y = eggs
 ```
 
 ### 8.4 Raising Exceptions
@@ -1341,15 +1341,15 @@ y = eggs
 Se hace así:
 
 ```python
-raise <exc>
+raise <exc>
 ```
 
 El argumento de `raise` es una instancia de una excepción o una clase de excepción (clase derivada de la clase ***Exception***), en cuyo caso se creará la instancia usando el constructor sin argumentos. En caso de que se levante una excepción en un bloque `try`, y queremos hacer algo con ella, pero queremos dejarla *unhandled* (o pasarla a un `try` exterior), dentro de la cláusula `except` pertinente hacemos con ella lo que queramos, y al final la re-levantamos con `raise` sin argumentos. Ejemplos:
 
 ```python
-raise Exception('spam', 'eggs', 10)    # excepción con argumentos
-raise NameError    # equivale a raise NameError()
-raise    # re-raise la excepción que estamos tratando
+raise Exception('spam', 'eggs', 10)    # excepción con argumentos
+raise NameError    # equivale a raise NameError()
+raise    # re-raise la excepción que estamos tratando
 ```
 
 ### 8.5 User-defined Exceptions
@@ -1369,9 +1369,9 @@ Si se produce una excepción en una sentencia `return`, y queda *unhandled*, nor
 Hay objetos que disponen de *predefined clean-up actions*, como los objetos archivo. Esto significa que se pueden usar con la sentencia `with`, de modo que ello nos asegura que los recursos son liberados después de su uso, pase lo que pase:
 
 ```python
-with open('myfile.txt') as f:
-    for line in f:
-        print(line)
+with open('myfile.txt') as f:
+    for line in f:
+        print(line)
 ```
 
 En este caso ***f*** queda cerrado después de su uso, incluso aunque se haya producido una excepción *unhandled* y el programa se interrumpa.
@@ -1419,11 +1419,11 @@ La definición de una clase crea un *objeto clase*. Los nombres definidos (funci
 Para acceder a los miembros de la clase definida, se utiliza la sintaxis ***objeto.atributo***.
 
 ```python
-class MyClass:
-    """A simple example class"""
-    i = 12345
-    def f(self):
-        return 'hello world'
+class MyClass:
+    """A simple example class"""
+    i = 12345
+    def f(self):
+        return 'hello world'
 ```
 
 En este caso, ***MyClass.f*** es un objeto función que ya puede llamarse; también podemos acceder al atributo ***MyClass.i***, que es un atributo de la clase. En este caso, el atributo ***MyClass.\_\_doc__*** devuelve el *docstring* de la clase.
@@ -1447,13 +1447,13 @@ En definitiva, sin instancia no hay método. Cuando llamamos a un método, inter
 Si ***x*** es una instancia de ***MyClass***, que define una función ***foo(self)***:
 
 ```python
-x.foo()  # llamada a un método
+x.foo()  # llamada a un método
 ```
 
 equivale a:
 
 ```python
-MyClass.foo(x)    # llamada a una función
+MyClass.foo(x)    # llamada a una función
 ```
 
 #### 9.3.5 Class and Instance Variables
@@ -1463,11 +1463,11 @@ Las variables *definidas* en una clase (o *añadidas posteriormente*) son compar
 ### Notas personales
 
 ```python
-class MiClase:
-    peso = 70    # atributo de datos (de la clase)
-    def __init__(self):    # constructor
-        self.nombre = 'Pepe'  # atrib. de datos (de la instancia)
-        peso = 80    # simple variable local de la función
+class MiClase:
+    peso = 70    # atributo de datos (de la clase)
+    def __init__(self):    # constructor
+        self.nombre = 'Pepe'  # atrib. de datos (de la instancia)
+        peso = 80    # simple variable local de la función
 ```
 
 Veamos en primer lugar, que para definir atributos de datos desde el código de un método, hay que utilizar el argumento ***self***. De lo contrario sería una simple variable local del método.
@@ -1493,13 +1493,13 @@ Si una instancia define una variable con el mismo nombre que una variable de la 
 Las funciones se pueden *definir* fuera de la definición de la clase también:
 
 ```python
-def f1(self, x, y):
-    return min(x, x+y)
-class C:
-    f = f1
-    def g(self):
-        return 'hello world'
-    h = g
+def f1(self, x, y):
+    return min(x, x+y)
+class C:
+    f = f1
+    def g(self):
+        return 'hello world'
+    h = g
 ```
 
 En este caso tenemos 3 métodos: ***f***, ***g*** y ***h***.
@@ -1511,15 +1511,15 @@ En este caso tenemos 3 métodos: ***f***, ***g*** y ***h***.
 Se crea una clase derivada así:
 
 ```python
-class Deriv(Base):
-    ...
+class Deriv(Base):
+    ...
 ```
 
 El nombre de la clase base tiene que estar en el *scope* de la definición de la derivada, naturalmente. Si la clase base está, p. e., en otro módulo ***m1***:
 
 ```python
-class Deriv(m1.Base):
-    ...
+class Deriv(m1.Base):
+    ...
 ```
 
 Cuando se referencia un atributo, primero se busca en la clase; si no se encuentra, en la base; y así recursivamente hasta el final de la jerarquía. Así, una derivada *overrides* los atributos (*data attributes* y *methods*) de la base.
@@ -1529,7 +1529,7 @@ Si un método, aunque sea uno definido en la clase base, llama a otro método de
 Una forma de llamar a un método de la clase base es hacerlo directamente como función (como haríamos desde fuera):
 
 ```python
-BaseClassName.methodname(self, arguments)
+BaseClassName.methodname(self, arguments)
 ```
 
 `isinstance(<obj>,<class>)` devuelve verdadero si ***obj*** es una instancia de la clase ***class*** o de una clase derivada de esta.
@@ -1539,8 +1539,8 @@ BaseClassName.methodname(self, arguments)
 #### 9.5.1 Multiple Inheritance
 
 ```python
-class Deriv(Base1, Base2, Base3):
-    ...
+class Deriv(Base1, Base2, Base3):
+    ...
 
 ```
 
@@ -1577,20 +1577,20 @@ Supongamos un objeto método ***m***: este tiene un atributo ***m.\_\_self__*** 
 Los objetos contenedores son *iterables*, es decir, se pueden iterar mediante `for` (listas, tuplas, diccionarios, *strings*, files,...). Lo que hace `for` es llamar a `iter()` sobre el objeto contenedor, lo cual devuelve un iterador: un objeto que tiene el método ***\_\_next__()***, que va devolviendo el siguiente elemento, y por último levanta una excepción ***StopIteration*** para que pare el `for`. Se puede llamar al método ***\_\_next__()*** del iterador usando la función builtin `next()`.
 
 ```python
->>> s = 'abc'
->>> it = iter(s)
->>> it
-<iterator object at 0x00A1DB50>
->>> next(it)
+>>> s = 'abc'
+>>> it = iter(s)
+>>> it
+<iterator object at 0x00A1DB50>
+>>> next(it)
 'a'
->>> next(it)
+>>> next(it)
 'b'
->>> next(it)
+>>> next(it)
 'c'
->>> next(it)
-Traceback (most recent call last):
-  File "<stdin>", line 1, in ?
-    next(it)
+>>> next(it)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in ?
+    next(it)
 StopIteration
 ```
 
@@ -1603,11 +1603,11 @@ Todos los iteradores son iterables, aunque no todos los iterables son iteradores
 Los generadores son una herramienta simple y poderosa para *crear iteradores*. Se escriben como una función normal, y usan la sentencia `yield`:
 
 ```python
-def generador(n1,n2,n3):
-    yield n1 * 5
-    yield n2 * 9
-    yield n3 * 14
-for n in generador(2, 2, 2): print(n)
+def generador(n1,n2,n3):
+    yield n1 * 5
+    yield n2 * 9
+    yield n3 * 14
+for n in generador(2, 2, 2): print(n)
 10
 18
 28
@@ -1622,7 +1622,7 @@ Lo que hace el generador cuando se itera en él es ejecutarse hasta el primer `y
 Las *generator expressions* son sintácticamente como las *list comprehensions* pero entre paréntesis en lugar de entre corchetes. Crean un iterador. Se suele usar como argumento de una función que recoja un iterable.
 
 ```python
-(i*i for i in range(10))    # objeto generador
+(i*i for i in range(10))    # objeto generador
 ```
 
 ## 16. APPENDIX
@@ -1636,7 +1636,7 @@ Los *scripts Python* se pueden hacer directamente ejecutables en entornos *Unix*
 O si no sabemos el *path* del ejecutable:
 
 ```python
-#!/usr/bin/env python3.9
+#!/usr/bin/env python3.9
 ```
 
 Teniendo en cuenta que el comando de *Python* (en este caso, `python3.9`) debe estar efectivamente incluido en ese *path*.
