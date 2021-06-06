@@ -83,7 +83,7 @@ En cuanto a \'signed\', indica si se va a utilizar complemento a 2 para
 codificar el entero. Si es que no (por defecto) y el valor es negativo,
 se levanta ***OverflowError***.
 
-classmethod int.from\_bytes(bytes,byteorder,\*,signed=False)
+classmethod int.from\_bytes(bytes,byteorder,\*,signed=False)
 
 Es la operación inversa a ***to\_bytes()***.
 
@@ -121,7 +121,7 @@ Retorna una representación hexadecimal del *float*, en un *string*, que
 empezará por \'0x\', e incluirá un sufijo \'p\' con el exponente
 (decimal, con base 2).
 
-classmethod float.fromhex(s)
+classmethod float.fromhex(s)
 
 A partir del *string*, que representa un *float*, devuelve ese *float*.
 El formato del *string* debe ser (puede ir entre espacio en blanco):
@@ -199,7 +199,7 @@ tipo distinto se pueden comparar por igualdad, pero es ***False***.
 Algunas secuencias pueden utilizar el operador ***in*** para hallas
 subsecuencias:
 
-\>\>\> \"gg\" in \"eggs\"
+\>\>\> \"gg\" in \"eggs\"
 
 True
 
@@ -207,17 +207,17 @@ En la repetición (***n\*s***), cualquier entero \<1 causa que se
 devuelva una secuencia vacía. Los elementos duplicados son referencias a
 los originales:
 
-\>\>\> lists = \[\[\]\] \* 3
+\>\>\> lists = \[\[\]\] \* 3
 
-\>\>\> lists
+\>\>\> lists
 
-\[\[\], \[\], \[\]\]
+\[\[\], \[\], \[\]\]
 
-\>\>\> lists\[0\].append(3)
+\>\>\> lists\[0\].append(3)
 
-\>\>\> lists
+\>\>\> lists
 
-\[\[3\], \[3\], \[3\]\]
+\[\[3\], \[3\], \[3\]\]
 
 Al concatenar secuencias inmutables, se crea un nuevo objeto cada vez,
 con lo que si tenemos varias concatenaciones consecutivas
@@ -317,33 +317,33 @@ poca memoria, ya que no guarda todos los números de la secuencia, sino
 
 Los *ranges* admiten indexado, *slicing*, etc.
 
-\>\>\> r = range(0, 20, 2)
+\>\>\> r = range(0, 20, 2)
 
-\>\>\> r
+\>\>\> r
 
-range(0, 20, 2)
+range(0, 20, 2)
 
-\>\>\> 11 in r
+\>\>\> 11 in r
 
 False
 
-\>\>\> 10 in r
+\>\>\> 10 in r
 
 True
 
-\>\>\> r.index(10)
+\>\>\> r.index(10)
 
 5
 
-\>\>\> r\[5\]
+\>\>\> r\[5\]
 
 10
 
-\>\>\> r\[:5\]
+\>\>\> r\[:5\]
 
-range(0, 10, 2)
+range(0, 10, 2)
 
-\>\>\> r\[-1\]
+\>\>\> r\[-1\]
 
 18
 
@@ -357,9 +357,9 @@ secuencia de números. En este sentido ***range(0)==range(2,1,3)*** y
 Secuencia inmutable de caracteres. Se puede construir a través de
 literales o mediante el constructor ***str()***.
 
-class str(object=\'\')
+class str(object=\'\')
 
-class str(object=b\'\',encoding=\'utf-8\',errors=\'strict\')
+class str(object=b\'\',encoding=\'utf-8\',errors=\'strict\')
 
 Si no se le da argumento, construye un *string* vacío. Si le damos un
 objeto cualquiera como argumento, creará un *string* en base a ese
@@ -398,14 +398,14 @@ str.casefold()
 Como ***str.lower()***, pero extendido a otras conversiones en algunos
 caracteres *Unicode*.
 
-str.center(width \[,fillchar\])
+str.center(width \[,fillchar\])
 
 Retorna un *string* de longitud \'width\' con el *string* original
 centrado en él. Se rellena con el carácter \'fillchar\' (por defecto,
 espacio). Si el *string* original tiene longitud de \'width\' o más
 caracteres, se retorna una copia del original.
 
-str.count(sub \[,start \[,end\]\])
+str.count(sub \[,start \[,end\]\])
 
 Retorna el número de veces (no solapadas) que el *substring* \'sub\'
 aparece en el *string* original. Podemos limitar la búsqueda si
@@ -417,7 +417,7 @@ str.encode(encoding=\'utf-8\',errors=\'strict\')
 Retorna la codificación del *string* en un objeto *bytes*. \'encoding\'
 y \'errors\' tienen el significado habitual.
 
-str.endswith(suffix \[,start \[,end\]\])
+str.endswith(suffix \[,start \[,end\]\])
 
 Retorna ***True*** si el *string* termina en el *string* \'suffix\', o,
 en caso de que este argumento sea una tupla de *strings*, si termina en
@@ -433,7 +433,7 @@ espacios. El número de espacios por el que será sustituido cada
 tabulador vendrá dado por \'tabsize\' y por la columna actual (se
 expande hasta el siguiente *tab stop*).
 
-str.find(sub \[,start \[,end\]\])
+str.find(sub \[,start \[,end\]\])
 
 Retorna el índice más bajo donde el *substring* \'sub\' se encuentra
 dentro del *string* actual, el cual se puede opcionalmente acotar al
@@ -450,7 +450,7 @@ str.format\_map(mapping)
 
 Similar a utilizar ***str.format(\*\*mapping)***.
 
-str.index(sub \[,start \[,end\]\])
+str.index(sub \[,start \[,end\]\])
 
 Como ***str.find()***, pero si no lo encuentra, levanta
 ***ValueError***.
@@ -529,7 +529,7 @@ Retorna un *string* que es la concatenación de todos los *strings* del
 iterable, y como separador, el contenido del *string* llamante. El
 iterable solo puede contener *strings*.
 
-str.ljust(width \[,fillchar\])
+str.ljust(width \[,fillchar\])
 
 Como ***str.center()*** pero a la izquierda.
 
@@ -542,7 +542,7 @@ str.lstrip(\[chars\])
 
 Como ***str.strip()*** pero solo en el principio del *string*.
 
-static str.maketrans(x \[,y \[,z\]\])
+static str.maketrans(x \[,y \[,z\]\])
 
 Retorna una tabla (diccionario) que se podrá utilizar en
 ***str.translate()***.
@@ -567,33 +567,33 @@ a \'sep\', \'sep\' en sí y el fragmento posterior. Si no encuentra
 \'sep\', el primer *string* de la tupla será una copia del original, y
 los otros dos serán *strings* vacíos.
 
-str.removeprefix(prefix, /)
+str.removeprefix(prefix, /)
 
 Si el *string* empieza por \'prefix\', retorna un *string* sin este
 prefijo. De lo contrario, retorna el *string* original.
 
-str.removesuffix(suffix, /)
+str.removesuffix(suffix, /)
 
 Si el *string* acaba con \'suffix\', retorna un *string* sin este
 sufijo. De lo contrario, retorna el *string* original.
 
-str.replace(old,new \[,count\])
+str.replace(old,new \[,count\])
 
 Retorna una copia del *string*, en la que cada ocurrencia del
 *substring* \'old\' es remplazada por \'new\'. Si se especifica
 \'count\', será el número máximo de remplazos (en orden de lectura).
 
-str.rfind(sub \[,start \[,end\]\])
+str.rfind(sub \[,start \[,end\]\])
 
 Como ***str.find()*** pero empezando a buscar por la derecha (índice más
 alto).
 
-str.rindex(sub \[,start \[,end\]\])
+str.rindex(sub \[,start \[,end\]\])
 
 Como ***str.rfind()*** pero levanta ***ValueError*** si no encuentra el
 \'sub\'.
 
-str.rjust(width \[,fillchar\])
+str.rjust(width \[,fillchar\])
 
 Como ***str.ljust()*** pero justificando a la derecha.
 
@@ -635,7 +635,7 @@ str.splitlines(\[keepends\])
 Retorna una lista con las líneas del *string*. Los caracteres *newline*
 no se incluyen, a no ser que \'keepends\' sea ***True***.
 
-str.startswith(prefix \[,start \[,end\]\])
+str.startswith(prefix \[,start \[,end\]\])
 
 Igual que ***str.endswith()*** pero en el principio del *string*.
 
@@ -683,7 +683,7 @@ Aunque esta modalidad es considerada *«old style»* y se prefiere usar
 
 Este tipo de formato se realiza mediante el operador módulo:
 
-formato % valores
+formato % valores
 
 donde \'formato\' es el *string* a rellenar y \'valores\' es una tupla
 con todos los valores necesarios para rellenarlo. Si solo es necesario
@@ -734,11 +734,11 @@ indicamos:
 1\. Cuando el parámetro de valores es un *mapping*, hay que incluir en
 cada especificador la clave del elemento entre paréntesis:
 
-\>\>\> print(\'%(language)s has %(number)03d quote types.\' %
+\>\>\> print(\'%(language)s has %(number)03d quote types.\' %
 
-\...     {\'language\': \"Python\", \"number\": 2})
+\...     {\'language\': \"Python\", \"number\": 2})
 
-Python has 002 quote types.
+Python has 002 quote types.
 
 2\. Flags de conversión:
 
@@ -801,14 +801,14 @@ realiza a bajo nivel (a nivel de *C*). Es el protocolo utilizado por los
 objetos *memoryview*: acceden a estas direcciones de memoria sin hacer
 copias ni crear y devolver objetos que contengan esos datos.
 
-classmethod bytes.fromhex(string)
+classmethod bytes.fromhex(string)
 
 Este método retorna un *bytes* a partir de un *string* que contiene una
 ristra de valores hexadecimales. Los espacios son ignorados. Debe
 contener un número par de dígitos, ya que cada dos dígitos hexadecimales
 generará un *byte*.
 
-bytes.hex(\[sep \[,bytes\_per\_sep\]\])
+bytes.hex(\[sep \[,bytes\_per\_sep\]\])
 
 Retorna un *string* con los *bytes* del objeto original codificados en
 pares de caracteres hexadecimales. Opcionalmente, podemos indicar un
@@ -827,15 +827,15 @@ Contraparte mutable de *bytes*. Usa los mismos literales que *bytes*,
 pero soporta los métodos para secuencias mutables. Por lo demás,
 funciona del mismo modo que *bytes*.
 
-class bytearray(\[source \[,encoding \[,errors\]\]\])
+class bytearray(\[source \[,encoding \[,errors\]\]\])
 
 Igual que *bytes*, solo que retorna un *bytearray*.
 
-classmethod bytearray.fromhex(string)
+classmethod bytearray.fromhex(string)
 
 Igual que *bytes*, solo que retorna un *bytearray*.
 
-bytearray.hex(\[sep \[,bytes\_per\_sep\]\])
+bytearray.hex(\[sep \[,bytes\_per\_sep\]\])
 
 Igual que *bytes*.
 
@@ -853,8 +853,8 @@ Los siguientes métodos están disponibles tanto para *bytes* como para
 argumento, se entiende que estamos hablando del tipo del objeto o clase
 llamante.
 
-bytes.count(sub \[,start \[,end\]\])\
-bytearray.count(sub \[,start \[,end\]\])
+bytes.count(sub \[,start \[,end\]\])\
+bytearray.count(sub \[,start \[,end\]\])
 
 Retorna el número de veces (no solapadas) que la *subsecuancia* \'sub\'
 aparece en la secuencia original. Podemos limitar la búsqueda si
@@ -869,8 +869,8 @@ bytearray.decode(encoding=\'utf-8\',errors=\'strict\')
 Retorna un *string* con la descodificación del *BLO* actual.
 \'encoding\' y \'errors\' tienen el significado habitual.
 
-bytes.endswith(suffix \[,start \[,end\]\])\
-bytearray.endswith(suffix \[,start \[,end\]\])
+bytes.endswith(suffix \[,start \[,end\]\])\
+bytearray.endswith(suffix \[,start \[,end\]\])
 
 Retorna ***True*** si el *BLO* termina en \'suffix\', o, en caso de que
 este argumento sea una tupla de *BLOs*, si termina en alguno de estos
@@ -879,8 +879,8 @@ este argumento sea una tupla de *BLOs*, si termina en alguno de estos
 Los argumentos opcionales (interpretados como en un slice) \'start\' y
 \'end\' sirven para limitar la búsqueda.
 
-bytes.find(sub \[,start \[,end\]\])\
-bytearray.find(sub \[,start \[,end\]\])
+bytes.find(sub \[,start \[,end\]\])\
+bytearray.find(sub \[,start \[,end\]\])
 
 Retorna el índice más bajo donde la subsecuencia \'sub\' se encuentra
 dentro del *BLO* actual, el cual se puede opcionalmente acotar al
@@ -890,8 +890,8 @@ es mejor usar el operador ***in***.
 
 La subsecuencia puede ser también un entero (entre 0 y 255).
 
-bytes.index(sub \[,start \[,end\]\])\
-bytearray.index(sub \[,start \[,end\]\])
+bytes.index(sub \[,start \[,end\]\])\
+bytearray.index(sub \[,start \[,end\]\])
 
 Como ***bytes.f****ind()*** (o ***bytearray.f****ind()***), pero si no
 lo encuentra, levanta ***ValueError***.
@@ -904,8 +904,8 @@ llamante) que es la concatenación de todos los *BLOs* del iterable, y
 como separador, el contenido del *BLO* llamante. El iterable solo puede
 contener *BLOs*.
 
-static bytes.maketrans(from,to)\
-static bytearray.maketrans(from,to)
+static bytes.maketrans(from,to)\
+static bytearray.maketrans(from,to)
 
 Retorna una tabla (diccionario) que se podrá utilizar en
 ***bytes.****translate()*** (o ***bytearray.****translate()***).
@@ -923,33 +923,33 @@ Busca la primera ocurrencia del *BLO* indicado en \'sep\' dentro del
 \'sep\', el primer *BLO* de la tupla será una copia del original, y los
 otros dos serán *BLOs* vacíos.
 
-***bytes***.removeprefix(prefix, /)\
-***bytearray***.removeprefix(prefix, /)
+***bytes***.removeprefix(prefix, /)\
+***bytearray***.removeprefix(prefix, /)
 
 Si el *BLO* empieza por \'prefix\', retorna un *BLO* sin este prefijo.
 De lo contrario, retorna el *BLO* original.
 
-bytes.removesuffix(suffix, /)\
-bytearray.removesuffix(suffix, /)
+bytes.removesuffix(suffix, /)\
+bytearray.removesuffix(suffix, /)
 
 Si el *BLO* acaba con \'suffix\', retorna un *BLO* sin este sufijo. De
 lo contrario, retorna el *BLO* original.
 
-bytes.replace(old,new \[,count\])\
-bytearray.replace(old,new \[,count\])
+bytes.replace(old,new \[,count\])\
+bytearray.replace(old,new \[,count\])
 
 Retorna una copia del *BLO*, en la que cada ocurrencia de la
 subsecuencia \'old\' es remplazada por \'new\'. Si se especifica
 \'count\', será el número máximo de remplazos (en orden de lectura).
 
-bytes.rfind(sub \[,start \[,end\]\])\
-bytearray.rfind(sub \[,start \[,end\]\])
+bytes.rfind(sub \[,start \[,end\]\])\
+bytearray.rfind(sub \[,start \[,end\]\])
 
 Como ***bytes.****find()*** o ***bytearray.****find()*** pero empezando
 a buscar por la derecha (índice más alto).
 
-bytes.rindex(sub \[,start \[,end\]\])\
-bytearray.rindex(sub \[,start \[,end\]\])
+bytes.rindex(sub \[,start \[,end\]\])\
+bytearray.rindex(sub \[,start \[,end\]\])
 
 Como ***bytes.index****()*** o ***bytearray.index****()*** pero
 empezando a buscar por la derecha (índice más alto).
@@ -960,8 +960,8 @@ bytearray.rpartition(sep)
 Como ***bytes.****partition()*** o ***bytearray.****partition()***, pero
 empezando a buscar por la derecha.
 
-bytes.startswith(prefix \[,start \[,end\]\])\
-bytearray.startswith(prefix \[,start \[,end\]\])
+bytes.startswith(prefix \[,start \[,end\]\])\
+bytearray.startswith(prefix \[,start \[,end\]\])
 
 Igual que ***by****t****es****.endswith()*** o
 ***by****t****earray****.endswith()*** pero en el principio del *BLO*.
@@ -983,16 +983,16 @@ Los métodos que veremos a continuación están pensados para *BLOs* que
 contengan caracteres *ASCII*, aunque se pueden utilizar para cualquier
 contenido:
 
-bytes.center(width \[,fillbyte\])\
-bytearray.center(width \[,fillbyte\])
+bytes.center(width \[,fillbyte\])\
+bytearray.center(width \[,fillbyte\])
 
 Retorna un *BLO* de longitud \'width\' con el *BLO* original centrado en
 él. Se rellena con el *byte* \'fillbyte\' (por defecto, espacio
 *ASCII*). Si el *BLO* original tiene longitud de \'width\' o más
 *bytes*, se retorna una copia del original.
 
-bytes.ljust(width \[,fillbyte\])\
-bytearray.ljust(width \[,fillbyte\])
+bytes.ljust(width \[,fillbyte\])\
+bytearray.ljust(width \[,fillbyte\])
 
 Como ***bytes.****center****()*** o ***bytearray.****center****()***
 pero a la izquierda.
@@ -1003,8 +1003,8 @@ bytearray.lstrip(\[chars\])
 Como ***bytes.****strip****()*** o ***bytearray.****strip****()*** pero
 solo en el principio del *BLO*.
 
-bytes.rjust(width \[,fillbyte\])\
-bytearray.rjust(width \[,fillbyte\])
+bytes.rjust(width \[,fillbyte\])\
+bytearray.rjust(width \[,fillbyte\])
 
 Como ***bytes.****center****()*** o ***bytearray.****center****()***
 pero a la derecha.
@@ -1181,7 +1181,7 @@ Estos objetos permiten acceder a los datos de objetos que admitan el
 intermedias de los mismos). Los objetos *bytes* y *bytearray* aceptan
 ese protocolo.
 
-class memoryview(obj)
+class memoryview(obj)
 
 Crea el objeto *memoryview* a partir del argumento. Resulta útil para
 acceder a estructuras de otros módulos, como ***array*** o ***struct***.
@@ -1196,8 +1196,8 @@ indexación ni *slicing*.
 Se pueden construir mediante una lista de elementos entre llaves, o
 usando el constructor:
 
-class set(\[iterable\])\
-class frozenset(\[iterable\])
+class set(\[iterable\])\
+class frozenset(\[iterable\])
 
 Construye el nuevo *set* o *frozenset* con los elementos del iterable.
 Si no se especifica este, construye un conjunto vacío.
@@ -1353,9 +1353,9 @@ genera un diccionario vacío.
 
 A parte, se puede usar el constructor:
 
-class dict(\*\*kwargs)\
-class dict(map \[,\*\*kwargs\])\
-class dict(it \[,\*\*kwargs\])
+class dict(\*\*kwargs)\
+class dict(map \[,\*\*kwargs\])\
+class dict(it \[,\*\*kwargs\])
 
 Sin argumentos, crea un diccionario vacío. Puede tener un argumento
 posicional al principio de todo. El resto serán *keyword arguments*.
@@ -1397,7 +1397,7 @@ d\[key\]=value
 Asigna el valor \'value\' a la clave \'key\'. Si no existe tal clave,
 crea el elemento.
 
-del d\[key\]
+del d\[key\]
 
 Elimina el elemento con clave \'key\' del diccionario. Si no existe
 levanta ***KeyError***.
@@ -1425,13 +1425,13 @@ dict.copy()
 
 Retorna una *shallow copy* del diccionario.
 
-classmethod dict.fromkeys(iterable \[,value\])
+classmethod dict.fromkeys(iterable \[,value\])
 
 Crea y retorna un diccionario cuyas claves son las del iterable, y los
 valores son un valor concreto \'value\', que si no se indica es
 ***None***.
 
-dict.get(key \[,default\])
+dict.get(key \[,default\])
 
 Retorna el valor asociado a la clave \'key\'. Si no existe tal clave,
 retorna el valor \'default\', que si no se especifica es ***None***. No
@@ -1447,7 +1447,7 @@ dict.keys()
 Retorna una nueva vista del diccionario, compuesta por las claves del
 mismo.
 
-dict.pop(key \[,default\])
+dict.pop(key \[,default\])
 
 Retorna el valor asociado a la clave \'key\' y elimina el elemento del
 diccionario. Si la clave no existe, simplemente retorna \'default\'. Si
@@ -1460,7 +1460,7 @@ Retorna el último elemento añadido al diccionario como una tupla (clave,
 valor), y elimina el elemento del diccionario. Si el diccionario está
 vacío, se levanta ***KeyError***.
 
-dict.setdefault(key \[,default\])
+dict.setdefault(key \[,default\])
 
 Devuelve el valor asociado a la clave \'key\'. Si no existe, crea un
 nuevo elemento con esa clave y el valor definido en \'default\', y
@@ -1527,8 +1527,8 @@ reversed(v)
 
 Igual que ***iter()*** pero en sentido inverso.
 
-x in v\
-x not in v
+x in v\
+x not in v
 
 Comprobación de pertenencia o no. En el caso de una vista hecha con
 ***items()***, x debería ser una tupla de 2 elementos.
@@ -1567,29 +1567,29 @@ la anterior y se propagará esta.
 
 Es posible crear alias de tipos genéricos. La forma general es:
 
-T\[X, Y, \...\]
+T\[X, Y, \...\]
 
 En este caso representa un contenedor de tipo \'T\' que tiene elementos
 de tipo \'X\', \'Y\', etc. Se suele usar para anotaciones de tipos.
 
-t = list\[str\]
+t = list\[str\]
 
 Aquí \'t\' define un *generic type* (de tipo ***types.GenericAlias***)
 de una lista con elementos *string*. Ahora se puede construir un
 elemento usando el constructor de ese tipo genérico:
 
-lista = t(\'uno\', \'dos\', \'tres\')
+lista = t(\'uno\', \'dos\', \'tres\')
 
 Al construir el objeto, no se comprueba el tipo, con lo que si hacemos:
 
-lista = t(1, 2, 3)
+lista = t(1, 2, 3)
 
 el código funcionará sin errores (aunque no sería correcto hacerlo). Así
 que en la práctica no es muy útil. Pero sí para hacer anotaciones:
 
-def average(values: list\[float\]) -\> float:
+def average(values: list\[float\]) -\> float:
 
-    return sum(values) / len(values)
+    return sum(values) / len(values)
 
 Esto define una función que toma por parámetro una lista de *floats* y
 devuelve un ***float***.
@@ -1628,19 +1628,19 @@ llamada.
 Sin embargo, no olvidemos que todo es un objeto en Python, y una función
 también lo es, por lo que se le pueden añadir atributos.
 
-def foo(verbose=False, init=False):
+def foo(verbose=False, init=False):
 
-    if init:
+    if init:
 
-        foo.atrib=0
+        foo.atrib=0
 
-    if verbose:
+    if verbose:
 
-        print(foo.atrib)
+        print(foo.atrib)
 
-foo(True, True)
+foo(True, True)
 
-foo.atrib += 1
+foo.atrib += 1
 
 foo(True)
 
@@ -1665,11 +1665,11 @@ Sin embargo no puede hacerse en los *bound methods*, solamente al objeto
 función. Si por ejemplo la clase \'C\' define el método \'met\', y \'c\'
 es una instancia de esa clase:
 
-C.met.atrib = 10    \# correcto
+C.met.atrib = 10    \# correcto
 
-c.met.atrib = 10    \# error!
+c.met.atrib = 10    \# error!
 
-c.met.\_\_func\_\_.atrib = 10    \# correcto
+c.met.\_\_func\_\_.atrib = 10    \# correcto
 
 ### []{#anchor-37}4.13.6 Type Objects
 

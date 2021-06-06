@@ -58,17 +58,17 @@ Retorna un *string* con el número \'n\' en binario, precedido por
 \'0b\'. Si \'n\' no es ***int***, debe implementar
 ***\_\_index\_\_()***, que devuelva un entero.
 
-class bool(\[ob\])
+class bool(\[ob\])
 
 Retorna el *truth value* del objeto (***True*** o ***False***). Si no se
 pasa argumento, devuelve ***False***.
 
-breakpoint(\*args, \*\*kwargs)
+breakpoint(\*args, \*\*kwargs)
 
 Representa un *breakpoint* y pasa el control al *debugger*, pasándole
 los parámetros en \'args\' y \'kwargs\'.
 
-class bytearray(\[source \[,encoding \[,errors\]\]\])
+class bytearray(\[source \[,encoding \[,errors\]\]\])
 
 Crea un objeto de tipo *bytearray* (secuencia mutable de *bytes*).
 
@@ -85,7 +85,7 @@ Si es un iterable, debe contener enteros de 0 a 255.
 
 Sin argumentos, crea un *bytearray* de longitud 0.
 
-class bytes(\[source \[,encoding \[,errors\]\]\])
+class bytes(\[source \[,encoding \[,errors\]\]\])
 
 Como ***bytearray****()***, pero para crear un objeto *bytes*
 (inmutable). En este caso los objetos *bytes* también se pueden crear
@@ -120,24 +120,24 @@ no estuviese ligado a ninguna instancia. Eso es un método clase (*class
 method*). Para eso tenemos ***classmethod()***. Podemos definir un
 *class method* así:
 
-class MiClase:
+class MiClase:
 
-    def metclas(cls)
+    def metclas(cls)
 
-        \# código del método
+        \# código del método
 
-    metclas = classmethod(metclas)    \# conversión a class method
+    metclas = classmethod(metclas)    \# conversión a class method
 
 Como eso es un poco feo sintácticamente, la función ***classmethod()***
 permite la sintaxis de *decorator*, mucho más agradable a la vista:
 
-class MiClase:
+class MiClase:
 
-    \@classmethod
+    \@classmethod
 
-    def metclas(cls)
+    def metclas(cls)
 
-        \# código del método
+        \# código del método
 
 Ahora, a este método *Python* le pasa automáticamente *como primer
 argumento*, en lugar de una referencia al objeto instancia, una
@@ -159,7 +159,7 @@ compile()
 Compila un *string* con código, y retorna un objeto ejecutable. No es de
 mucho interés por el momento.
 
-class complex(\[real \[,imag\]\])
+class complex(\[real \[,imag\]\])
 
 Retorna un objeto complejo, inicializado a los valores real e imaginario
 especificados. También le podemos pasar un *string* u objeto (1 solo
@@ -173,15 +173,15 @@ Al convertir un objeto \'x\' a complejo, se utilizará
 ***x.\_\_complex\_\_()***. Si no está definido, ***x.\_\_float\_\_()***
 y si tampoco, ***x.\_\_index\_\_()***.
 
-delattr(ob, name)
+delattr(ob, name)
 
 Elimina el atributo con nombre \'name\' (*string*) del objeto \'ob\' (si
 el objeto lo permite). ***delattr(x,\'atrib\')*** equivale a ***del
 ****x****.a****trib***.
 
-class dict(\*\*kwargs)\
-class dict(map \[,\*\*kwargs\])\
-class dict(it \[,\*\*kwargs\])
+class dict(\*\*kwargs)\
+class dict(map \[,\*\*kwargs\])\
+class dict(it \[,\*\*kwargs\])
 
 Constructor de un diccionario. Si se pasa sin argumentos, crea un
 diccionario vacío. Si le pasamos un iterable, este debe contener
@@ -206,14 +206,14 @@ divmod(n1,n2)
 Devuelve una tupla con el cociente y el resto de la división de los dos
 números (no complejos).
 
-enumerate(it, start=0)
+enumerate(it, start=0)
 
 Retorna un iterable de tipo ***enumerate***, cuyos elementos son tuplas
 de dos elementos: el primero, el número de orden (empezando por el valor
 de \'start\'), y el segundo, el valor de cada uno de los elementos del
 iterable \'it\'.
 
-eval(expression \[, globals \[, locals \]\])
+eval(expression \[, globals \[, locals \]\])
 
 Evalúa un *string* con una *expresión*, o un objeto de código (compilado
 con ***compile()***). Se le puede dar un diccionario con las variables
@@ -231,7 +231,7 @@ entrada automáticamente, para que siempre exista referencia a estos.
 
 Retorna el resultado de la expresión.
 
-exec(code \[, globals \[, locals \]\])
+exec(code \[, globals \[, locals \]\])
 
 Similar a ***eval()***, pero en este caso para ejecutar una serie de
 instrucciones especificadas en un *string*, o en un objeto de código
@@ -246,7 +246,7 @@ es ***True***. Si \'fun\' es ***None***, se asume la función identidad,
 es decir, el iterador resultante estará formado por los elementos de
 \'it\' que evalúen a ***True***.
 
-class float(\[ob\])
+class float(\[ob\])
 
 Construye (y retorna) un número en punto flotante a partir del objeto
 que se le pasa, que normalmente será un número. También puede ser un
@@ -261,7 +261,7 @@ Si el objeto no define ***\_\_float\_\_()***, *falls back to*
 
 Si no se le da argumento, retorna 0.0.
 
-format(value \[,format\_spec\])
+format(value \[,format\_spec\])
 
 Retorna una representación en *string* del valor indicado, formateado
 según la *format string* \'format\_spec\'. Normalmente debería seguir la
@@ -277,12 +277,12 @@ Si en la búsqueda del método se llega hasta ***object*** y el *string*
 de formato no es un *string* vacío, se levanta excepción
 ***TypeError***.
 
-class frozenset(\[it\])
+class frozenset(\[it\])
 
 Construye y devuelve un *frozenset*. Si se le pasa un iterable, lo hará
 con sus elementos. Si no, será un conjunto vacío. Inmutable.
 
-getattr(ob, name \[,default\])
+getattr(ob, name \[,default\])
 
 Retorna el atributo con nombre \'name\' (*string*) del objeto \'ob\'.
 ***getattr(x,\'atri\')*** equivale a ***x.atri***. Si no existe tal
@@ -330,7 +330,7 @@ función lee un valor de la entrada estándar, y lo retorna como *string*,
 sin el *newline* final. Si se lee *EOF* (cuando la entrada proviene de
 un archivo, por ejemplo), se levanta ***EOFException***.
 
-class int(\[x \[,base=10\]\])
+class int(\[x \[,base=10\]\])
 
 Construye y retorna un entero (***int***) a partir del objeto \'x\', que
 normalmente será un número o *string*. Si no se especifica, retornará 0.
@@ -359,7 +359,7 @@ base.
 El número del *string* puede contener guiones bajos para agrupar
 dígitos.
 
-isinstance(ob, class)
+isinstance(ob, class)
 
 Retorna ***True*** si el objeto \'ob\' es una instancia de \'class\', o
 de una subclase de \'class\'. Si \'class\' es una tupla de tipos (puede
@@ -370,7 +370,7 @@ En caso contrario, retorna ***False***.
 
 Si \'class\' no es un tipo o tupla de tipos, se levanta ***TypeError***.
 
-issubclass(class1, class2)
+issubclass(class1, class2)
 
 Retorna ***True*** si la clase \'class1\' es una subclase de \'class2\'.
 Una clase se considera subclase de sí misma. Si \'class2\' es una tupla
@@ -383,7 +383,7 @@ En caso contrario, retorna ***False***.
 Si \'class1\' o \'class2\' no son tipos (o tupla de tipos en caso de
 \'class2\'), se levanta ***TypeError***.
 
-iter(ob \[,sentinel\])
+iter(ob \[,sentinel\])
 
 Si no especificamos \'sentinel\', la función retorna un iterador a
 partir de \'ob\', el cual debe definir ***\_\_iter\_\_()***, o en su
@@ -400,7 +400,7 @@ len(ob)
 
 Retorna el número de elementos del objeto.
 
-class list(\[it\])
+class list(\[it\])
 
 Construye y retorna una lista (mutable), a partir de un iterable. En
 caso de no dar argumentos, crea una lista vacía.
@@ -409,7 +409,7 @@ locals()
 
 Retorna el diccionario de nombres local.
 
-map(fun, it1 \[,it2,\...\])
+map(fun, it1 \[,it2,\...\])
 
 Retorna un iterador que aplica la función \'fun\' a cada elemento del
 iterable \'it\', y *yields* cada resultado (valor de retorno de
@@ -424,8 +424,8 @@ por entero.
 Para 3 argumentos a \'fun\' se necesitan 3 iterables, y así
 sucesivamente.
 
-max(it, \* \[,key\] \[,default\])\
-max(arg1, arg2 \[,arg3,\...\], \* \[,key\])
+max(it, \* \[,key\] \[,default\])\
+max(arg1, arg2 \[,arg3,\...\], \* \[,key\])
 
 Retorna el valor máximo entre una serie de números.
 
@@ -442,22 +442,22 @@ que le pasaremos una función de un solo argumento, que servirá como
 función de ordenación de los valores. Si \'key\' es ***None***, se
 evaluarán los objetos por su valor numérico simplemente.
 
-class memoryview(ob)
+class memoryview(ob)
 
 Crea un objeto memory view a partir del objeto pasado.
 
-min(it, \* \[,key\] \[,default\])\
-min(arg1, arg2 \[,arg3,\...\], \* \[,key\])
+min(it, \* \[,key\] \[,default\])\
+min(arg1, arg2 \[,arg3,\...\], \* \[,key\])
 
 Igual que ***max()***, pero para el menor de los valores.
 
-next(it \[,default\])
+next(it \[,default\])
 
 Retorna el siguiente valor del iterador \'it\'. Si se ha agotado este,
 se levantará ***StopIteration***, a no ser que indiquemos \'default\',
 en cuyo caso, simplemente retornará ese valor.
 
-class object()
+class object()
 
 Construye y retorna un objeto de tipo object, que es la clase base de
 todos los objetos de *Python*. No acepta argumentos. Estos objetos no
@@ -469,8 +469,8 @@ Retorna un *string* con una representación octal del número \'n\',
 precedida por \'0o\'. El argumento debe ser entero, de lo contario debe
 implementar ***\_\_index\_\_()***.
 
-open(file, mode='r', buffering=-1, encoding=None,\
-     errors=None, newline=None, closefd=True, opener=None)
+open(file, mode='r', buffering=-1, encoding=None,\
+     errors=None, newline=None, closefd=True, opener=None)
 
 Abre el archivo y devuelve un objeto archivo. Si no puede abrirlo, se
 levanta ***OSError***.
@@ -550,7 +550,7 @@ ord(c)
 Inversa de ***chr()***. Dado un carácter, devuelve el *code point
 Unicode*.
 
-pow(base, exp \[, mod\])
+pow(base, exp \[, mod\])
 
 Retorna \'base\' elevado a \'exp\'. Si también indicamos \'mod\' le
 aplica además el módulo indicado (más eficiente que
@@ -562,7 +562,7 @@ a no ser que \'exp\' sea negativo, en cuyo caso será de punto flotante.
 Si \'base\' y \'exp\' son enteros, \'mod\' también debe serlo (y
 distinto de 0).
 
-print(\*objects,sep=' ',end='\\n',file=sys.stdout,flush=False)
+print(\*objects,sep=' ',end='\\n',file=sys.stdout,flush=False)
 
 Muestra en el *stream* de texto definido en \'file\' (por defecto la
 salida estándar) los objetos indicados, separados por lo que indica
@@ -579,7 +579,7 @@ archivo en modo binario.
 Si el *stream* es *buffered*, se realiza un *flush* si \'flush\' es
 ***True***.
 
-class property(fget=None,fset=None,fdel=None,doc=None)
+class property(fget=None,fset=None,fdel=None,doc=None)
 
 Crea un objeto propiedad. Una propiedad representa un atributo, y puede
 contener todas las funciones necesarias para *get*, *set* y *delete*,
@@ -587,44 +587,44 @@ así como su *docstring*. Al inicializar la propiedad se le dan estos
 elementos como argumentos, respectivamente en \'fget\', \'fset\',
 \'fdel\' y \'doc\'.
 
-class C:
+class C:
 
-    def \_\_init\_\_(self):
+    def \_\_init\_\_(self):
 
-        self.\_x = None
+        self.\_x = None
 
-    def getx(self):
+    def getx(self):
 
-        return self.\_x
+        return self.\_x
 
-    def setx(self, value):
+    def setx(self, value):
 
-        self.\_x = value
+        self.\_x = value
 
-    def delx(self):
+    def delx(self):
 
-        del self.\_x
+        del self.\_x
 
-    x = property(getx, setx, delx, \"I\'m the \'x\' property.\")
+    x = property(getx, setx, delx, \"I\'m the \'x\' property.\")
 
 En este caso, controlamos cómo vamos a acceder y manipular el atributo
 \'x\'. Si no definimos el docstring del atributo propiedad, utilizará el
 docstring del getter (si lo hay). De esta forma es muy sencillo hacer
 atributos de solo lectura usando un decorador:
 
-class Parrot:
+class Parrot:
 
-    def \_\_init\_\_(self):
+    def \_\_init\_\_(self):
 
-        self.\_voltage = 100000
+        self.\_voltage = 100000
 
-    \@property
+    \@property
 
-    def voltage(self):
+    def voltage(self):
 
-        \"\"\"Get the current voltage.\"\"\"
+        \"\"\"Get the current voltage.\"\"\"
 
-        return self.\_voltage
+        return self.\_voltage
 
 En este caso, se aplica ***voltage = property(voltage)***, es decir,
 \'voltage\' deja de ser un método *callable*, y pasa a ser una
@@ -635,31 +635,31 @@ Adicionalmente, una propiedad posee unos métodos ***getter()***,
 para añadir los métodos ***fget()***, ***fset()*** y ***fdel()*** a la
 propiedad, respectivamente:
 
-class C:
+class C:
 
-    def \_\_init\_\_(self):
+    def \_\_init\_\_(self):
 
-        self.\_x = None
+        self.\_x = None
 
-    \@property
+    \@property
 
-    def x(self):
+    def x(self):
 
-        \"\"\"I\'m the \'x\' property.\"\"\"
+        \"\"\"I\'m the \'x\' property.\"\"\"
 
-        return self.\_x
+        return self.\_x
 
-    \@x.setter
+    \@x.setter
 
-    def x(self, value):
+    def x(self, value):
 
-        self.\_x = value
+        self.\_x = value
 
-    \@x.deleter
+    \@x.deleter
 
-    def x(self):
+    def x(self):
 
-        del self.\_x
+        del self.\_x
 
 En este caso, tras crearse la propiedad de solo lectura (\'x\'), se
 realiza la llamada ***x = x.setter(x)***, es decir, al miembro \'x\' se
@@ -671,8 +671,8 @@ lectura. Luego añadimos ***fdel()*** a la propiedad, llamando a
 ***x.deleter()***. Si lo hacemos así, se les debe dar a las funciones el
 mismo nombre que la propiedad.
 
-class range(stop)\
-class range(start,stop\[,step\])
+class range(stop)\
+class range(start,stop\[,step\])
 
 Construye y retorna un objeto *range* (secuencia inmutable).
 
@@ -704,25 +704,25 @@ que el de \'n\'.
 
 En caso de duda, se redondea al número par más cercano:
 
-\>\>\> round(0.5) == round (-0.5) == 0
+\>\>\> round(0.5) == round (-0.5) == 0
 
 True
 
-\>\>\> round(1.5) == round (2.5) == 2
+\>\>\> round(1.5) == round (2.5) == 2
 
 True
 
-\>\>\> round(0.50001)
+\>\>\> round(0.50001)
 
 1
 
 En los demás casos, el 5 se redondea hacia arriba:
 
-\>\>\> round(0.65, 1)
+\>\>\> round(0.65, 1)
 
 0.7
 
-\>\>\> round(-0.65, 1)
+\>\>\> round(-0.65, 1)
 
 -0.7
 
@@ -732,14 +732,14 @@ En general, el valor retornado es el que define el método
 Algunos números en punto flotante pueden producir resultados extraños.
 Por ejemplo:
 
-\>\>\> round(2.675, 2)
+\>\>\> round(2.675, 2)
 
 2.67
 
 Esto se debe a que la mayoría de fracciones decimales no pueden
 representarse *exactamente* como *float*, por sus limitaciones.
 
-class set(\[it\])
+class set(\[it\])
 
 Construye y retorna un *set*. Si se le da un iterable, lo hará con los
 elementos de este.
@@ -751,8 +751,8 @@ objeto \'ob\' cuyo nombre está especificado por el *string* \'name\' (si
 el objeto lo permite). ***setattr(x,\'atrib\',val)*** equivale a
 ***x.atrib=val***.
 
-class slice(stop)\
-class slice(start,stop\[,step\])
+class slice(stop)\
+class slice(start,stop\[,step\])
 
 Crea y retorna un objeto *slice*, que especifica un conjunto de índices.
 Su sintaxis es como la de ***range()***, pero un objeto *slice* no es
@@ -775,13 +775,13 @@ staticmethod(met)\
 Análogo a ***classmethod()***, aunque en esta ocasión se crea un método
 estático. También acepta sintaxis de *decorator*:
 
-class MiClase:
+class MiClase:
 
-    \@staticmethod
+    \@staticmethod
 
-    def metstat()
+    def metstat()
 
-        \# código del método
+        \# código del método
 
 En este caso, *Python* no le pasa ningún argumento, solamente los que le
 definamos nosotros. Esta función no tiene absolutamente nada que ver con
@@ -792,8 +792,8 @@ de una instancia (***x.metstat()***) o de la clase
 (***MiClase.metstat()***), sin que haya ninguna diferencia hacerlo de
 una forma o de otra.
 
-class str(object=\'\')\
-class str(object=b\'\',encoding=\'utf-8\',errors=\'strict\')
+class str(object=\'\')\
+class str(object=b\'\',encoding=\'utf-8\',errors=\'strict\')
 
 Construye y retorna un *string*.
 
@@ -867,14 +867,14 @@ lado. Este tipo de llamada puede ser útil para invocar un *static
 method*, pudiendo elegir la versión que queramos del método, dentro de
 la jerarquía.
 
-class tuple(\[it\])
+class tuple(\[it\])
 
 Construye y retorna una tupla. Si no se le especifica parámetro, resulta
 una tupla vacía. Si se especifica un iterador, se toman los datos del
 mismo para construir la tupla.
 
-class type(ob)\
-class type(name,bases,dict)
+class type(ob)\
+class type(name,bases,dict)
 
 Pasándole un objeto, retorna el tipo del mismo, que es en sí un objeto
 tipo, y suele ser el devuelto por ***ob.\_\_class\_\_***.
@@ -891,13 +891,13 @@ ser una tupla, con las clases base de la clase (***\_\_bases\_\_***), y
 
 Este código:
 
-\>\>\> class X:
+\>\>\> class X:
 
-\...     a = 1
+\...     a = 1
 
 Equivale a:
 
-\>\>\> X = type(\'X\', (object,), dict(a=1))
+\>\>\> X = type(\'X\', (object,), dict(a=1))
 
 vars(\[ob\])
 
@@ -981,11 +981,11 @@ StopAsyncIteration
 
 ArithmeticError
 
-    FloatingPointError
+    FloatingPointError
 
-    OverflowError
+    OverflowError
 
-    ZeroDivisionError
+    ZeroDivisionError
 
 AssertionError
 
@@ -997,65 +997,65 @@ EOFError
 
 ImportError
 
-    ModuleNotFoundError
+    ModuleNotFoundError
 
 LookupError
 
-    IndexError
+    IndexError
 
-    KeyError
+    KeyError
 
 MemoryError
 
 NameError
 
-    UnboundLocalError
+    UnboundLocalError
 
 OSError
 
-    BlockingIOError
+    BlockingIOError
 
-    ChildProcessError
+    ChildProcessError
 
-    ConnectionError
+    ConnectionError
 
-        BrokenPipeError
+        BrokenPipeError
 
-        ConnectionAbortedError
+        ConnectionAbortedError
 
-        ConnectionRefusedError
+        ConnectionRefusedError
 
-        ConnectionResetError
+        ConnectionResetError
 
-    FileExistsError
+    FileExistsError
 
-    FileNotFoundError
+    FileNotFoundError
 
-    InterruptedError
+    InterruptedError
 
-    IsADirectoryError
+    IsADirectoryError
 
-    NotADirectoryError
+    NotADirectoryError
 
-    PermissionError
+    PermissionError
 
-    ProcessLookupError
+    ProcessLookupError
 
-    TimeoutError
+    TimeoutError
 
 ReferenceError
 
 RuntimeError
 
-    NotImplementedError
+    NotImplementedError
 
-    RecursionError
+    RecursionError
 
 SyntaxError
 
-    IndentationError
+    IndentationError
 
-        TabError
+        TabError
 
 SystemError
 
@@ -1063,32 +1063,32 @@ TypeError
 
 ValueError
 
-    UnicodeError
+    UnicodeError
 
-        UnicodeDecodeError
+        UnicodeDecodeError
 
-        UnicodeEncodeError
+        UnicodeEncodeError
 
-        UnicodeTranslateError
+        UnicodeTranslateError
 
 Warning
 
-    DeprecationWarning
+    DeprecationWarning
 
-    PendingDeprecationWarning
+    PendingDeprecationWarning
 
-    RuntimeWarning
+    RuntimeWarning
 
-    SyntaxWarning
+    SyntaxWarning
 
-    UserWarning
+    UserWarning
 
-    FutureWarning
+    FutureWarning
 
-    ImportWarning
+    ImportWarning
 
-    UnicodeWarning
+    UnicodeWarning
 
-    BytesWarning
+    BytesWarning
 
-    ResourceWarning
+    ResourceWarning
