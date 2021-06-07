@@ -991,7 +991,7 @@ Al ejecutar un módulo como *script*, no compila en el cache. Se puede importar 
 
 ### 6.3 The dir() Function
 
-Esta función *built-in* muestra los nombres definidos (funciones, variables, módulos,...) en un módulo concreto. Sin parámetros, muestra los nombres de la tabla del módulo actual. Con ***dir(\<módulo>)*** vemos los nombres definidos en el módulo específico (cuyo nombre debe estar en la tabla actual).
+Esta función *built-in* muestra los nombres definidos (funciones, variables, módulos,...) en un módulo concreto. Sin parámetros, muestra los nombres de la tabla del módulo actual. Con `dir(<módulo>)` vemos los nombres definidos en el módulo específico (cuyo nombre debe estar en la tabla actual).
 
 No muestra los nombres *built-in*. Para ello tendríamos que hacer:
 
@@ -1035,7 +1035,7 @@ sound/                 (paquete nivel superior)
         karaoke.py
 ```
 
-En este ejemplo, el paquete se llama 'sound' (***import sound***), y contiene dos módulos (***install.py***, ***uninstall.py***) y tres subpaquetes (***formats***, ***effects*** y ***filters***), los cuales contienen varios módulos cada uno.
+En este ejemplo, el paquete se llama 'sound' (`import sound`), y contiene dos módulos (***install.py***, ***uninstall.py***) y tres subpaquetes (***formats***, ***effects*** y ***filters***), los cuales contienen varios módulos cada uno.
 
 Ejemplos:
 
@@ -1070,7 +1070,7 @@ from soud.effects.echo import foo
 Y entonces podemos llamar así: `foo()`.
 
 Al hacer: `from <package> import <item>`, ***item*** puede ser un *package*, un módulo, o cualquier nombre definido en el *package* (como una función, una variable o una clase). *Python* intenta primero averiguar si es un nombre definido en el código del *package* (en ***\_\_init\_\_.py***); si no lo encuentra, asumirá que es un *subpackage* (o submódulo); si
-tampoco, dará error. En cambio, al hacer ***import item.subitem.subsubitem***, todos los nombres deben ser *packages*, excepto el último que puede ser un *package* o un módulo.
+tampoco, dará error. En cambio, al hacer `import item.subitem.subsubitem`, todos los nombres deben ser *packages*, excepto el último que puede ser un *package* o un módulo.
 
 #### Notas personales
 
@@ -1087,21 +1087,21 @@ A la hora de importar elementos de un *package*, debemos hacerlo siguiendo la je
 - ***sound.effects.echo*** (módulo)
 - ***sound.effects.echo.foo*** (función en módulo)
 
-Podemos importar un módulo o paquete sin utilizar la sintaxis de jerarquía de nombres, o tomando cualquier otra carpeta como paquete raíz, por ejemplo ***import echo***, o ***import effects***, siempre y cuando el directorio del módulo o paquete en cuestión esté referenciado en las rutas de búsqueda estándar (***sys.path***).
+Podemos importar un módulo o paquete sin utilizar la sintaxis de jerarquía de nombres, o tomando cualquier otra carpeta como paquete raíz, por ejemplo `import echo`, o `import effects`, siempre y cuando el directorio del módulo o paquete en cuestión esté referenciado en las rutas de búsqueda estándar (***sys.path***).
 
 ##### Importar con *import*
 
-Importaremos con ***import \<nombre>***, donde ***nombre*** es una secuencia jerárquica de nombres separados por punto. Dichos nombres solo pueden ser nombres de paquetes (en orden jerárquico), a excepción del último que puede ser el nombre de un paquete o de un módulo.
+Importaremos con `import <nombre>`, donde ***nombre*** es una secuencia jerárquica de nombres separados por punto. Dichos nombres solo pueden ser nombres de paquetes (en orden jerárquico), a excepción del último que puede ser el nombre de un paquete o de un módulo.
 
 Al importar, se van ejecutando todos los ***\_\_init\_\_.py*** en el orden que los va encontrando, empezando por el del paquete raíz. Si el último nombre es de un módulo, lo ejecuta, después de los ***\_\_init\_\_.py***.
 
 El nombre que se añade a la tabla de nombres es únicamente el del *paquete raíz*. Luego, en el código podremos acceder, a través de ese nombre, a los demás paquetes de la ruta (y al módulo final, si lo hay), así como a todos los elementos (funciones, clases, variables, etc.) definidos en todos ellos.
 
-Por lo tanto, cualquier referencia a un elemento importado mediante una sentencia ***import***, deberá incluir la ruta de nombres completa desde el paquete raíz.
+Por lo tanto, cualquier referencia a un elemento importado mediante una sentencia `import`, deberá incluir la ruta de nombres completa desde el paquete raíz.
 
 ##### Importar con *from-import*
 
-Otro modo de importar es con ***from \<nombre> import \<elemento>***. Al igual que en el caso anterior, 'nombre' es la ruta de nombres separados por punto. Todos ellos deben ser nombres de paquetes excepto el último, que puede ser nombre de paquete o de módulo. Si el último es
+Otro modo de importar es con `from <nombre> import <elemento>`. Al igual que en el caso anterior, 'nombre' es la ruta de nombres separados por punto. Todos ellos deben ser nombres de paquetes excepto el último, que puede ser nombre de paquete o de módulo. Si el último es
 el nombre de un paquete, 'elemento' puede ser el nombre de un subpaquete, módulo, o elemento (función, clase, variable, etc.). Si el último es un nombre de módulo, 'elemento' será forzosamente un nombre de elemento definido en el módulo en cuestión.
 
 Igual que en el caso anterior, también se van ejecutando los ***\_\_init\_\_.py*** (y el posible módulo final) en orden, desde el raíz, hasta el último de los nombres de 'nombre'. La única diferencia es que en lugar de añadirse a la tabla de nombres el nombre del paquete
@@ -1110,7 +1110,7 @@ raíz, se añade directamente el elemento indicado en 'elemento', ya sea este un
 Si "elemento", que es el nombre que será añadido a la tabla de nombres, es un paquete o módulo, a través de dicho nombre podremos acceder a *todos* los elementos definidos en él. En cambio, si es un elemento (función, clase, etc.) solo podremos acceder a este (y sin
 prefijo).
 
-Haciendo la importación con ***from-import***, no podremos acceder a otros elementos de la jerarquía. Si el elemento importado fuese un subpaquete, no habría ningún tipo de acceso ni al paquete padre, ni a posibles subpaquetes, ni incluso módulos que estuvieran en el subpaquete. Los únicos elementos a los que se podría acceder serían los elementos (funciones, clases, etc.) definidos en el subpaquete, prefijándoles el nombre del mismo. Lo mismo sucedería si se tratara de un módulo.
+Haciendo la importación con `from ... import`, no podremos acceder a otros elementos de la jerarquía. Si el elemento importado fuese un subpaquete, no habría ningún tipo de acceso ni al paquete padre, ni a posibles subpaquetes, ni incluso módulos que estuvieran en el subpaquete. Los únicos elementos a los que se podría acceder serían los elementos (funciones, clases, etc.) definidos en el subpaquete, prefijándoles el nombre del mismo. Lo mismo sucedería si se tratara de un módulo.
 
 Si quisiéramos que al importarse un paquete estuviesen accesibles otros elementos, como submódulos del paquete, o incluso otros subpaquetes, se deberían incluir esas importaciones en el código del ***\_\_init\_\_.py*** del paquete.
 
@@ -1120,21 +1120,21 @@ Por otro lado, en cuanto a la ejecución de los ***\_\_init\_\_.py*** y módulos
 
 #### 6.4.1 Importing * From a Package
 
-Si hacemos ***from \<pack> import \**** de un paquete, no se importan submódulos ni *subpackages*, sino únicamente los elementos que estén definidos en el código del paquete (en su ***\_\_init\_\_.py***), aunque también se pueden importar otras cosas explícitamente desde allí.
+Si hacemos `from <pack> import *` de un paquete, no se importan submódulos ni *subpackages*, sino únicamente los elementos que estén definidos en el código del paquete (en su ***\_\_init\_\_.py***), aunque también se pueden importar otras cosas explícitamente desde allí.
 
-Sin embargo, podemos definir fácilmente el contenido del *package* mediante la lista de *strings* ***\_\_all\_\_***. Si está definida en ***\_\_init\_\_.py***, se importará lo que la lista especifique, en el orden especificado, en el caso concreto de que hagamos un ***from \<pack> import \****:
+Sin embargo, podemos definir fácilmente el contenido del *package* mediante la lista de *strings* ***\_\_all\_\_***. Si está definida en ***\_\_init\_\_.py***, se importará lo que la lista especifique, en el orden especificado, en el caso concreto de que hagamos un `from <pack> import *`:
 
 ```python
 __all__ = ['install', 'uninstall', 'formats', 'foo']
 ```
 
-Podemos incluir nombres de submódulos, subpaquetes y elementos definidos en el mismo paquete (en ***\_\_init\_\_.py***). Cuando ***\_\_all\_\_*** no está incluido, pues, solo se importarán los elementos definidos en ***\_\_init\_\_.py***; sin embargo, si ***\_\_all\_\_*** está definido, dichos elementos no se cargan si no están explícitamente incluidos, uno a uno, en ***\_\_all\_\_*** (siempre hablando en relación a ***from \<pack> import \****).
+Podemos incluir nombres de submódulos, subpaquetes y elementos definidos en el mismo paquete (en ***\_\_init\_\_.py***). Cuando ***\_\_all\_\_*** no está incluido, pues, solo se importarán los elementos definidos en ***\_\_init\_\_.py***; sin embargo, si ***\_\_all\_\_*** está definido, dichos elementos no se cargan si no están explícitamente incluidos, uno a uno, en ***\_\_all\_\_*** (siempre hablando en relación a `from <pack> import *`).
 
 Solo se pueden incluir en ***\_\_all\_\_*** cosas que pertenezcan directamente al paquete (sus submódulos, subpaquetes y elementos), no cosas de niveles inferiores (ni superiores, claro), por lo que todos los *strings* especificados son nombres simples, sin prefijos.
 
 #### 6.4.2 Intra-package References
 
-Podemos hacer referencia a otros paquetes o módulos de la jerarquía del paquete actual en la sentencia ***from-import***. Por ejemplo, desde el paquete ***effects***, podríamos escribir:
+Podemos hacer referencia a otros paquetes o módulos de la jerarquía del paquete actual en la sentencia `from ... import`. Por ejemplo, desde el paquete ***effects***, podríamos escribir:
 
 ```python
 from . import echo    # . se refiere al mismo 'effects'
