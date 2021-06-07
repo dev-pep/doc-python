@@ -4,11 +4,11 @@ Estos son mis apuntes de *Python* 3.9.
 
 ## Tabla de contenido
 
-1. [Tutorial](capitulos/01-tutorial.md)
-2. [Referencia](capitulos/02-referencia.md)
-3. [Biblioteca - Builtins](capitulos/03-lib-builtins.md)
-4. [Biblioteca - Tipos builtin](capitulos/04-lib-tipos-builtin.md)
-5. [Biblioteca - Formato](capitulos/05-lib-formato.md)
+1. [Tutorial](capitulos/tutorial.md)
+2. [Referencia](capitulos/referencia.md)
+3. [Biblioteca - Builtins](capitulos/libstd-01-builtins.md)
+4. [Biblioteca - Tipos builtin](capitulos/libstd-02-tipos-builtin.md)
+5. [Biblioteca - Formato](capitulos/libstd-03-formato.md)
 
 ## Bibliografía
 
