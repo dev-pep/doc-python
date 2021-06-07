@@ -695,7 +695,7 @@ La expresión puede ser incluso una *list comprehension* a su vez. Un modo de tr
 
 Como método `pop()`, pero no devuelve valor (`del a[N]`), y además puede eliminar un *slice* (`del a[2:4]`), o la lista entera (`del a[:]`), o eliminar la variable (`del a`).
 
-## 5.3 Tuples and Sequences
+### 5.3 Tuples and Sequences
 
 A parte de los *strings* y listas, hay otros tipos de *secuencias*. Uno de ellos es la *tupla*.
 
