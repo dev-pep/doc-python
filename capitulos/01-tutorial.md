@@ -40,7 +40,7 @@ El símbolo `/` es el operador división de punto flotante (*float*); la divisi�
 
 Las expresiones con enteros y *floats*, convierten los enteros a *float* antes de evaluar.
 
-En modo interactivo, la variable guión bajo (***_***) se refiere al resultado anterior:
+En modo interactivo, la variable guión bajo (***\_***) se refiere al resultado anterior:
 
 ```python
 >>> 11 * 3.5
@@ -63,7 +63,7 @@ Un *raw string* toma los caracteres tal cual, no entiende de *escaped characters
 
 ***r'Hola,\\nen'*** (o ***r"Hola,\\nen"***) incluye el carácter '***\\***' entre la coma y la '***n***'.
 
-Para *multiline strings* podemos usar *triple-quoted strings*: ***"""..."""*** o ***'''...'''*** y todos los *newlines* que tecleemos quedarán también definidos en el *string*.
+Para *multiline strings* podemos usar *triple-quoted strings*: ***\"""..."""*** o ***'''...'''*** y todos los *newlines* que tecleemos quedarán también definidos en el *string*.
 
 De todas formas, si el último carácter de una línea es '***\\***', la línea se concatena con la siguiente, aunque estemos dentro de un *triple-quoted string*. Es la forma de definir una línea lógica, compuesta por dos o más líneas físicas.
 
@@ -240,6 +240,7 @@ Si queremos que cada variable sea una referencia a un objeto distinto, debemos h
 #### *Shallow copy* / *deep copy*
 
 Siguiendo con el ejemplo anterior, y una vez definido 'a', podemos hacer una *shallow copy* en 'b', de varias formas distintas:
+
 - `b=a[:]` - si el objeto *sliced* está a la izquierda del operador asignación, no se crea una *shallow copy*, sino que sirve solamente para manipular los elementos de la lista a los que se refiere, como hemos visto antes.
 - `b=list(a)`
 - `b=a.copy()`
@@ -585,7 +586,7 @@ Convenio sobre las *docstrings*: *triple-quoted*; primera línea, un breve sumar
 
 Información (metadatos) completamente opcional sobre cada parámetro y sobre el valor de retorno.
 
-Su efecto es básicamente el de almacenar esos metadatos en el atributo ***\_\_annotations__*** de la función, como diccionario.
+Su efecto es básicamente el de almacenar esos metadatos en el atributo ***\_\_annotations\_\_*** de la función, como diccionario.
 
 Podemos darle la información que queramos, el compilador no lo usa para nada, lo pueden usar aplicaciones de terceros.
 
@@ -609,13 +610,14 @@ En caso de incluir esta información, no es necesario definirla para cada parám
 ### 4.8 Intermezzo: Coding Style
 
 El estilo de *Python* definido en el *PEP 8* se toma como oficial:
+
 - Identación de 4 espacios sin tabuladores.
 - Líneas de máximo 79 caracteres.
 - Uso de líneas en blanco para separar funciones y grandes bloques de código dentro de ellas.
 - Cuando sea posible incluir comentarios en su propias líneas.
 - Uso de *docstrings*.
 - Usar espacios alrededor de operadores y después de coma, pero no directamente entre los paréntesis: `a = f(1, 2) + g(3, 4)`.
-- Nombrar clases y funciones consistentemente: la convención es ***CamelCase*** para clases y ***lower\_case\_with\_underscores*** para funciones y métodos. Usar `self` como nombre del primer argumento de un método.
+- Nombrar clases y funciones consistentemente: la convención es ***CamelCase*** para clases y ***lower_case_with_underscores*** para funciones y métodos. Usar `self` como nombre del primer argumento de un método.
 - Usar codificaciones estándar si vas a compartir código. *UTF-8* va bien, o incluso *ASCII* puro y duro.
 - No usar caracteres *non-ASCII* si alguien de otro idioma que el tuyo va a tener que ver el código.
 
@@ -624,6 +626,7 @@ El estilo de *Python* definido en el *PEP 8* se toma como oficial:
 ### 5.1 More on Lists
 
 Las listas tienen también los siguientes métodos (sea 'a' una lista):
+
 - `a.append(x)` - añade un elemento al final de la lista; equivale a `a[len(a):]=[x]`.
 - `a.extend(L)` - añade elementos de cualquier iterable ***L***; equivale a `a[len(a):]=L`.
 - `a.insert(i,x)` - inserta antes del elemento con índice 'i'; si 'i' es igual a `len(a)`, equivale a `append()`. Si es 0, inserta por delante.
@@ -912,8 +915,8 @@ Un módulo (del tipo ***nombre.py***, es decir, se trata de un *script*) se pued
 
 Al importar un módulo no inserta los nombres de las funciones allí definidas en la tabla de nombres actual, sino solo el nombre del módulo. Se puede ver como un objeto módulo en la tabla de nombres actual. A través de ese objeto podemos acceder a las funciones así: `modulo.foo()`. Aunque podemos insertar una función en la tabla actual así: `fun = modulo.foo`.
 
-Uno de los atributos del objeto módulo es la variable ***\_\_name__***, que simplemente guarda el nombre del módulo. ***\_\_name__*** a secas es el nombre del módulo actual, y
-***modulo.\_\_name__*** es el nombre del módulo ***modulo*** (que es precisamente ***'modulo'***).
+Uno de los atributos del objeto módulo es la variable ***\_\_name\_\_***, que simplemente guarda el nombre del módulo. ***\_\_name\_\_*** a secas es el nombre del módulo actual, y
+***modulo.\_\_name\_\_*** es el nombre del módulo ***modulo*** (que es precisamente ***'modulo'***).
 
 ### 6.1 More on Modules
 
@@ -964,18 +967,19 @@ Desde el *shell*:
 python m1.py <argumentos>
 ```
 
-Cuando un módulo se está ejecutando en el nivel superior, el valor de ***\_\_name__*** es ***'__main\_\_'***. Este es el modo de saber si nuestro módulo está funcionando como un *script* invocado directamente (nivel superior), o está siendo importado para que otro módulo utilice sus funciones.
+Cuando un módulo se está ejecutando en el nivel superior, el valor de ***\_\_name\_\_*** es ***'\_\_main\_\_'***. Este es el modo de saber si nuestro módulo está funcionando como un *script* invocado directamente (nivel superior), o está siendo importado para que otro módulo utilice sus funciones.
 
 #### 6.1.2 The Module Search Path
 
 Al importar un módulo (o elementos de un módulo), *Python* busca primero el nombre del mismo en los *built-in modules*, si no lo encuentra, en los lugares definidos en la variable ***sys.path*** (modificable), que, por defecto indica los valores siguientes:
+
 - Directorio que contiene el *script*, o directorio desde el que se ha llamado al intérprete interactivo.
 - Variable del sistema ***PYTHONPATH*** (mismo formato que ***PATH***).
 - Otros (dependiendo de la instalación de *Python* concreta).
 
 #### 6.1.3 "Compiled" Python files
 
-Al importar un módulo ***m1***, *Python* lo «compila» (codifica, *platform-independent*) y guarda ese archivo compilado en el directorio ***\_\_pycache__*** (dentro del directorio donde se encuentra el módulo), con nombre ***m1.ver.pyc***, donde 'ver' es la versión de *Python* que lo compiló. Así, pueden coexistir varias implementaciones/versiones de *Python* en el sistema.
+Al importar un módulo ***m1***, *Python* lo «compila» (codifica, *platform-independent*) y guarda ese archivo compilado en el directorio ***\_\_pycache\_\_*** (dentro del directorio donde se encuentra el módulo), con nombre ***m1.ver.pyc***, donde 'ver' es la versión de *Python* que lo compiló. Así, pueden coexistir varias implementaciones/versiones de *Python* en el sistema.
 
 Cada vez que importamos un módulo, si el archivo ***.py*** es más nuevo que el ***.pyc*** (o el ***.pyc*** no existe), lo recompila; si no, lee el archivo compilado, que es más rápido de cargar que el archivo de texto, sin afectar nada en la velocidad de ejecución después de cargarse.
 
@@ -1002,9 +1006,9 @@ Podemos estructurar el *namespace* de los módulos, agrupándolos jerárquicamen
 
 Así, un *package* se organiza en un directorio donde se incluirán todos sus módulos (archivos ***.py***) y/o *subpackages* (subdirectorios con más módulos). El nombre del directorio es el que define el nombre del *package* (o *subpackage*).
 
-La búsqueda del *package* hace igualmente como se indica en ***sys.path***. Para que al importar *Python* trate a esa carpeta como un *package*, esta debe contener un archivo ***\_\_init__.py*** (o una versión compilada del mismo). Si no existe tal archivo, el directorio es una simple carpeta de archivos, nada que ver con los *packages*. Es suficiente la presencia de ***\_\_init.py__*** para que la carpeta sea considerada *package*, aunque el archivo esté en blanco.
+La búsqueda del *package* hace igualmente como se indica en ***sys.path***. Para que al importar *Python* trate a esa carpeta como un *package*, esta debe contener un archivo ***\_\_init\_\_.py*** (o una versión compilada del mismo). Si no existe tal archivo, el directorio es una simple carpeta de archivos, nada que ver con los *packages*. Es suficiente la presencia de ***\_\_init.py\_\_*** para que la carpeta sea considerada *package*, aunque el archivo esté en blanco.
 
-Si incluimos código en ***\_\_init__.py***, al importar el paquete se ejecuta (código de inicialización del paquete).
+Si incluimos código en ***\_\_init\_\_.py***, al importar el paquete se ejecuta (código de inicialización del paquete).
 
 Veamos una posible estructura de directorios definiendo un paquete de utilidades de sonido:
 
@@ -1065,14 +1069,15 @@ from soud.effects.echo import foo
 
 Y entonces podemos llamar así: `foo()`.
 
-Al hacer: `from <package> import <item>`, ***item*** puede ser un *package*, un módulo, o cualquier nombre definido en el *package* (como una función, una variable o una clase). *Python* intenta primero averiguar si es un nombre definido en el código del *package* (en ***\_\_init__.py***); si no lo encuentra, asumirá que es un *subpackage* (o submódulo); si
+Al hacer: `from <package> import <item>`, ***item*** puede ser un *package*, un módulo, o cualquier nombre definido en el *package* (como una función, una variable o una clase). *Python* intenta primero averiguar si es un nombre definido en el código del *package* (en ***\_\_init\_\_.py***); si no lo encuentra, asumirá que es un *subpackage* (o submódulo); si
 tampoco, dará error. En cambio, al hacer ***import item.subitem.subsubitem***, todos los nombres deben ser *packages*, excepto el último que puede ser un *package* o un módulo.
 
-### Notas personales
+#### Notas personales
 
-En los archivos ***\_\_init__.py*** y en los módulos que forman parte de un paquete se puede incluir cualquier código que estimemos oportuno. Allí se puede incluir código de inicialización del paquete o módulo, importar otros elementos, definir funciones, clases, variables, etc.
+En los archivos ***\_\_init\_\_.py*** y en los módulos que forman parte de un paquete se puede incluir cualquier código que estimemos oportuno. Allí se puede incluir código de inicialización del paquete o módulo, importar otros elementos, definir funciones, clases, variables, etc.
 
 A la hora de importar elementos de un *package*, debemos hacerlo siguiendo la jerarquía de nombres, desde el paquete raíz, separándolos por puntos. El directorio donde está el paquete raíz debe estar referenciado en ***sys.path***. En nuestro caso, por ejemplo:
+
 - ***sound*** (paquete raíz)
 - ***sound.foo*** (función en paquete raíz)
 - ***sound.uninstall*** (módulo)
@@ -1084,49 +1089,48 @@ A la hora de importar elementos de un *package*, debemos hacerlo siguiendo la je
 
 Podemos importar un módulo o paquete sin utilizar la sintaxis de jerarquía de nombres, o tomando cualquier otra carpeta como paquete raíz, por ejemplo ***import echo***, o ***import effects***, siempre y cuando el directorio del módulo o paquete en cuestión esté referenciado en las rutas de búsqueda estándar (***sys.path***).
 
-#### Importar con *import*
+##### Importar con *import*
 
-Importaremos con ***import <nombre>***, donde ***nombre*** es una secuencia jerárquica de nombres separados por punto. Dichos nombres solo pueden ser nombres de paquetes (en orden jerárquico), a excepción del último que puede ser el nombre de un paquete o de un módulo.
+Importaremos con ***import \<nombre>***, donde ***nombre*** es una secuencia jerárquica de nombres separados por punto. Dichos nombres solo pueden ser nombres de paquetes (en orden jerárquico), a excepción del último que puede ser el nombre de un paquete o de un módulo.
 
-Al importar, se van ejecutando todos los ***\_\_init__.py*** en el orden que los va encontrando, empezando por el del paquete raíz. Si el último nombre es de un módulo, lo ejecuta, después de los ***\_\_init__.py***.
+Al importar, se van ejecutando todos los ***\_\_init\_\_.py*** en el orden que los va encontrando, empezando por el del paquete raíz. Si el último nombre es de un módulo, lo ejecuta, después de los ***\_\_init\_\_.py***.
 
 El nombre que se añade a la tabla de nombres es únicamente el del *paquete raíz*. Luego, en el código podremos acceder, a través de ese nombre, a los demás paquetes de la ruta (y al módulo final, si lo hay), así como a todos los elementos (funciones, clases, variables, etc.) definidos en todos ellos.
 
 Por lo tanto, cualquier referencia a un elemento importado mediante una sentencia ***import***, deberá incluir la ruta de nombres completa desde el paquete raíz.
 
-#### Importar con *from-import*
+##### Importar con *from-import*
 
-Otro modo de importar es con ***from <nombre> import <elemento>***. Al igual que en el caso anterior, 'nombre' es la ruta de nombres separados por punto. Todos ellos deben ser nombres de paquetes excepto el último, que puede ser nombre de paquete o de módulo. Si el último es
+Otro modo de importar es con ***from \<nombre> import \<elemento>***. Al igual que en el caso anterior, 'nombre' es la ruta de nombres separados por punto. Todos ellos deben ser nombres de paquetes excepto el último, que puede ser nombre de paquete o de módulo. Si el último es
 el nombre de un paquete, 'elemento' puede ser el nombre de un subpaquete, módulo, o elemento (función, clase, variable, etc.). Si el último es un nombre de módulo, 'elemento' será forzosamente un nombre de elemento definido en el módulo en cuestión.
 
-Igual que en el caso anterior, también se van ejecutando los ***\_\_init__.py*** (y el posible módulo final) en orden, desde el raíz, hasta el último de los nombres de 'nombre'. La única diferencia es que en lugar de añadirse a la tabla de nombres el nombre del paquete
-raíz, se añade directamente el elemento indicado en 'elemento', ya sea este un subpaquete (cuyo ***\_\_init__.py*** se ejecuta en último lugar), un módulo (que se ejecuta en último lugar), o un elemento (definido en un paquete o módulo, cuyo código correspondiente se ejecuta en último lugar).
+Igual que en el caso anterior, también se van ejecutando los ***\_\_init\_\_.py*** (y el posible módulo final) en orden, desde el raíz, hasta el último de los nombres de 'nombre'. La única diferencia es que en lugar de añadirse a la tabla de nombres el nombre del paquete
+raíz, se añade directamente el elemento indicado en 'elemento', ya sea este un subpaquete (cuyo ***\_\_init\_\_.py*** se ejecuta en último lugar), un módulo (que se ejecuta en último lugar), o un elemento (definido en un paquete o módulo, cuyo código correspondiente se ejecuta en último lugar).
 
 Si "elemento", que es el nombre que será añadido a la tabla de nombres, es un paquete o módulo, a través de dicho nombre podremos acceder a *todos* los elementos definidos en él. En cambio, si es un elemento (función, clase, etc.) solo podremos acceder a este (y sin
 prefijo).
 
 Haciendo la importación con ***from-import***, no podremos acceder a otros elementos de la jerarquía. Si el elemento importado fuese un subpaquete, no habría ningún tipo de acceso ni al paquete padre, ni a posibles subpaquetes, ni incluso módulos que estuvieran en el subpaquete. Los únicos elementos a los que se podría acceder serían los elementos (funciones, clases, etc.) definidos en el subpaquete, prefijándoles el nombre del mismo. Lo mismo sucedería si se tratara de un módulo.
 
-Si quisiéramos que al importarse un paquete estuviesen accesibles otros elementos, como submódulos del paquete, o incluso otros subpaquetes, se deberían incluir esas importaciones en el código del ***\_\_init__.py*** del paquete.
+Si quisiéramos que al importarse un paquete estuviesen accesibles otros elementos, como submódulos del paquete, o incluso otros subpaquetes, se deberían incluir esas importaciones en el código del ***\_\_init\_\_.py*** del paquete.
 
 En cuanto al elemento a importar, conviene tener en cuenta que este nunca puede ser una jerarquía de nombres, sino un nombre simple.
 
-Por otro lado, en cuanto a la ejecución de los ***\_\_init__.py*** y módulos, se debe tener en cuenta que los que se hayan ejecutado ya no se vuelven a ejecutar.
+Por otro lado, en cuanto a la ejecución de los ***\_\_init\_\_.py*** y módulos, se debe tener en cuenta que los que se hayan ejecutado ya no se vuelven a ejecutar.
 
 #### 6.4.1 Importing * From a Package
 
-Si hacemos ***from <pack> import \**** de un paquete, no se importan submódulos ni *subpackages*, sino únicamente los elementos que estén definidos en el código del paquete (en su ***\_\_init__.py***), aunque también se pueden importar otras cosas explícitamente desde allí.
+Si hacemos ***from \<pack> import \**** de un paquete, no se importan submódulos ni *subpackages*, sino únicamente los elementos que estén definidos en el código del paquete (en su ***\_\_init\_\_.py***), aunque también se pueden importar otras cosas explícitamente desde allí.
 
-Sin embargo, podemos definir fácilmente el contenido del *package* mediante la lista de *strings* ***\_\_all__***. Si está definida en ***\_\_init__.py***, se importará lo que la lista especifique, en el orden especificado, en el caso concreto de que hagamos un ***from
-<pack> import \****:
+Sin embargo, podemos definir fácilmente el contenido del *package* mediante la lista de *strings* ***\_\_all\_\_***. Si está definida en ***\_\_init\_\_.py***, se importará lo que la lista especifique, en el orden especificado, en el caso concreto de que hagamos un ***from \<pack> import \****:
 
 ```python
 __all__ = ['install', 'uninstall', 'formats', 'foo']
 ```
 
-Podemos incluir nombres de submódulos, subpaquetes y elementos definidos en el mismo paquete (en ***\_\_init__.py***). Cuando ***\_\_all__*** no está incluido, pues, solo se importarán los elementos definidos en ***\_\_init__.py***; sin embargo, si ***\_\_all__*** está definido, dichos elementos no se cargan si no están explícitamente incluidos, uno a uno, en ***\_\_all__*** (siempre hablando en relación a ***from <pack> import \****).
+Podemos incluir nombres de submódulos, subpaquetes y elementos definidos en el mismo paquete (en ***\_\_init\_\_.py***). Cuando ***\_\_all\_\_*** no está incluido, pues, solo se importarán los elementos definidos en ***\_\_init\_\_.py***; sin embargo, si ***\_\_all\_\_*** está definido, dichos elementos no se cargan si no están explícitamente incluidos, uno a uno, en ***\_\_all\_\_*** (siempre hablando en relación a ***from \<pack> import \****).
 
-Solo se pueden incluir en ***\_\_all__*** cosas que pertenezcan directamente al paquete (sus submódulos, subpaquetes y elementos), no cosas de niveles inferiores (ni superiores, claro), por lo que todos los *strings* especificados son nombres simples, sin prefijos.
+Solo se pueden incluir en ***\_\_all\_\_*** cosas que pertenezcan directamente al paquete (sus submódulos, subpaquetes y elementos), no cosas de niveles inferiores (ni superiores, claro), por lo que todos los *strings* especificados son nombres simples, sin prefijos.
 
 #### 6.4.2 Intra-package References
 
@@ -1138,17 +1142,17 @@ from .. import formats    # .. es el paquete padre
 from ..filters import equalizer    # subimos y bajamos
 ```
 
-Un punto (***.***) es el paquete actual, dos (***..***) el superior, tres (***...***) el superior a este, etc. Tras los puntos, podemos bajar opcionalmente uno o más niveles, hasta ir a parar a un paquete concreto (o módulo). Por ejemplo, desde cualquier archivo de ***effects*** (ya sea desde uno de los módulos o desde dentro de ***\_\_init__.py***):
+Un punto (***.***) es el paquete actual, dos (***..***) el superior, tres (***...***) el superior a este, etc. Tras los puntos, podemos bajar opcionalmente uno o más niveles, hasta ir a parar a un paquete concreto (o módulo). Por ejemplo, desde cualquier archivo de ***effects*** (ya sea desde uno de los módulos o desde dentro de ***\_\_init\_\_.py***):
 
 ```python
 from ..filters.equalizer import foo    # sube, luego baja 2
 ```
 
-Este mecanismo no funciona desde los módulos que se estén ejecutando en el nivel superior, y su nombre sea ***\_\_main__***.
+Este mecanismo no funciona desde los módulos que se estén ejecutando en el nivel superior, y su nombre sea ***\_\_main\_\_***.
 
 #### 6.4.3 Packages in Multiple Directories
 
-Los packages tienen una variable tipo lista ***\_\_path__*** que especifica el directorio donde se encuentra su ***\_\_init__.py*** antes de ejecutarse. Al cambiarla, se cambia el lugar donde se buscarán los submódulos y subpaquetes del paquete actual.
+Los packages tienen una variable tipo lista ***\_\_path\_\_*** que especifica el directorio donde se encuentra su ***\_\_init\_\_.py*** antes de ejecutarse. Al cambiarla, se cambia el lugar donde se buscarán los submódulos y subpaquetes del paquete actual.
 
 ## 7. INPUT AND OUTPUT
 
@@ -1184,11 +1188,11 @@ Las funciones *built-in* `str()` y `repr()` retornan representaciones en *string
 >>> s = 'x value is ' + repr(x) + ', and y is ' + repr(y) + '.'
 >>> print(s)
 x value is 32.5, and y is 40000.
->>> hello='hello, world\\n'
+>>> hello='hello, world\n'
 >>> print(hello)
 hello, world
 >>> print(repr(hello))
-'hello, world\\n'
+'hello, world\n'
 ```
 
 Muchos tipos de datos tienen la misma representación con
@@ -1280,6 +1284,7 @@ except <error2>:
 ```
 
 Esta es la secuencia de acciones:
+
 - Primero se ejecutan las sentencias de la cláusula `try` (de`try` a `except`).
   - Si no se levanta ninguna excepción en toda la cláusula (incluyendo excepciones no tratadas provenientes de funciones a las que hayamos llamado), se salta las cláusulas `except` y la ejecución sigue tras el bloque `try`.
   - Si se levanta excepción, se salta el resto de la cláusula `try` y se empieza a buscar en las cláusulas `except`, en orden de aparición, hasta encontrar la cláusula `except` pertinente.
@@ -1316,7 +1321,7 @@ La última cláusula `except` puede omitir el tipo de excepción (`except:`), si
 
 Después de las cláusulas `except` puede haber opcionalmente una cláusula `else`. Esta se ejecuta solo si la cláusula `try` se ha ejecutado entera sin leventar ninguna excepción (si hay excepción no se ejecuta). Sería la continuación de las sentencias de la cláusula `try`, pero fuera de la protección de `try...except`. Para esto es útil, para que ese tramo no quede protegido por las cláusulas `except`, que serán más específicas para el tramo inicial de `try`. Pero al mismo tiempo, es un código que no queremos que se ejecute si se produce una excepción en el tramo inicial.
 
-Si escribimos por ejemplo `except <error> as err:` podemos acceder al contenido del error mediante la variable ***err***, una instancia de la excepción, de tipo ***error***. Si la excepción se ha levantado con argumentos, podemos acceder a ellos mediante `err.args`. El objeto (instancia) de la excepción concreta también define ***\_\_str__*** que contiene los argumentos, con lo que se pueden imprimir estos sin pasar por ***args***:
+Si escribimos por ejemplo `except <error> as err:` podemos acceder al contenido del error mediante la variable ***err***, una instancia de la excepción, de tipo ***error***. Si la excepción se ha levantado con argumentos, podemos acceder a ellos mediante `err.args`. El objeto (instancia) de la excepción concreta también define ***\_\_str\_\_*** que contiene los argumentos, con lo que se pueden imprimir estos sin pasar por ***args***:
 
 ```python
 >>> try:
@@ -1354,7 +1359,7 @@ raise    # re-raise la excepción que estamos tratando
 
 ### 8.5 User-defined Exceptions
 
-Podemos definir tipos de excepciones, derivando la clase ***Exception***. Podemos *override* cosas como ***\_\_str__***, o hacer que el inicializador defina otros atributos en lugar de ***args***, p.e. Sus nombres suelen terminar en ***Error***. Para tratar posibles excepciones en nuestro código concreto.
+Podemos definir tipos de excepciones, derivando la clase ***Exception***. Podemos *override* cosas como ***\_\_str\_\_***, o hacer que el inicializador defina otros atributos en lugar de ***args***, p.e. Sus nombres suelen terminar en ***Error***. Para tratar posibles excepciones en nuestro código concreto.
 
 ### 8.6 Defining Clean-up Actions
 
@@ -1390,9 +1395,10 @@ Un *namespace* es un *mapping* de nombres a objetos, mapeo que se produce en la 
 
 Un nombre detrás de un punto es un atributo del objeto «padre»; en ***modname.funcname*** el módulo 'modname' tiene una función ***funcname()***. Se dice que ***funcname*** es un atributo del objeto 'modname'. Los atributos pueden ser de lectura o de lectura/escritura (estos últimos pueden hasta ser borrados con `del`).
 
-El *namespace* de los *built-ins* se crea al iniciarse el intérprete, y permanece hasta que este se cierra. El *namespace* global de cada módulo se crea al cargar el módulo, y persiste hasta que se cierra el intérprete. Esto incluye el módulo principal (***\_\_main__***). El *namespace* de una función se crea en cada llamada a esta, y se elimina tras su ejecución.
+El *namespace* de los *built-ins* se crea al iniciarse el intérprete, y permanece hasta que este se cierra. El *namespace* global de cada módulo se crea al cargar el módulo, y persiste hasta que se cierra el intérprete. Esto incluye el módulo principal (***\_\_main\_\_***). El *namespace* de una función se crea en cada llamada a esta, y se elimina tras su ejecución.
 
 El *scope* es la región textual en la que un *namespace* es directamente accesible, es decir, mediante *unqualified names* (sin prefijar el nombre del *namespace*). *Scopes* existentes (en orden de búsqueda, desde *innermost* a *outermost*):
+
 - *Scope* local de la función o clase, el que se busca primero (nombres locales).
 - *Scope(s)* de la(s) posible(s) *enclosing function(s)*. Se buscan desde más adentro a más afuera. Sus nombres no son locales, pero tampoco globales.
 - Penúltimo *enclosing scope*, con los nombres globales del módulo actual.
@@ -1426,11 +1432,11 @@ class MyClass:
         return 'hello world'
 ```
 
-En este caso, ***MyClass.f*** es un objeto función que ya puede llamarse; también podemos acceder al atributo ***MyClass.i***, que es un atributo de la clase. En este caso, el atributo ***MyClass.\_\_doc__*** devuelve el *docstring* de la clase.
+En este caso, ***MyClass.f*** es un objeto función que ya puede llamarse; también podemos acceder al atributo ***MyClass.i***, que es un atributo de la clase. En este caso, el atributo ***MyClass.\_\_doc\_\_*** devuelve el *docstring* de la clase.
 
 La instanciación usa notación de función: `x = MyClass()`. Esto crea un *objeto instancia* (de la clase 'MyClass') y lo asocia a la variable 'x'.
 
-Si queremos inicializar con argumentos cuando instanciemos una clase, debemos definir el método (constructor) ***\_\_init__()***, que recogerá esos argumentos.
+Si queremos inicializar con argumentos cuando instanciemos una clase, debemos definir el método (constructor) ***\_\_init\_\_()***, que recogerá esos argumentos.
 
 #### 9.3.3 Instance Objects
 
@@ -1482,7 +1488,7 @@ Se pueden ir creando y borrando atributos de datos en instancias y clases sobre 
 
 Se puede también añadir/quitar funciones (métodos) en clases e instancias. Supongamos que ***foo()*** es una función cualquiera, se podrían hacer cosas como `x.fun=foo`, `MiClase.f=foo`, `del MiClase.fun`, etc. Se pueden incluso eliminar de la clase funciones incluidas en la definición de la misma.
 
-*Desde dentro de un método*, se puede acceder a los miembros (variables y métodos) *de la instancia* mediante el primer parámetro, así: ***self.atributo*** (preferentemente le llamaremos ***self***, por convenio, aunque le podríamos dar cualquier nombre). Para acceder a las variables *de la clase*, lo haremos usando el nombre de la clase: ***MiClase.atributo***. Si no queremos escribir explícitamente el nombre de la clase, se podría hacer mediante `type(self).atributo` (también, aunque menos elegante, ***self.\_\_class__.atributo***). Para acceder a variables globales (módulo donde está definido el método), se hace igual que en funciones ordinarias (mediante `global`).
+*Desde dentro de un método*, se puede acceder a los miembros (variables y métodos) *de la instancia* mediante el primer parámetro, así: ***self.atributo*** (preferentemente le llamaremos ***self***, por convenio, aunque le podríamos dar cualquier nombre). Para acceder a las variables *de la clase*, lo haremos usando el nombre de la clase: ***MiClase.atributo***. Si no queremos escribir explícitamente el nombre de la clase, se podría hacer mediante `type(self).atributo` (también, aunque menos elegante, ***self.\_\_class\_\_.atributo***). Para acceder a variables globales (módulo donde está definido el método), se hace igual que en funciones ordinarias (mediante `global`).
 
 A una función, que es también un objeto, se le pueden añadir atributos. Por ejemplo `foo.n=3` le añade una variable ***n*** a la función ***foo()***. Se comportaría como una variable *static* de una función en *C*. Mantendría su valor entre llamadas, lógicamente. Para acceder a esa variable desde dentro de la función, se haría mediante ***foo.n***, ya que ***n*** a secas sería una simple variable local. También podría accederse a ***foo.n*** desde fuera de la función.
 
@@ -1504,7 +1510,7 @@ class C:
 
 En este caso tenemos 3 métodos: ***f***, ***g*** y ***h***.
 
-*Cualquier valor en Python* es un objeto, por lo que tiene una clase (también llamada "tipo"), que está almacenada en el atributo ***objeto.\_\_class__***. Equivale, como hemos visto, a llamar a la función *bult-in* `type(objeto)`.
+*Cualquier valor en Python* es un objeto, por lo que tiene una clase (también llamada "tipo"), que está almacenada en el atributo ***objeto.\_\_class\_\_***. Equivale, como hemos visto, a llamar a la función *bult-in* `type(objeto)`.
 
 ### 9.5 Inheritance
 
@@ -1570,11 +1576,11 @@ Así, cualquier método o atributo de datos con este formato (en este caso ***\_
 
 Si queremos algo así como un *struct* de *C*, podemos crear una clase vacía, con una simple sentencia `pass` (no nos interesan datos compartidos por las instancias), e ir añadiendo (o borrando) a cada instancia los valores (atributos) que queramos, sobre la marcha.
 
-Supongamos un objeto método ***m***: este tiene un atributo ***m.\_\_self__*** que es el objeto al que pertenece el método, y uno ***m.\_\_func__*** que es la función en sí. De hecho, un método no es más que una función asociada (*bound*) a un objeto instanciado.
+Supongamos un objeto método ***m***: este tiene un atributo ***m.\_\_self\_\_*** que es el objeto al que pertenece el método, y uno ***m.\_\_func\_\_*** que es la función en sí. De hecho, un método no es más que una función asociada (*bound*) a un objeto instanciado.
 
 ### 9.8 Iterators
 
-Los objetos contenedores son *iterables*, es decir, se pueden iterar mediante `for` (listas, tuplas, diccionarios, *strings*, files,...). Lo que hace `for` es llamar a `iter()` sobre el objeto contenedor, lo cual devuelve un iterador: un objeto que tiene el método ***\_\_next__()***, que va devolviendo el siguiente elemento, y por último levanta una excepción ***StopIteration*** para que pare el `for`. Se puede llamar al método ***\_\_next__()*** del iterador usando la función builtin `next()`.
+Los objetos contenedores son *iterables*, es decir, se pueden iterar mediante `for` (listas, tuplas, diccionarios, *strings*, files,...). Lo que hace `for` es llamar a `iter()` sobre el objeto contenedor, lo cual devuelve un iterador: un objeto que tiene el método ***\_\_next\_\_()***, que va devolviendo el siguiente elemento, y por último levanta una excepción ***StopIteration*** para que pare el `for`. Se puede llamar al método ***\_\_next\_\_()*** del iterador usando la función builtin `next()`.
 
 ```python
 >>> s = 'abc'
@@ -1594,7 +1600,7 @@ Traceback (most recent call last):
 StopIteration
 ```
 
-Viendo como funcionan los iteradores, es fácil dotar de funcionalidad de iterador a nuestra clase: solo hay que definir un método ***\_\_iter__()***, que devolverá un objeto que posea un método ***\_\_next__()*** (normalmente ***\_\_iter__()*** devuelve ***self*** y listos); y un método ***\_\_next__()*** que vaya devolviendo elementos secuencialmente al ser llamado, y tras el último levante la excepción ***StopIteration***.
+Viendo como funcionan los iteradores, es fácil dotar de funcionalidad de iterador a nuestra clase: solo hay que definir un método ***\_\_iter\_\_()***, que devolverá un objeto que posea un método ***\_\_next\_\_()*** (normalmente ***\_\_iter\_\_()*** devuelve ***self*** y listos); y un método ***\_\_next\_\_()*** que vaya devolviendo elementos secuencialmente al ser llamado, y tras el último levante la excepción ***StopIteration***.
 
 Todos los iteradores son iterables, aunque no todos los iterables son iteradores.
 
@@ -1613,7 +1619,7 @@ for n in generador(2, 2, 2): print(n)
 28
 ```
 
-***generador*** es un objeto función, y ***generador(2, 2, 2)*** es un objeto generador, que tiene todas las características de un iterador. Un generador crea automáticamente los métodos ***\_\_iter__()*** y ***\_\_next__()***, y levanta la excepción ***StopIteration*** cuando hace falta.
+***generador*** es un objeto función, y ***generador(2, 2, 2)*** es un objeto generador, que tiene todas las características de un iterador. Un generador crea automáticamente los métodos ***\_\_iter\_\_()*** y ***\_\_next\_\_()***, y levanta la excepción ***StopIteration*** cuando hace falta.
 
 Lo que hace el generador cuando se itera en él es ejecutarse hasta el primer `yield`, devolviendo ese primer valor; al volver (`next()`) para buscar el segundo valor seguirá la ejecución donde la había dejado la primera vez (guarda el estado de ejecución completo), y acabará devolviendo el segundo valor; y así sucesivamente hasta el final. Tras devolver el último `yield`, al volver a llamarse `next()` ejecutará todo el código tras ese último `yield` hasta el final (fin de código o `return`) y levantará ***StopIteration***.
 
