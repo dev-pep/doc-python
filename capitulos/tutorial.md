@@ -1,4 +1,4 @@
-# Tutorial
+# Tutorial de Python
 
 El presente documento es un resumen de los aspectos más relevantes del tutorial oficial de *Python* 3.9. Los títulos se han mantenido en inglés, que es el idioma del documento que se ha utilizado como base para este resumen.
 
