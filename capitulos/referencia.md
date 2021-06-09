@@ -1,4 +1,4 @@
-# Referencia
+# Referencia de Python
 
 El presente documento es un resumen de los aspectos más relevantes de la referencia oficial de *Python* 3.9. Los títulos se han mantenido en inglés, que es el idioma del documento que se ha utilizado como base para este resumen.
 
@@ -758,52 +758,24 @@ expr3, expr4 = expr1, expr2
 
 Prioridad de los operadores en *Python*, de menor a mayor:
 
-+----------------------------------+----------------------------------+
-| `:=`                             | Assignment expression            |
-+----------------------------------+----------------------------------+
-| `lambda`                         | Lambda expression                |
-+----------------------------------+----------------------------------+
-| `if` - `else`                    | Conditional expression           |
-+----------------------------------+----------------------------------+
-| `or`                             | Boolean OR                       |
-+----------------------------------+----------------------------------+
-| `and`                            | Boolean AND                      |
-+----------------------------------+----------------------------------+
-| `not`                            | Boolean NOT                      |
-+----------------------------------+----------------------------------+
-| `in`, `not in`, `is`, `is not`,  | Comparisons, including           |
-| `<`, `<=`, `>`, `>=`, `!=`, `==` | membership tests and identity    |
-|                                  | tests                            |
-+----------------------------------+----------------------------------+
-| `|`                              | Bitwise OR                       |
-+----------------------------------+----------------------------------+
-| `^`                              | Bitwise XOR                      |
-+----------------------------------+----------------------------------+
-| `&`                              | Bitwise AND                      |
-+----------------------------------+----------------------------------+
-| `<<`, `>>`                       | Shifts                           |
-+----------------------------------+----------------------------------+
-| `+`, `-`                         | Addition and subtraction         |
-+----------------------------------+----------------------------------+
-| `*`, `@`, `/`, `//`, `%`         | Multiplication, matrix           |
-|                                  | multiplication,                  |
-|                                  | division, floor division,        |
-|                                  | remainder                        |
-+----------------------------------+----------------------------------+
-| `+x`, `-x`, `~x`                 | Positive, negative, bitwise NOT  |
-+----------------------------------+----------------------------------+
-| `**`                             | Exponentiation                   |
-+----------------------------------+----------------------------------+
-| `await x`                        | Await expression                 |
-+----------------------------------+----------------------------------+
-| `x[index]`, `x[index:index]`,    | Subscription, slicing, call,     |
-| `x(arguments...)`, `x.attribute` | attribute reference              |
-+----------------------------------+----------------------------------+
-| `(expressions...)`,              | Binding or parenthesized         |
-| `[expressions...]`,              | expression, list display,        |
-| `{key: value\...}`,              | dictionary display, set display  |
-| `{expressions...}`               |                                  |
-+----------------------------------+----------------------------------+
+- `:=` (asignación)
+- `lambda`
+- `if` - `else`
+- `or`
+- `and`
+- `not`
+- `in`, `not in`, `is`, `is not`, `<`, `<=`, `>`, `>=`, `!=`, `==`
+- `|`
+- `^`
+- `&`
+- `<<`, `>>`
+- `+`, `-`
+- `*`, `@`, `/`, `//`, `%`
+- `+x`, `-x`, `~x`
+- `**`
+- `await x`
+- `x[index]`, `x[index:index]`, `x(argumentos...)`, `x.atributo`
+- `(expresiones...)`, `[expresiones...]`, `{key: value...}`, `{expresiones...}`
 
 En cuanto al operador de exponente, su prioridad es distinta en operadores unarios de uno y otro lado:
 
