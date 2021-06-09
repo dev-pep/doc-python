@@ -58,8 +58,8 @@ Retorna ***True*** si el objeto es llamable, o ***False*** de lo contrario. Las 
 
 Devuelve un *string* de longitud 1 con el carácter cuyo *code point Unicode* es ***i***. El argumento puede tener valor desde ***0*** hasta ***0x10FFFF***.
 
-`classmethod(met)
-@classmethod`
+`classmethod(met)`\
+`@classmethod`
 
 Supongamos un objeto ***x*** de clase ***MiClase***, con un método ***met(self)***. Un método normal tiene acceso a los atributos de la instancia a través de ***self***. A parte, puede, si lo desea, cambiar atributos de la clase mediante cosas como `type(self).atrib`, o con el nombre explícito de la clase ***MiClase.atrib***, etc. Para llamar al método, lo haremos mediante `x.met()`, no podemos hacer una llamada sin referirnos a una instancia concreta: `MiClase.met()` daría error (aunque podríamos hacer `MiClase.met(x)`, que de hecho equivale a `x.met()`).
 
@@ -103,9 +103,9 @@ Al convertir un objeto ***x*** a complejo, se utilizará `x.__complex__()`. Si n
 
 Elimina el atributo con nombre ***name*** (*string*) del objeto ***ob*** (si el objeto lo permite). `delattr(x, 'atrib')` equivale a `del x.atrib`.
 
-`class dict(**kwargs)
-class dict(map [,**kwargs])
-class dict(it [,**kwargs])`
+`class dict(**kwargs)`\
+`class dict(map [,**kwargs])`\
+`class dict(it [,**kwargs])`
 
 Constructor de un diccionario. Si se pasa sin argumentos, crea un diccionario vacío. Si le pasamos un iterable, este debe contener elementos que a su vez contengan 2 elementos cada uno: el primero para la clave (debe ser inmutable) y el segundo para el valor.
 
@@ -255,8 +255,8 @@ Esto suponiendo que la función tome 1 solo argumento. Si toma 2, habrá que pas
 
 Para 3 argumentos a ***fun*** se necesitan 3 iterables, y así sucesivamente.
 
-`max(it, * [,key] [,default])
-max(arg1, arg2 [,arg3,...], * [,key])`
+`max(it, * [,key] [,default])`\
+`max(arg1, arg2 [,arg3,...], * [,key])`
 
 Retorna el valor máximo entre una serie de números.
 
@@ -270,8 +270,8 @@ En ambas versiones podemos especificar el *keyword argument* ***key***, al que l
 
 Crea un objeto memory view a partir del objeto pasado.
 
-`min(it, * [,key] [,default])
-min(arg1, arg2 [,arg3,...], * [,key])`
+`min(it, * [,key] [,default])`\
+`min(arg1, arg2 [,arg3,...], * [,key])`
 
 Igual que `max()`, pero para el menor de los valores.
 
@@ -404,8 +404,8 @@ class C:
 
 En este caso, tras crearse la propiedad de solo lectura (***x***), se realiza la llamada `x = x.setter(x)`, es decir, al miembro ***x*** se le asigna lo que retorne `x.setter()`, al que se le pasa la función que estamos definiendo; lo que hace `setter()` es añadir a la propiedad ***x*** el método `fset()` que será igual a esta nueva definición que le pasamos, con lo cual la propiedad deja de ser de solo lectura. Luego añadimos `fdel()` a la propiedad, llamando a `x.deleter()`. Si lo hacemos así, se les debe dar a las funciones el mismo nombre que la propiedad.
 
-`class range(stop)
-class range(start,stop[,step])`
+`class range(stop)`\
+`class range(start,stop[,step])`
 
 Construye y retorna un objeto *range* (secuencia inmutable).
 
@@ -462,8 +462,8 @@ Construye y retorna un *set*. Si se le da un iterable, lo hará con los elemento
 
 Contraparte de `getattr()`. Da el valor ***value*** al atributo del objeto ***ob*** cuyo nombre está especificado por el *string* ***name*** (si el objeto lo permite). `setattr(x, 'atrib', val)` equivale a `x.atrib=val`.
 
-`class slice(stop)
-class slice(start,stop[,step])`
+`class slice(stop)`\
+`class slice(start,stop[,step])`
 
 Crea y retorna un objeto *slice*, que especifica un conjunto de índices. Su sintaxis es como la de `range()`, pero un objeto *slice* no es iterable.
 
@@ -473,8 +473,8 @@ Retorna una lista con los elementos del iterable ***it*** ordenados según la fu
 
 La función garantiza que la posición relativa de dos elementos que se comparan igual no será cambiada respecto al orden original.
 
-`staticmethod(met)
-@staticmethod`
+`staticmethod(met)`\
+`@staticmethod`
 
 Análogo a `classmethod()`, aunque en esta ocasión se crea un método estático. También acepta sintaxis de *decorator*:
 
@@ -487,8 +487,8 @@ class MiClase:
 
 En este caso, *Python* no le pasa ningún argumento, solamente los que le definamos nosotros. Esta función no tiene absolutamente nada que ver con la clase ni con ninguna instancia de la misma. Es simplemente una manera de encapsularla en un *namespace* de una clase o instancia en su *scope* correspondiente. Se puede llamar, al igual que un método clase, a través de una instancia (`x.metstat()`) o de la clase (`MiClase.metstat()`), sin que haya ninguna diferencia hacerlo de una forma o de otra.
 
-`class str(object='')
-class str(object=b'', encoding='utf-8', errors='strict')`
+`class str(object='')`\
+`class str(object=b'', encoding='utf-8', errors='strict')`
 
 Construye y retorna un *string*.
 
@@ -518,8 +518,8 @@ Si el segundo argumento es una subclase del primero en lugar de una instancia, l
 
 Construye y retorna una tupla. Si no se le especifica parámetro, resulta una tupla vacía. Si se especifica un iterador, se toman los datos del mismo para construir la tupla.
 
-`class type(ob)
-class type(name, bases, dict)`
+`class type(ob)`\
+`class type(name, bases, dict)`
 
 Pasándole un objeto, retorna el tipo del mismo, que es en sí un objeto tipo, y suele ser el devuelto por `ob.__class__`.
 
@@ -574,13 +574,13 @@ Es la función que utiliza `import`. No es aconsejable cambiarla.
 
 Este módulo es útil en el modo interactivo del intérprete, y no se debería usar en programas.
 
-`quit(code=None)
-exit(code=None)`
+`quit(code=None)`\
+`exit(code=None)`
 
 Al imprimir estos objetos muestran ***'Use quit() or Ctrl-D (i.e. EOF) to exit'***. Al llamarlos levantan ***SystemExit*** con el código especificado.
 
-***copyright
-credits***
+***copyright***\
+***credits***
 
 Al imprimirlos o llamarlos dan información de copyright y de créditos respectivamente.
 
