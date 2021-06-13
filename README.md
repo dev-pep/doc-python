@@ -17,8 +17,7 @@ Biblioteca estándar:
 
 Otras bibliotecas:
 
-- Kivy
-- poker
+- Kivy (*próximamente*)
 
 ## Bibliografía
 
