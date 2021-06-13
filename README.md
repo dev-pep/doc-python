@@ -17,7 +17,8 @@ Biblioteca estándar:
 
 Otras bibliotecas:
 
-- Por hacer
+- Kivy
+- poker
 
 ## Bibliografía
 
