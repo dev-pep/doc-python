@@ -287,8 +287,7 @@ Construye y retorna un objeto de tipo object, que es la clase base de todos los 
 
 Retorna un *string* con una representación octal del número ***n***, precedida por ***0o***. El argumento debe ser entero, de lo contario debe implementar `__index__()`.
 
-`open(file, mode='r', buffering=-1, encoding=None,
-     errors=None, newline=None, closefd=True, opener=None)`
+`open(file, mode='r', buffering=-1, encoding=None, errors=None, newline=None, closefd=True, opener=None)`
 
 Abre el archivo y devuelve un objeto archivo. Si no puede abrirlo, se levanta ***OSError***.
 
