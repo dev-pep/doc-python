@@ -214,19 +214,19 @@ Cada uno de ellos es de un tipo especial que solo puede tomar ese valor.
 **Números**: son inmutables.
 
 - `int` - enteros, positivos y negativos. No tienen límite.
-  - `bool` - ***True*** o ***False***. Al convertirse a número, se convierten, respectivamente, a 0 y 1 (o 0.0 y 1.0). A `string`, ***'True'*** y ***'False'***.
+    - `bool` - ***True*** o ***False***. Al convertirse a número, se convierten, respectivamente, a 0 y 1 (o 0.0 y 1.0). A `string`, ***'True'*** y ***'False'***.
 - `float` - números de punto flotante de doble precisión.
 - `complex` - almacenado como un par de `float`. Atributos `real` e `imag`.
 
 **Secuencias**: conjuntos finitos indexados por enteros positivos y cero (el primero). `len()` devuelve el número de elementos. Selección con `a[i]`. *Slice* `a[i:j]` es una lista del mismo tipo, con los elementos ***i \<= j \< k***. Un *slice* crea una copia del mismo tipo, que a su vez se puede indexar empezando por 0. Algunas secuencias admiten *extended slice*: `a[i:j:k]`, siendo ***k*** el *\"step"*.
 
 - **Secuencias inmutables**: contienen siempre los mismos objetos (aunque sean objetos mutables).
-  - ***Strings***: secuencias de caracteres *Unicode* (***U+0000*** a ***U+10FFFF***). No existe el tipo carácter: el *string* no es más que una sucesión de *strings* de longitud 1. `ord()` convierte un elemento de un *string* a entero (índice *Unicode*). `chr()` hace la operación inversa hacia un *string* de longitud 1. `str.encode()` pasa de *string* a *bytes*, y `bytes.decode()` hace la operación inversa.
-  - **Tuplas**: *comma-separated* expressions; una sola expresión seguida de coma (*singleton*), o tupla vacía mediante ***()***.
-  - ***Bytes***: *array* de *bytes* (8 bits). Se crean con literales *byte*, o con la *built-in function* `bytes()`. Decodificables con método `decode()`.
+    - ***Strings***: secuencias de caracteres *Unicode* (***U+0000*** a ***U+10FFFF***). No existe el tipo carácter: el *string* no es más que una sucesión de *strings* de longitud 1. `ord()` convierte un elemento de un *string* a entero (índice *Unicode*). `chr()` hace la operación inversa hacia un *string* de longitud 1. `str.encode()` pasa de *string* a *bytes*, y `bytes.decode()` hace la operación inversa.
+    - **Tuplas**: *comma-separated* expressions; una sola expresión seguida de coma (*singleton*), o tupla vacía mediante ***()***.
+    - ***Bytes***: *array* de *bytes* (8 bits). Se crean con literales *byte*, o con la *built-in function* `bytes()`. Decodificables con método `decode()`.
 - **Secuencias mutables**: mediante índice o *slicing* se puede asignar valor a los elementos, o borrarlos (con `del`).
-  - **Listas**: *comma-separated expressions* entre corchetes.
-  - ***Byte arrays***: creados con el constructor `bytearray()`. Se comportan exactamente igual que un elemento `bytes`, pero es mutable.
+    - **Listas**: *comma-separated expressions* entre corchetes.
+    - ***Byte arrays***: creados con el constructor `bytearray()`. Se comportan exactamente igual que un elemento `bytes`, pero es mutable.
 
 ***Set types***: conjuntos no ordenados (no indexables) de objetos inmutables y únicos. Se pueden iterar; disponen de `len()`. Aceptan operadores de conjuntos matemáticos.
 

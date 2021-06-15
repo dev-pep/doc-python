@@ -484,11 +484,11 @@ Entre el carácter % y el carácter de tipo puede haber varios modificadores opc
 Python has 002 quote types.
 ```
 2. Flags de conversión:
-  - ***#*** - la conversión usará la forma alternativa.
-  - ***0*** - los números serán rellenados con ceros a la izquierda (según anchura especificada).
-  - ***-*** - la conversión se ajustará a la izquierda (overrides ***0***).
-  - ***\<espacio>*** - si es una conversión con signo y el número resultante es positivo, se deja un espacio en blanco justo antes del número.
-  - ***+*** - en números, se incluye siempre signo (***+*** o ***-***) antes del número (*overrides* espacio).
+    - ***#*** - la conversión usará la forma alternativa.
+    - ***0*** - los números serán rellenados con ceros a la izquierda (según anchura especificada).
+    - ***-*** - la conversión se ajustará a la izquierda (overrides ***0***).
+    - ***\<espacio>*** - si es una conversión con signo y el número resultante es positivo, se deja un espacio en blanco justo antes del número.
+    - ***+*** - en números, se incluye siempre signo (***+*** o ***-***) antes del número (*overrides* espacio).
 3. Anchura mínima: se especifica en un número entero, o un ***\****. En este caso, dicho número se lee del siguiente objeto de la tupla de valores.
 4. Precisión: indicado mediante un punto (***.***) seguido de un número entero, o un ***\****, en cuyo caso se lee tal número del siguiente objeto en la tupla de valores.\
 En el caso de ***E***, ***e***, ***F*** y ***f***, indica el número de dígitos decimales (si no se indica, es 6). En el caso de ***g*** y ***G***, indica el número de dígitos significativos, incluyendo antes y después del punto decimal (si no se indica, es 6).

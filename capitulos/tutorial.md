@@ -1286,12 +1286,12 @@ except <error2>:
 Esta es la secuencia de acciones:
 
 - Primero se ejecutan las sentencias de la cláusula `try` (de`try` a `except`).
-  - Si no se levanta ninguna excepción en toda la cláusula (incluyendo excepciones no tratadas provenientes de funciones a las que hayamos llamado), se salta las cláusulas `except` y la ejecución sigue tras el bloque `try`.
-  - Si se levanta excepción, se salta el resto de la cláusula `try` y se empieza a buscar en las cláusulas `except`, en orden de aparición, hasta encontrar la cláusula `except` pertinente.
-    - Si la encuentra, la ejecuta entera (suponiendo que no se produzca otra excepción dentro de ella, que no será tratada, a no ser que dentro de esa cláusula `except` exista a su vez un bloque `try`), para luego saltarse el resto de cláusulas `except`.
-    - Si no la encuentra, pasa el *handling* de la excepción a un posible bloque `try` más exterior (caso de bloques `try` anidados, o estamos en una función que ha sido llamada desde otro bloque `try`).
-      - Si lo hay, se repite allí el proceso.
-      - Si no lo hay, se trata de una *unhandled exception* y la ejecución se interrumpe.
+    - Si no se levanta ninguna excepción en toda la cláusula (incluyendo excepciones no tratadas provenientes de funciones a las que hayamos llamado), se salta las cláusulas `except` y la ejecución sigue tras el bloque `try`.
+    - Si se levanta excepción, se salta el resto de la cláusula `try` y se empieza a buscar en las cláusulas `except`, en orden de aparición, hasta encontrar la cláusula `except` pertinente.
+        - Si la encuentra, la ejecuta entera (suponiendo que no se produzca otra excepción dentro de ella, que no será tratada, a no ser que dentro de esa cláusula `except` exista a su vez un bloque `try`), para luego saltarse el resto de cláusulas `except`.
+        - Si no la encuentra, pasa el *handling* de la excepción a un posible bloque `try` más exterior (caso de bloques `try` anidados, o estamos en una función que ha sido llamada desde otro bloque `try`).
+            - Si lo hay, se repite allí el proceso.
+            - Si no lo hay, se trata de una *unhandled exception* y la ejecución se interrumpe.
 
 La cláusula `except` puede tener como argumento un tipo de excepción, o varios en una tupla, que serán recogidos todos:
 
