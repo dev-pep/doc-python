@@ -16,8 +16,9 @@ Biblioteca estándar:
 3. [Biblioteca - Formato](capitulos/libstd-03-formato.md)
 4. Biblioteca - ctypes (*próximamente*)
 
-Otras bibliotecas:
+Otros:
 
+- Crear extensiones con *C* (*próximamente*)
 - Kivy (*próximamente*)
 
 ## Bibliografía
