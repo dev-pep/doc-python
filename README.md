@@ -14,12 +14,12 @@ Biblioteca estándar:
 1. [Biblioteca - Builtins](capitulos/libstd-01-builtins.md)
 2. [Biblioteca - Tipos builtin](capitulos/libstd-02-tipos-builtin.md)
 3. [Biblioteca - Formato](capitulos/libstd-03-formato.md)
-4. Biblioteca - ctypes (*próximamente*)
+4. Biblioteca - ctypes
 
 Otros:
 
-- Crear extensiones con *C* (*próximamente*)
-- Kivy (*próximamente*)
+- [Extender con C](capitulos/extender-c.md)
+- Kivy
 
 ## Bibliografía
 
