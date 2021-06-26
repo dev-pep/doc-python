@@ -81,7 +81,7 @@ El segundo argumento (***args*** por convenio) corresponde a un apuntador a un o
 Y eso es lo que hace exactamente la función `PyArg_ParseTuple()`:
 
 ```c
-int PyArg_ParseTuple(PyObject *args, const char *format, ...)
+int PyArg_ParseTuple(PyObject *args, const char *format, ...);
 ```
 
 Convierte los argumentos de una tupla en objetos de tipos de *C*. Usa una *format string* que especifica los tipos a los que se deben convertir los objetos. En el ejemplo, un solo elemento *string* (***"s"***). Los objetos serán almacenados en las variables cuyas direcciones se pasen a continuación (en este caso, ***command***).
@@ -117,7 +117,7 @@ Si retornamos indicador de error desde una función, todos los objetos creados e
 Se pueden crear excepciones a medida:
 
 ```c
-PyObject* PyErr_NewException(const char *name, PyObject *base, PyObject *dict)
+PyObject* PyErr_NewException(const char *name, PyObject *base, PyObject *dict);
 ```
 
 Esto retorna una referencia a una nueva clase de excepción. Se la pasa un nombre, que debe terner la forma ***modulo.clase***. En nuestro caso, podría ser ***spam.error***, por ejemplo. El atributo ***\_\_module\_\_*** de la nueva clase se establece a lo que está a la izquierda del último punto (***spam***), y su nombre a lo que está a su derecha (***error***).
@@ -174,7 +174,7 @@ Si la función no recibe argumentos, se indicará ***METH_NOARGS***.
 En ese caso, hay que recoger el valor de los argumentos mediante:
 
 ```c
-int PyArg_ParseTupleAndKeywords(PyObject *args, PyObject *kw, const char *format, char *keywords[], ...)
+int PyArg_ParseTupleAndKeywords(PyObject *args, PyObject *kw, const char *format, char *keywords[], ...);
 ```
 
 Aquí, proporcionamos, a parte de ***args*** (argumentos posicionales), el diccionario de argumentos ***kw***, que es el que ha recibido nuestra función. Por otro lado, indicamos el formato de cada uno en ***format***, y la secuencia (orden) de parseo de argumentos en el *array* de *strings* ***keywords***, que es un *array NULL-terminated* con los nombres de los *keyword arguments* en el orden deseado (los nombres vacíos indican parámetro *positional only*). El valor de retorno es como el de `PyArg_ParseTuple()`.
@@ -243,7 +243,7 @@ Es como la anterior, pero en este caso, además, ***dict_args*** es un diccionar
 #### 2.1.7 Extracting Parameters in Extension Functions
 
 ```c
-int PyArg_ParseTuple(PyObject *args, const char *format, ...)
+int PyArg_ParseTuple(PyObject *args, const char *format, ...);
 ```
 
 La *format string* definirá el tipo de datos esperado de los argumentos de la tupla. Siempre hay que pasar la dirección de la variable que almacenará el valor del argumento en cuestión. Si es un apuntador, la dirección del apuntador.
@@ -321,7 +321,7 @@ Estas funciones retornan verdadero si todo funciona bien, o falso en caso contra
 #### 2.1.8 Keyword Parameters for Extension Functions
 
 ```c
-int PyArg_ParseTupleAndKeywords(PyObject *args, PyObject *kw, const char *format, char *keywords[], ...)
+int PyArg_ParseTupleAndKeywords(PyObject *args, PyObject *kw, const char *format, char *keywords[], ...);
 ```
 
 No se pueden parsear tuplas anidadas cuando usamos *keyword arguments*.
@@ -337,23 +337,23 @@ Realiza la acción inversa a las funciones de parseo de tuplas que hemos visto. 
 El objeto retornado es una tupla siempre y cuando el número de *format units* sea superior a uno. Si es uno, retorna ese simple valor. Si es cero, retorna ***None***. Si queremos forzar a que retorne una tupla con 0 o 1 elemento, hay que indicar un par de paréntesis en la *format string*.
 
 ```c
-Py_BuildValue("")                   // None
-Py_BuildValue("i", 123)             // 123
-Py_BuildValue("iii", 123, 456, 789) // (123, 456, 789)
-Py_BuildValue("s", "hello")         // 'hello'
-Py_BuildValue("y", "hello")         // b'hello'
-Py_BuildValue("ss", "hello", "world")  // ('hello', 'world')
-Py_BuildValue("s#", "hello", 4)     // 'hell'
-Py_BuildValue("y#", "hello", 4)     // b'hell'
-Py_BuildValue("()")                 // ()
-Py_BuildValue("(i)", 123)           // (123,)
-Py_BuildValue("(ii)", 123, 456)     // (123, 456)
-Py_BuildValue("(i,i)", 123, 456)    // (123, 456)
-Py_BuildValue("[i,i]", 123, 456)    // [123, 456]
+Py_BuildValue("");                   // None
+Py_BuildValue("i", 123);             // 123
+Py_BuildValue("iii", 123, 456, 789); // (123, 456, 789)
+Py_BuildValue("s", "hello");         // 'hello'
+Py_BuildValue("y", "hello");         // b'hello'
+Py_BuildValue("ss", "hello", "world");  // ('hello', 'world')
+Py_BuildValue("s#", "hello", 4);     // 'hell'
+Py_BuildValue("y#", "hello", 4);     // b'hell'
+Py_BuildValue("()");                 // ()
+Py_BuildValue("(i)", 123);           // (123,)
+Py_BuildValue("(ii)", 123, 456);     // (123, 456)
+Py_BuildValue("(i,i)", 123, 456);    // (123, 456)
+Py_BuildValue("[i,i]", 123, 456);    // [123, 456]
 Py_BuildValue("{s:i,s:i}",
-      "abc", 123, "def", 456)       // {'abc': 123, 'def': 456}
-Py_BuildValue("((ii)(ii)) (ii)",    // (((1, 2), (3, 4)), (5, 6))
-      1, 2, 3, 4, 5, 6)
+      "abc", 123, "def", 456);       // {'abc': 123, 'def': 456}
+Py_BuildValue("((ii)(ii)) (ii)",
+      1, 2, 3, 4, 5, 6);             // (((1, 2), (3, 4)), (5, 6))
 ```
 
 #### 2.1.10 Reference Counts
@@ -460,16 +460,16 @@ Esta información puede encontrarse en el documento *The Python/C API*.
 ### *Reference Counts*
 
 ```c
-void Py_INCREF(PyObject *o)
-void Py_DECREF(PyObject *o)
-void Py_XINCREF(PyObject *o)
-void Py_XDECREF(PyObject *o)
+void Py_INCREF(PyObject *o);
+void Py_DECREF(PyObject *o);
+void Py_XINCREF(PyObject *o);
+void Py_XDECREF(PyObject *o);
 ```
 
 Incrementan y decrementan el conteo de referencias, como hemos visto.
 
 ```c
-void Py_CLEAR(PyObject *o)
+void Py_CLEAR(PyObject *o);
 ```
 
 Establece en 0 el conteo de referencias al objeto ***o***. Si el apuntador es ***NULL***, la función no tiene efecto.
@@ -485,25 +485,25 @@ Si opta por retornar error, la función llamante no levantará excepción (de es
 Este *API* proporciona unas variables globales de tipo `PyObject*` con el tipo de cada una de las excepciones posibles, cuyo nombre es el nombre del objeto excpeción *Python* con el prefijo ***PyExc\_*** (***PyExc_ZeroDivisionError***, ***PyExc_ValueError***, ***PyExc_TypeError***, etc.).
 
 ```c
-void PyErr_Clear()
+void PyErr_Clear();
 ```
 
 Limpia el estado de error.
 
 ```c
-void PyErr_SetString(PyObject *type, const char *message)
+void PyErr_SetString(PyObject *type, const char *message);
 ```
 
 Levanta una excepción. El primer argumento es el objeto excepción pertinente (no hay que incrementar el conteo de referencias), y el segundo es un mensaje de error en un *string* codificado con *UTF-8*, que será el valor asociado a la excepción.
 
 ```c
-void PyErr_SetObject(PyObject *type, PyObject *value)
+void PyErr_SetObject(PyObject *type, PyObject *value);
 ```
 
 Es como `PyErr_SetString()`, pero indicando un objeto *Python* como valor de la excepción.
 
 ```c
-PyObject* PyErr_Occurred()
+PyObject* PyErr_Occurred();
 ```
 
 Retorna una *borrowed reference* del tipo de excepción que esté levantada. Si no hay, retorna ***NULL***. Dado que el estado de error se almacena por cada hilo, si el código es *multithread*, el llamador a la función debe tener el *GIL* (*Global Interpreter Lock*).
@@ -511,19 +511,19 @@ Retorna una *borrowed reference* del tipo de excepción que esté levantada. Si 
 > No se debe comparar el valor retornado con un tipo de excepción concreto, ya que uno podría ser una instancia y el otro la clase, o uno podría ser una subclase del otro y la comparación retornaría falso. Para comprobación se debe usar `PyErr_ExceptionMatches()`.
 
 ```c
-int PyErr_GivenExceptionMatches(PyObject *given, PyObject *exc)
+int PyErr_GivenExceptionMatches(PyObject *given, PyObject *exc);
 ```
 
 Retorna verdadero si la excepción ***given*** es del tipo en ***exc***. Si ***exc*** es un objeto clase, retornará verdadero si ***given*** es una subclase de ***exc***, o una instancia de esta o de una subclase de la misma. Si ***exc*** es una tupla, se comprobarán todos los tipos de excepción que contenga (recursivamente si hay anidación) buscando una coincidencia.
 
 ```c
-int PyErr_ExceptionMatches(PyObject *exc)
+int PyErr_ExceptionMatches(PyObject *exc);
 ```
 
 Equivalente a `PyErr_GivenExceptionMatches(PyErr_Occurred(), exc)`. **Solo debe llamarse si hay una excepción levantada**.
 
 ```c
-PyObject* PyErr_NewException(const char *name, PyObject *base, PyObject *dict)
+PyObject* PyErr_NewException(const char *name, PyObject *base, PyObject *dict);
 ```
 
 Retorna una nueva referencia a un tipo nuevo de excepción, como vimos anteriormente. ***base*** y ***dict*** suelen ser ***NULL***.
@@ -531,14 +531,14 @@ Retorna una nueva referencia a un tipo nuevo de excepción, como vimos anteriorm
 ### *Parsing arguments and building values*
 
 ```c
-int PyArg_ParseTuple(PyObject *args, const char *format, ...)
-int PyArg_ParseTupleAndKeywords(PyObject *args, PyObject *kw, const char *format, char *keywords[], ...)
+int PyArg_ParseTuple(PyObject *args, const char *format, ...);
+int PyArg_ParseTupleAndKeywords(PyObject *args, PyObject *kw, const char *format, char *keywords[], ...);
 ```
 
 Parsean los argumentos recibidos en una tupla, como se ha visto ya. Si alguno de los argumentos extraídos es un objeto *Python*, será una *borrowed reference* (no habrá que decrementar conteo).
 
 ```c
-int PyArg_UnpackTuple(PyObject *args, const char *name, Py_ssize_t min, Py_ssize_t max, ...)
+int PyArg_UnpackTuple(PyObject *args, const char *name, Py_ssize_t min, Py_ssize_t max, ...);
 ```
 
 Esta forma de parsear la tupla de entrada no precisa de *format string*. Aquí la tupla ***args*** debe tener un mínimo de ***min*** elementos y un máximo de ***max*** (ambos números pueden ser iguales). Se deben proporcionar argumentos adicionales, apuntadores a `PyObject*`, que irán llenándose con los elementos de la tupla, sin conversiones. Los argumentos opcionales que no estén presentes en la tupla no modificarán el valor del correspondiente argumento (deberá ser inicializado anteriormente). El parámetro ***name*** es el nombre de función que se usará en un posible mensaje de error. Una función que parsee los argumentos de este modo debe declararse con ***METH_VARARGS*** en la tabla de funciones. Los objetos recibidos son *borrowed references*. La función retorna 1 si tiene éxito y 0 en caso contrario.
