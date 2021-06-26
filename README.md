@@ -18,7 +18,7 @@ Biblioteca estándar:
 
 Otros:
 
-- [Extender con C](capitulos/extender-c.md)
+- [Extensiones en C](capitulos/extensiones-c.md)
 - Kivy
 
 ## Bibliografía
