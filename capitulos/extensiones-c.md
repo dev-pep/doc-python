@@ -84,9 +84,9 @@ Y eso es lo que hace exactamente la función `PyArg_ParseTuple()`:
 int PyArg_ParseTuple(PyObject *args, const char *format, ...);
 ```
 
-Convierte los argumentos de una tupla en objetos de tipos de *C*. Usa una *format string* que especifica los tipos a los que se deben convertir los objetos. En el ejemplo, un solo elemento *string* (***"s"***). Los objetos serán almacenados en las variables cuyas direcciones se pasen a continuación (en este caso, ***command***).
+Extrae los elementos de una tupla y los referencia en apuntadores *C*. Usa una *format string* ***format*** que especifica los tipos a los que se deben convertir los objetos. En el ejemplo, un solo elemento *string* (***"s"***). Los argumentos que pasamos a la función pasarán a apuntar al objeto convertido (en este caso, ***command***).
 
-La función retorna un valor no cero si se han convertido con éxito todos los elementos de la tupla, y cero en caso contrario.
+La función retorna 1 si se han convertido con éxito todos los elementos de la tupla, y cero en caso contrario.
 
 Como vemos, si la función ha fallado, retornamos ***NULL***, lo cual es una forma de indicar a *Python* que ha habido un error.
 
@@ -134,7 +134,7 @@ Por otro lado, a veces puede interesarnos que algún elemento del módulo sea ac
 
 #### 2.1.3 Back to the Example
 
-Ahora ya sabemos que si `PyArg_ParseTuple()` ha fallado, ha levantado la excepción adecuada, y ha retornado ***NULL***. De lo contrario, tenemos en ***command*** un apuntador a un *string*. No deberíamos modificar su contenido; por eso está declarado como `const char *command`.
+Ahora ya sabemos que si `PyArg_ParseTuple()` ha fallado, ha levantado la excepción adecuada, y ha retornado ***NULL***. De lo contrario, tenemos en ***command*** un apuntador a un *string*. No deberíamos modificar su contenido (pertenece al objeto *Python* y tiene su mismo tiempo de vida); por eso está declarado como `const char *command`.
 
 Ahora ya podemos invocar a `system()` de ***stdlib.h*** y pasarle ese *string*. Recogemos el valor devuelto por esta función en ***sts***, y retornamos ese entero, previa conversión a un entero de *Python* con `PyLong_FromLong()`, que retorna, como de costumbre, un objeto *Python* (`PyObject*`).
 
@@ -167,17 +167,15 @@ El último elemento debe estar a ***NULL*** para marcar el fin de la tabla.
 
 En cuanto a la *calling convention*, lo habitual es ***METH_VARARGS***, que indica que los argumentos de *Python* se pasarán en una tupla que se podrá procesar correctamente mediante `PyArg_ParseTuple()`.
 
-También es posible indicar ***METH_VARARGS | METH_KEYWORDS***. En este caso, la función pasa también *keyword arguments*. En ese caso, nuestra función recibiría desde *Python* un tercer argumento con un `PyObject` que contiene un diccionario de *keywords*.
-
 Si la función no recibe argumentos, se indicará ***METH_NOARGS***.
+
+También es posible indicar ***METH_VARARGS | METH_KEYWORDS***. En este caso, la función pasa también *keyword arguments*. En ese caso, nuestra función recibiría desde *Python* un tercer argumento con un `PyObject` que contiene un diccionario de *keywords*.
 
 En ese caso, hay que recoger el valor de los argumentos mediante:
 
 ```c
 int PyArg_ParseTupleAndKeywords(PyObject *args, PyObject *kw, const char *format, char *keywords[], ...);
 ```
-
-Aquí, proporcionamos, a parte de ***args*** (argumentos posicionales), el diccionario de argumentos ***kw***, que es el que ha recibido nuestra función. Por otro lado, indicamos el formato de cada uno en ***format***, y la secuencia (orden) de parseo de argumentos en el *array* de *strings* ***keywords***, que es un *array NULL-terminated* con los nombres de los *keyword arguments* en el orden deseado (los nombres vacíos indican parámetro *positional only*). El valor de retorno es como el de `PyArg_ParseTuple()`.
 
 El resto de *calling conventions* disponibles están *deprecated*.
 
@@ -246,75 +244,9 @@ Es como la anterior, pero en este caso, además, ***dict_args*** es un diccionar
 int PyArg_ParseTuple(PyObject *args, const char *format, ...);
 ```
 
-La *format string* definirá el tipo de datos esperado de los argumentos de la tupla. Siempre hay que pasar la dirección de la variable que almacenará el valor del argumento en cuestión. Si es un apuntador, la dirección del apuntador.
+Extrae elementos de una tupla. La veremos con más detalle más adelante.
 
-Cuando extraemos un argumento que precisa de un *buffer*, como un *string*, la función asigna al apuntador correspondiente una dirección de memoria a un *buffer* ya existente, gestionado por el objeto *Python* del que extraemos la información. Dicho *buffer* tiene el mismo tiempo de vida que el objeto, con lo que no necesitamos liberarlo de memoria (con las excepciones de los datos tipo ***es***, ***es#***, ***et*** y ***et#***).
-
-En ocasiones, los datos se leen y rellenan una estructura `Py_buffer`, con un *buffer* en el miembro ***buf***. En ese caso, el *buffer* queda bloqueado para escritura (sobre posibles objetos mutables). Para liberarlo una vez se ha terminado de modificar, se debe llamar a `PyBuffer_Release()` para que otro posible hilo pueda escribir sobre él.
-
-La *format string* está compuesta por unidades de formato, que describen objetos *Python*. Una *format unit* suele ser un solo carácter o una serie de unidades de formato entre paréntesis. Cada unidad proporcionará el valor de un apuntador *C* al tipo adecuado.
-
-Algunas unidades de formato retornan la longitud del argumento (***s#***, ***y#***,...). Tal longitud es un entero, del tipo `int`, aunque es mejor que retorne un tipo `Py_ssize_t`. Para que esto sea así, hay que definir la macro `PY_SSIZE_T_CLEAN` **antes** de incluir ***Python.h***:
-
-```c
-#define PY_SSIZE_T_CLEAN
-#include <Python.h>
-//...
-```
-
-Veamos tipos habituales de *format units*:
-
-- ***s*** convierte un *string Unicode* (no *bytes*) de *Python* a tipo `const char*`, que apuntará a un *buffer null-terminated*, codificado con *UTF-8*. El *string Python* no puede contener *codepoints* nulos.
-- ***s\**** como ***s***, pero en lugar de establecer la dirección del apuntador *C*, rellena una estructura `Py_buffer` (le pasaremos la dirección de la misma). El *buffer* está en el miembrio ***buf***. En este caso, el *string C* puede contener *bytes* nulos.
-- ***s#*** es como ***s\**** pero no acepta objetos mutables. Retorna dos valores: el *string* y la longitud (`int` o `Py_ssize_t`).
-- ***z*** es como ***s***, pero el *string Python* puede ser ***None***, en cuyo caso el apuntador *C* será ***NULL***.
-- ***z\**** es como ***s\****, pero el *string Python* puede ser ***None***, en cuyo caso el miembro ***buf*** de la estructura será ***NULL***.
-- ***z#*** es como ***s#***, pero el *string Python* puede ser ***None***, en cuyo caso el apuntador *C* será ***NULL***.
-- ***y*** es como ***s***, pero no acepta *strings Unicode* (solo *bytes*, que no puede contener *bytes* nulos).
-- ***y\**** es como ***s\****, pero no acepta *strings Unicode* (solo *bytes*, que sí puede contener *bytes* nulos). **Es la forma recomendada de obtener datos binarios**.
-- ***y#*** es como ***s#***, pero no acepta *strings Unicode* (solo *bytes*, que sí puede contener *bytes* nulos).
-- ***S*** extrae un objeto *bytes* directamente, sin convertir. El tipo *C* será `PyObject*` o `PyBytesObject*`.
-- ***Y*** extrae un objeto *bytearray* directamente, sin convertir. El tipo *C* será `PyObject*` o `PyByteArrayObject*`.
-- ***U*** extrae un *string Unicode* directamente, sin convertir. El tipo *C* será `PyObject*`.
-- ***w\**** es como ***y\****, pero permite lectura y escritura en el *buffer*. Una vez se ha terminado de modificar el *buffer* se debe desbloquear para escritura con `PyBuffer_Release()`.
-- ***es*** variación de ***s*** que permite establecer la codificación del *string*. Necesita dos argumentos: el primero se utiliza como entrada, no salida: es un `const char*` que apunta al nombre de la codificación deseada (debe ser conocida por *Python*); si es ***NULL***, se entenderá *UTF-8*. El segundo es `char**`, es decir, un apuntador a un *buffer* de elementos `char` (se puede ver como un apuntador a un *array* de caracteres). El apuntador que referenciamos parará a apuntar a un *buffer* con el texto solicitado. Para ello, la función reservará la memoria necesaria para el *buffer* (que no es gestionado por el objeto *Python*), con lo que cuando hayamos terminado de trabajar con él deberemos invocar `PyMem_Free()` para liberarlo.
-- ***et*** es como ***es***, pero acepta también objetos *bytes* (o *bytearray*), en cuyo caso, el resultado se pasará sin codificar (se asumirá que la codificación del *bytes* o *bytearray* ya es la deseada).
-- ***es#*** es como ***es***, pero por un lado permite datos de entrada con caracteres nulos, y por otro lado requiere de un tercer argumento (`int` o `Py_ssize_t`), en el que colocará la longitud del *buffer*. En este caso hay dos modos de funcionamiento:
-    - si el apuntador al *buffer* es nulo inicialmente, funcionará como de costumbre;
-    - en caso contrario, usará el valor del *buffer* para colocar allí el texto, sin reservar memoria, ya que asumirá que ya hay una cantidad de memoria reservada, igual al valor inicial del tercer argumento.
-- ***et#*** es como ***es#***, pero permite objetos *bytes* o *bytearray* (que pasarán sin codificar a la salida).
-- Números. En las conversiones a *unsigned* no hay comprobación de *overflow*.
-    - ***b*** entero no negativo a `unsigned char`.
-    - ***B*** entero a `unsigned char`.
-    - ***h*** entero a `short int`.
-    - ***H*** entero a `unsigned short int`.
-    - ***i*** entero a `int`.
-    - ***I*** entero a `unsigned int`.
-    - ***l*** entero a `long int`.
-    - ***k*** entero a `unsigned long int`.
-    - ***L*** entero a `long long int`.
-    - ***K*** entero a `unsigned long long int`.
-    - ***n*** entero a `Py_ssize_t`.
-    - ***c*** objeto *bytes* o *bytearray* de longitud 1 a `char`.
-    - ***C*** objeto *string* de longitud 1 a `int`.
-    - ***f*** número de punto flotante a `float`.
-    - ***d*** número de punto flotante a `double`.
-    - ***D*** número complejo a estructura `Py_complex`.
-- ***O*** es el objeto tal cual, sin conversión (tipo `PyObject*`).
-- ***O!*** es como ***O***, pero en este caso precisa dos argumentos: el primero es de entrada, y es un apuntador a un objeto tipo de *Python*; el segundo es el acostumbrado apuntador a un objeto, que debe ser del tipo especificado en el primer argumento.
-- ***p*** convierte un `bool` de *Python* a `int`.
-
-Si en la *format string* se indican paréntesis, dentro de los cuales hay (opcionalmente) *format units*, definimos una secuencia *Python* con los elementos indicados. Pueden anidarse.
-
-Existen otros caracteres (no permitidos dentro de paréntesis):
-- ***|*** indica que los argumentos a continuación son opcionales. Si no existen, la función no hace nada con el argumento *C* correspondiente.
-- ***$*** indica que el resto de los argumentos son *keyword only* (solo en `PyArg_ParseTupleAndKeywords()`).
-- ***:*** indica que la lista de *format units* ha terminado; tras ***:*** se indica el nombre de función que aparecerá en los posibles mensajes de error (valor asociado de la excepción que se levante).
-- ***;*** similar a ***:***, pero indica el mensaje de error en lugar del mensaje de error por defecto. ***:*** y ***;*** se excluyen mutuamente.
-
-Los objetos pasados a la función llamadora son *borrowed references* (2.1.10), por lo que no debemos decrementar el conteo de referencias tras usarlos.
-
-En los elementos ***es***, ***et***, etc., hay que asegurarse de pasar el tipo correcto para el *buffer*. En este caso, ***buffer*** un apuntador a `char*`, es decir, un `char**`. Hay que tener cuidado: se debe pasar **la dirección de memoria de ese** `char**`, es decir, un apuntador a `char**`, o sea un `char***`.
+Los objetos recibidos en la función llamadora son *borrowed references* (2.1.10), por lo que no debemos decrementar el conteo de referencias tras usarlos.
 
 Estas funciones retornan verdadero si todo funciona bien, o falso en caso contrario.
 
@@ -324,7 +256,7 @@ Estas funciones retornan verdadero si todo funciona bien, o falso en caso contra
 int PyArg_ParseTupleAndKeywords(PyObject *args, PyObject *kw, const char *format, char *keywords[], ...);
 ```
 
-No se pueden parsear tuplas anidadas cuando usamos *keyword arguments*.
+No se pueden parsear tuplas anidadas cuando usamos *keyword arguments*. Se verá también más adelante.
 
 #### 2.1.9 Building Arbitrary Values
 
@@ -355,6 +287,8 @@ Py_BuildValue("{s:i,s:i}",
 Py_BuildValue("((ii)(ii)) (ii)",
       1, 2, 3, 4, 5, 6);             // (((1, 2), (3, 4)), (5, 6))
 ```
+
+Se verá con más detalle más adelante.
 
 #### 2.1.10 Reference Counts
 
@@ -416,7 +350,7 @@ Por lo tanto, cuando usemos ese tipo de funciones que extraen elementos, o una f
 
 Cada función debe documentar qué hace con las referencias a objetos *Python* que recibe por parámetro: si roba o si toma prestada la propiedad. También debe documentar, en caso de retornar un objeto *Python*, si transfiere o no la propiedad al llamador. El llamador debe adaptarse al funcionamiento de la función llamada.
 
-Una función *C* que retorne un objeto a *Python* debe transferir obligatoriamente la propiedad de la referencia, es decir, debe ser propietaria de la referencia que retorna.
+Una función *C* que retorne un objeto a *Python* debe transferir obligatoriamente la propiedad de la referencia, es decir, debe ser propietaria de la referencia antes de retornarla.
 
 Las macros `Py_INCREF()` y `Py_DECREF()` no comprueban si el apuntador pasado es ***NULL*** antes de ejecutarse. Sin embargo, las variantes `Py_XINCREF()` y `Py_XDECREF()` sí lo hacen. En caso de recibir ***NULL*** por parámetro no hacen nada, en lugar de levantar error.
 
@@ -534,10 +468,81 @@ Retorna una nueva referencia a un tipo nuevo de excepción, como vimos anteriorm
 
 ```c
 int PyArg_ParseTuple(PyObject *args, const char *format, ...);
+```
+
+Extrae los elementos de una tupla. Si alguno de los argumentos extraídos es un objeto *Python*, será una *borrowed reference* (no habrá que decrementar conteo). Retorna 1 si tiene éxito o 0 en caso contrario.
+
+La *format string* definirá el tipo de datos esperado de los argumentos de la tupla. Siempre hay que pasar la dirección de la variable que almacenará el valor del argumento en cuestión. Si es un apuntador, la dirección del apuntador.
+
+Cuando extraemos un argumento que precisa de un *buffer*, como un *string*, la función asigna al apuntador correspondiente una dirección de memoria a un *buffer* ya existente, gestionado por el objeto *Python* del que extraemos la información. Dicho *buffer* tiene el mismo tiempo de vida que el objeto, con lo que no necesitamos liberarlo de memoria (con las excepciones de los datos tipo ***es***, ***es#***, ***et*** y ***et#***).
+
+En ocasiones, los datos se leen y rellenan una estructura `Py_buffer`, con un *buffer* en el miembro ***buf***. En ese caso, el *buffer* queda bloqueado para escritura (sobre posibles objetos mutables). Para liberarlo una vez se ha terminado de modificar, se debe llamar a `PyBuffer_Release()` para que otro posible hilo pueda escribir sobre él (código *multi-threaded*).
+
+La *format string* está compuesta por unidades de formato, que describen objetos *Python*. Una *format unit* suele ser un solo carácter o una serie de unidades de formato entre paréntesis. Cada unidad proporcionará el valor de un apuntador *C* al tipo adecuado.
+
+Algunas unidades de formato retornan la longitud del argumento (***s#***, ***y#***,...). Tal longitud es un entero, del tipo `int`, aunque es mejor que retorne un tipo `Py_ssize_t`, como se ha visto anteriormente. Para que esto sea así, hay que definir la macro `PY_SSIZE_T_CLEAN` **antes** de incluir ***Python.h***:
+
+```c
+#define PY_SSIZE_T_CLEAN
+#include <Python.h>
+//...
+```
+
+Posibles *format units* del *string* de formato:
+
+- ***s*** convierte un *string Unicode* (no `bytes`) de *Python* a un apuntador a `const char*`, que apuntará a un *buffer null-terminated*, codificado con *UTF-8*. El *string Python* no puede contener *codepoints* nulos.
+- ***s\**** como ***s***, pero también acepta objetos de tipo `bytes`, y en lugar de establecer la dirección del apuntador *C*, rellena una estructura `Py_buffer` (le pasaremos un apuntador a `Py_buffer`). La dirección del *buffer* resultante estará en el miembro ***buf*** de la estructura. En este caso, el *string C* puede contener *bytes* nulos.
+- ***s#*** es como ***s*** pero acepta también objetos de tipo `bytes`, solo que en esta ocasión no acepta objetos mutables. Proporciona dos valores: el *string* (pasaremos un apuntador a `const char*`) y la longitud (pasaremos un apuntador a `int` o a `Py_ssize_t`).
+- ***z*** es como ***s***, pero el *string Python* puede ser ***None***, en cuyo caso el apuntador *C* será ***NULL***.
+- ***z\**** es como ***s\****, pero el *string Python* puede ser ***None***, en cuyo caso el miembro ***buf*** de la estructura será ***NULL***.
+- ***z#*** es como ***s#***, pero el *string Python* puede ser ***None***, en cuyo caso el apuntador *C* será ***NULL***.
+- ***y*** es como ***s***, pero solo acepta objetos de tipo `bytes` **inmutables**, que no pueden contener *bytes* nulos).
+- ***y\**** es como ***s\****, pero solo acepta objetos tipo `bytes`, que sí pueden contener *bytes* nulos. **Es la forma recomendada de obtener datos binarios**.
+- ***y#*** es como ***s#***, pero solo acepta objetos de tipo `bytes` **inmutables**, que sí pueden contener *bytes* nulos).
+- ***S*** extrae un objeto `bytes` directamente, sin convertir. Pasaremos un apuntador al tipo *C* (apuntador a `PyObject*` o a `PyBytesObject*`).
+- ***Y*** extrae un objeto `bytearray` directamente, sin convertir. El tipo *C* será `PyObject*` o `PyByteArrayObject*` (pasaremos apuntador a uno de estos tipos).
+- ***U*** extrae un *string Unicode* directamente, sin convertir. El tipo *C* será `PyObject*` (pasaremos apuntador a `Py_Object*`).
+- ***w\**** es como ***y\****, pero permite lectura y escritura en el *buffer* obtenido. Una vez se ha terminado de modificar el *buffer* se debe desbloquear para escritura con `PyBuffer_Release()`.
+- ***es*** variación de ***s*** que permite establecer la codificación del *string*. Necesita dos argumentos: el primero se utiliza como entrada, no salida: es un `const char*` que apunta al nombre de la codificación deseada (debe ser conocida por *Python*); si es ***NULL***, se entenderá *UTF-8*. El segundo es `char**`, es decir, un apuntador a un *buffer* de elementos `char` (se puede ver como un apuntador a un *array* de caracteres). El apuntador que referenciamos pasará a apuntar a un *buffer* con el texto solicitado. Para ello, la función reservará la memoria necesaria para el *buffer*, que no es gestionado por el objeto *Python*, con lo que cuando hayamos terminado de trabajar con él deberemos invocar `PyMem_Free()` para liberarlo. Debemos pasar como argumentos a `PyArg_ParseTuple()`, pues, uno de tipo `const char*` (es de entrada) y un apuntador a `char**`.
+- ***et*** es como ***es***, pero acepta también objetos `bytes` (o `bytearray`), en cuyo caso, el resultado se pasará sin codificar (se asumirá que la codificación del `bytes` o `bytearray` ya es la deseada).
+- ***es#*** es como ***es***, pero por un lado permite datos de entrada con caracteres nulos, y por otro lado requiere de un tercer argumento (pasaremos apuntador a `int` o a `Py_ssize_t`), en el que colocará la longitud del *buffer* de salida. En este caso hay dos modos de funcionamiento:
+    - si el apuntador al *buffer* es nulo inicialmente, funcionará como de costumbre;
+    - en caso contrario, usará el valor del *buffer* para colocar allí el texto, sin reservar memoria, ya que asumirá que ya hay una cantidad de memoria reservada, igual al valor inicial del tercer argumento.
+- ***et#*** es como ***es#***, pero permite objetos `bytes` o `bytearray` (que pasarán sin codificar a la salida).
+- Números. En las conversiones a *unsigned* no hay comprobación de *overflow*.
+    - ***b*** entero no negativo a `unsigned char`.
+    - ***B*** entero a `unsigned char`.
+    - ***h*** entero a `short int`.
+    - ***H*** entero a `unsigned short int`.
+    - ***i*** entero a `int`.
+    - ***I*** entero a `unsigned int`.
+    - ***l*** entero a `long int`.
+    - ***k*** entero a `unsigned long int`.
+    - ***L*** entero a `long long int`.
+    - ***K*** entero a `unsigned long long int`.
+    - ***n*** entero a `Py_ssize_t`.
+    - ***c*** objeto `bytes` o `bytearray` de longitud 1 a `char`.
+    - ***C*** objeto *string* de longitud 1 a `int`.
+    - ***f*** número de punto flotante a `float`.
+    - ***d*** número de punto flotante a `double`.
+    - ***D*** número complejo a estructura `Py_complex`.
+- ***O*** es el objeto tal cual, sin conversión (tipo `PyObject*`).
+- ***O!*** es como ***O***, pero en este caso precisa dos argumentos: el primero es de entrada, y es un apuntador a un objeto que define un tipo *Python*; el segundo es el acostumbrado apuntador a un objeto, que debe ser del tipo especificado en el primer argumento.
+- ***p*** convierte un `bool` de *Python* a `int`.
+
+Si en la *format string* se indican paréntesis, dentro de los cuales hay (opcionalmente) *format units*, definimos una secuencia *Python* con los elementos indicados. Pueden anidarse.
+
+Existen otros caracteres (no permitidos dentro de paréntesis):
+- ***|*** indica que los argumentos a continuación son opcionales. Si no existen, la función no hace nada con el argumento *C* correspondiente.
+- ***$*** indica que el resto de los argumentos son *keyword only* (solo en `PyArg_ParseTupleAndKeywords()`).
+- ***:*** indica que la lista de *format units* ha terminado; tras ***:*** se indica el nombre de función que aparecerá en los posibles mensajes de error (valor asociado de la excepción que se levante).
+- ***;*** similar a ***:***, pero indica el mensaje de error en lugar del mensaje de error por defecto. ***:*** y ***;*** se excluyen mutuamente.
+
+```c
 int PyArg_ParseTupleAndKeywords(PyObject *args, PyObject *kw, const char *format, char *keywords[], ...);
 ```
 
-Parsean los argumentos recibidos en una tupla, como se ha visto ya. Si alguno de los argumentos extraídos es un objeto *Python*, será una *borrowed reference* (no habrá que decrementar conteo).
+Esta función es como `PyArg_ParseTuple()`, pero aquí proporcionamos, a parte de ***args*** (argumentos posicionales), el diccionario de argumentos ***kw***, que es el que ha recibido nuestra función. Por otro lado, indicamos el formato de cada uno en ***format***, y la secuencia (orden) de parseo de argumentos en el *array* de *strings* ***keywords***, que es un *array NULL-terminated* con los nombres de los *keyword arguments* en el orden deseado (los nombres vacíos indican parámetro *positional only*). El valor de retorno es como el de `PyArg_ParseTuple()`.
 
 ```c
 int PyArg_UnpackTuple(PyObject *args, const char *name, Py_ssize_t min, Py_ssize_t max, ...);
@@ -546,3 +551,47 @@ int PyArg_UnpackTuple(PyObject *args, const char *name, Py_ssize_t min, Py_ssize
 Esta forma de parsear la tupla de entrada no precisa de *format string*. Aquí la tupla ***args*** debe tener un mínimo de ***min*** elementos y un máximo de ***max*** (ambos números pueden ser iguales). Se deben proporcionar argumentos adicionales, apuntadores a `PyObject*`, que irán llenándose con los elementos de la tupla, sin conversiones. Los argumentos opcionales que no estén presentes en la tupla no modificarán el valor del correspondiente argumento (deberá ser inicializado anteriormente). El parámetro ***name*** es el nombre de función que se usará en un posible mensaje de error. Una función que parsee los argumentos de este modo debe declararse con ***METH_VARARGS*** en la tabla de funciones. Los objetos recibidos son *borrowed references*. La función retorna 1 si tiene éxito y 0 en caso contrario.
 
 ### *Building values*
+
+```c
+PyObject* Py_BuildValue(const char *format, ...);
+```
+
+Construye una tupla a partir de los argumentos (que son de entrada, por lo que no deberán ser apuntadores), y retorna una **nueva referencia** a dicha tupla. Usa una *format string* similar a la de `PyArg_ParseTuple()` y familia, aunque su efecto es a la inversa (de tipo *C* a tipo *Python*). Retorna ***NULL*** en caso de error.
+
+Si solo se le pasa un argumento opcional, retorna un solo objeto, no una tupla (para forzar una tupla de un elemento debería incluirse la *format unit* entre paréntesis). Si no se proporciona ningún argumento opcional, retona ***None*** (para forzar tupla vacía, se debe indicar un par de paréntesis en la *format string*).
+
+Estos son los valores que pueden tomar las *format units* (las que precisan una longitud tomarán un argumento `int` o `Py_ssize_t`):
+
+- ***s*** convierte un *null-terminated string C* codificado con *UTF-8* en un *string Python*. Si el apuntador es ***NULL***, se convierte a ***None***.
+- ***s#*** es como ***s*** pero usa un segundo argumento con la longitud del *string*, que no tiene por qué ser *null-terminated*.
+- ***y*** es como ***s*** pero convirtiendo el *string C* en un objeto `bytes`.
+- ***y#*** es como ***s#*** pero convirtiendo el *string C* en un objeto `bytes`.
+- ***z*** y ***z#*** son lo mismo que ***s*** y ***s#*** respectivamente.
+- ***u*** es como ***s*** pero la entrada es un *buffer Unicode* de `wchar_t`, con terminador nulo.
+- ***u#*** es como ***u*** pero con indicador de longitud en lugar de terminador nulo.
+- ***U*** y ***U#*** son lo mismo que ***s*** y ***s#*** respectivamente.
+- Números:
+    - ***i*** convierte `int` a entero.
+    - ***b*** convierte `char` a entero.
+    - ***h*** convierte `short int` a entero.
+    - ***l*** convierte `long int` a entero.
+    - ***B*** convierte `unsigned char` a entero.
+    - ***H*** convierte `unsigned short int` a entero.
+    - ***I*** convierte `unsigned int` a entero.
+    - ***k*** convierte `unsigned long` a entero.
+    - ***L*** convierte `long long int` a entero.
+    - ***K*** convierte `unsigned long long` a entero.
+    - ***n*** convierte `Py_ssize_t` a entero.
+    - ***c*** convierte `int` conteniendo un *byte* a un objeto `bytes` de longitud 1.
+    - ***C*** convierte `int` conteniendo un carácter (*wide*) a *string Unicode* de longitud 1.
+    - ***d*** convierte `double` a punto flotante.
+    - ***f*** convierte `float` a punto flotante.
+    - ***D*** convierte `Py_complex*` a número complejo.
+    - ***O*** y ***S*** convierten `Py_Object*` a objeto, sin cambio (solo aumenta su *reference count*).
+    - ***N*** es como ***O***, pero no incrementa el *reference count*, es decir, retorna una *borrowed reference* en lugar de una referencia nueva.
+
+Si la *format string* indica *format units* entre paréntesis ***()***, crea una tupla. Entre corchetes ***\[\]*** una lista. Entre llaves ***{}*** un diccionario, en cuyo caso se especificarán los pares clave-valor separados por dos puntos (***:***). Los elementos de una secuencia pueden separarse por comas en la *format string*.
+
+### Otras funciones
+
+Los capítulos 7 y 8 del documento *The C/Python API* documentan una gran cantidad de funciones para trabajar con todo tipo de objetos *Python*.
