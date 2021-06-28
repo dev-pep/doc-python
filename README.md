@@ -11,10 +11,10 @@ Lenguaje:
 
 Biblioteca estándar:
 
-1. [Biblioteca - Builtins](capitulos/libstd-01-builtins.md)
-2. [Biblioteca - Tipos builtin](capitulos/libstd-02-tipos-builtin.md)
-3. [Biblioteca - Formato](capitulos/libstd-03-formato.md)
-4. Biblioteca - ctypes
+1. [Builtins](capitulos/libstd-builtins.md)
+2. [Tipos builtin](capitulos/libstd-tipos-builtin.md)
+3. [Formato](capitulos/libstd-formato.md)
+4. [ctypes](capitulos/libstd-ctypes.md)
 
 Otros:
 
