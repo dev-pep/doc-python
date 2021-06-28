@@ -389,7 +389,7 @@ En cuanto a la segunda orden, crea la biblioteca compartida ***demo.so***:
 - `build/demo.o` es el archivo de entrada.
 - `-o build/demo.so` es el archivo de salida (***build/demo.so***).
 
-## Anexo: resumen de funciones útiles
+## Referencia rápida de algunas funciones útiles
 
 Esta información puede encontrarse en el documento *The Python/C API*.
 
@@ -528,6 +528,7 @@ Posibles *format units* del *string* de formato:
     - ***D*** número complejo a estructura `Py_complex`.
 - ***O*** es el objeto tal cual, sin conversión (tipo `PyObject*`).
 - ***O!*** es como ***O***, pero en este caso precisa dos argumentos: el primero es de entrada, y es un apuntador a un objeto que define un tipo *Python*; el segundo es el acostumbrado apuntador a un objeto, que debe ser del tipo especificado en el primer argumento.
+- ***O&*** realiza una conversión a través de una función indicada.
 - ***p*** convierte un `bool` de *Python* a `int`.
 
 Si en la *format string* se indican paréntesis, dentro de los cuales hay (opcionalmente) *format units*, definimos una secuencia *Python* con los elementos indicados. Pueden anidarse.
@@ -588,10 +589,384 @@ Estos son los valores que pueden tomar las *format units* (las que precisan una 
     - ***f*** convierte `float` a punto flotante.
     - ***D*** convierte `Py_complex*` a número complejo.
     - ***O*** y ***S*** convierten `Py_Object*` a objeto, sin cambio (solo aumenta su *reference count*).
+    - ***O&*** realiza una conversión a través de una función indicada.
     - ***N*** es como ***O***, pero no incrementa el *reference count*, es decir, retorna una *borrowed reference* en lugar de una referencia nueva.
 
 Si la *format string* indica *format units* entre paréntesis ***()***, crea una tupla. Entre corchetes ***\[\]*** una lista. Entre llaves ***{}*** un diccionario, en cuyo caso se especificarán los pares clave-valor separados por dos puntos (***:***). Los elementos de una secuencia pueden separarse por comas en la *format string*.
 
 ### Otras funciones
 
-Los capítulos 7 y 8 del documento *The C/Python API* documentan una gran cantidad de funciones para trabajar con todo tipo de objetos *Python*.
+Los capítulos 7 y 8 del documento *The C/Python API* documentan una gran cantidad de funciones para trabajar con todo tipo de objetos *Python*. Indicamos a continuación el prototipo de algunas de ellas, a modo de referencia rápida.
+
+#### *Object protocol*
+
+```c
+PyObject* Py_NotImplemented;  // objeto NotImplemented
+Py_RETURN_NOTIMPLEMENTED;  // macro que incrementa el conteo y retorna
+PyObject* PyObject_GetAttr(PyObject *o, PyObject *attr_name);
+PyObject* PyObject_GetAttrString(PyObject *o, const char *attr_name);
+int PyObject_SetAttr(PyObject *o, PyObject *attr_name, PyObject *v);
+int PyObject_SetAttrString(PyObject *o, const char *attr_name, PyObject *v);
+int PyObject_DelAttr(PyObject *o, PyObject *attr_name);
+int PyObject_DelAttrString(PyObject *o, const char *attr_name);
+PyObject* PyObject_Repr(PyObject *o);
+PyObject* PyObject_ASCII(PyObject *o);
+PyObject* PyObject_Str(PyObject *o);
+PyObject* PyObject_Bytes(PyObject *o);
+int PyObject_IsSubclass(PyObject *derived, PyObject *cls);
+int PyObject_IsInstance(PyObject *inst, PyObject *cls);
+int PyObject_IsTrue(PyObject *o);
+int PyObject_Not(PyObject *o);
+int PyObject_TypeCheck(PyObject *o, PyTypeObject *type);
+Py_ssize_t PyObject_Size(PyObject *o);
+Py_ssize_t PyObject_Length(PyObject *o);
+PyObject* PyObject_GetItem(PyObject *o, PyObject *key);
+int PyObject_SetItem(PyObject *o, PyObject *key, PyObject *v);
+int PyObject_DelItem(PyObject *o, PyObject *key);
+```
+
+#### *Call protocol*
+
+```c
+PyObject* PyObject_Call(PyObject *callable, PyObject *args, PyObject *kwargs);
+PyObject* PyObject_CallNoArgs(PyObject *callable);
+PyObject* PyObject_CallOneArg(PyObject *callable, PyObject *arg);
+PyObject* PyObject_CallObject(PyObject *callable, PyObject *args);
+PyObject* PyObject_CallFunction(PyObject *callable, const char *format, ...);
+PyObject* PyObject_CallMethod(PyObject *obj, const char *name, const char *format, ...);
+PyObject* PyObject_CallFunctionObjArgs(PyObject *callable, ...);
+PyObject* PyObject_CallMethodObjArgs(PyObject *obj, PyObject *name, ...);
+PyObject* PyObject_CallMethodNoArgs(PyObject *obj, PyObject *name);
+PyObject* PyObject_CallMethodOneArg(PyObject *obj, PyObject *name, PyObject *arg);
+```
+
+#### *Number protocol*
+
+Existen numerosas funciones para todo tipo de operaciones matemáticas y de conversión.
+
+```c
+int PyNumber_Check(PyObject *o);
+int PyIndex_Check(PyObject *o);
+```
+#### *Sequence protocol*
+
+```c
+int PySequence_Check(PyObject *o);
+Py_ssize_t PySequence_Size(PyObject *o);
+Py_ssize_t PySequence_Length(PyObject *o);
+PyObject* PySequence_Concat(PyObject *o1, PyObject *o2);
+PyObject* PySequence_Repeat(PyObject *o, Py_ssize_t count);
+PyObject* PySequence_InPlaceConcat(PyObject *o1, PyObject *o2);
+PyObject* PySequence_InPlaceRepeat(PyObject *o, Py_ssize_t count);
+PyObject* PySequence_GetItem(PyObject *o, Py_ssize_t i);
+PyObject* PySequence_GetSlice(PyObject *o, Py_ssize_t i1, Py_ssize_t i2);
+int PySequence_SetItem(PyObject *o, Py_ssize_t i, PyObject *v);
+int PySequence_DelItem(PyObject *o, Py_ssize_t i);
+int PySequence_SetSlice(PyObject *o, Py_ssize_t i1, Py_ssize_t i2, PyObject *v);
+int PySequence_DelSlice(PyObject *o, Py_ssize_t i1, Py_ssize_t i2);
+Py_ssize_t PySequence_Count(PyObject *o, PyObject *value);
+int PySequence_Contains(PyObject *o, PyObject *value);
+Py_ssize_t PySequence_Index(PyObject *o, PyObject *value);
+PyObject* PySequence_List(PyObject *o);
+PyObject* PySequence_Tuple(PyObject *o);
+```
+
+#### *Mapping protocol*
+
+```c
+int PyMapping_Check(PyObject *o);
+Py_ssize_t PyMapping_Size(PyObject *o);
+Py_ssize_t PyMapping_Length(PyObject *o);
+PyObject* PyMapping_GetItemString(PyObject *o, const char *key);
+int PyMapping_SetItemString(PyObject *o, const char *key, PyObject *v);
+int PyMapping_DelItem(PyObject *o, PyObject *key);
+int PyMapping_DelItemString(PyObject *o, const char *key);
+PyObject* PyMapping_Keys(PyObject *o);
+PyObject* PyMapping_Values(PyObject *o);
+PyObject* PyMapping_Items(PyObject *o);
+```
+
+#### *Fundamental objects*
+
+`PyTypeObject` es una estructura *C* usada para describir tipos *built-in* en *Python*.
+
+`PyType_Type` es un **objeto** *Python* (por tanto, de tipo `PyObject*`). Es un objeto tipo (o clase). En *Python* en es objeto ***type*** (el tipo del objeto base).
+
+```c
+int PyType_Check(PyObject *o);
+```
+
+Retorna *non-zero* si el objeto es un objeto *type*, incluyendo instancias de tipos derivados. En caso contrario, retorna 0.
+
+> Esta función no comprueba si un objeto es de determinado tipo, sino si el objeto es un tipo en sí, ya sea el tipo base, o cualquier tipo derivado de este.
+
+```c
+int PyType_CheckExact(PyObject *o)
+```
+
+Esta función es como `PyType_Check()`, pero no da verdadero en subclases (solo el tipo base).
+
+```c
+PyObject* Py_None;  // instancia del objeto None
+Py_RETURN_NONE;  // macro que incrementa su conteo y retorna None
+```
+
+#### Objetos numéricos
+
+Los objetos *Python* son de tipo apuntador a `PyObject`. Este tipo tiene subtipos derivados, como `PyLongObject`, `PyFloatObject`, etc. Por otro lado existen los objetos que describen un tipo. Estos objetos son de tipo `PyTypeObject`, y se usan cuando queremos referirnos a un tipo, y no a un objeto.
+
+Las funciones que retornan un entero (la mayoría de las que empiezan por `PyLong_As`) retornan ***-1*** en caso de error, lo cual puede confundirse precisamente con un valor numérico. Para saber si se ha producido error en ese caso, habrá que consultar `PyErr_Occurred()`.
+
+Las funciones que comprueban que un objeto sea de un tipo determinado, comprueban que el tipo del objeto sea un objeto del tipo adecuado. Por ejemplo, la función `PyLong_Check()` comprueba que el objeto que le pasamos tenga como tipo asociado un objeto `PyLong_Type`. Si el objeto es realmente un entero *Python*, será un objeto que ***en *C*** será del tipo `PyObject*` o subtipo `PyLongObject*`, lo cual es una estructura que describe el tipo que tiene el objeto ***en *Python***, para lo cual uno de los campos de esta estructura tiene una referencia al tipo *Python* pertinente, en este caso una instancia del objeto `PyLong_Type` (que a su vez es de tipo `PyTypeObject`).
+
+```c
+// Enteros:
+PyLongObject;
+PyTypeObject PyLong_Type;
+int PyLong_Check(PyObject *p);
+int PyLong_CheckExact(PyObject *p);
+PyObject* PyLong_FromLong(long v);
+PyObject* PyLong_FromUnsignedLong(unsigned long v);
+PyObject* PyLong_FromLongLong(long long v);
+PyObject* PyLong_FromUnsignedLongLong(unsigned long long v);
+PyObject* PyLong_FromDouble(double v);
+PyObject* PyLong_FromString(const char *str, char **pend, int base);
+PyObject* PyLong_FromUnicodeObject(PyObject *u, int base);
+long PyLong_AsLong(PyObject *obj);
+long long PyLong_AsLongLong(PyObject *obj);
+Py_ssize_t PyLong_AsSsize_t(PyObject *pylong);
+unsigned long PyLong_AsUnsignedLong(PyObject *pylong);
+size_t PyLong_AsSize_t(PyObject *pylong);
+unsigned long long PyLong_AsUnsignedLongLong(PyObject *pylong);
+double PyLong_AsDouble(PyObject *pylong);
+```
+
+```c
+// Booleanos (subtipo de entero):
+int PyBool_Check(PyObject *o);
+PyObject* Py_False;  // objeto falso
+PyObject* Py_True;  // objeto verdadero
+Py_RETURN_FALSE;  // macro que incrementa conteo y retorna
+Py_RETURN_TRUE;  // macro que incrementa conteo y retorna
+PyObject* PyBool_FromLong(long v);
+```
+
+```c
+// Punto flotante:
+PyFloatObject;
+PyTypeObject PyFloat_Type;
+int PyFloat_Check(PyObject *p);
+int PyFloat_CheckExact(PyObject *p);
+PyObject* PyFloat_FromDouble(double v);
+double PyFloat_AsDouble(PyObject *pyfloat);
+```
+
+```c
+// Complejos:
+typedef struct {
+    double real;
+    double imag;
+} Py_complex;  // estructura que guarda el complejo en C
+PyComplexObject;
+PyTypeObject PyComplex_Type;
+int PyComplex_Check(PyObject *p);
+int PyComplex_CheckExact(PyObject *p);
+PyObject* PyComplex_FromCComplex(Py_complex v);
+PyObject* PyComplex_FromDoubles(double real, double imag);
+double PyComplex_RealAsDouble(PyObject *op);
+double PyComplex_ImagAsDouble(PyObject *op);
+Py_complex PyComplex_AsCComplex(PyObject *op);
+```
+
+#### Secuencias
+
+```c
+// Bytes:
+PyBytesObject;
+PyTypeObject PyBytes_Type;
+int PyBytes_Check(PyObject *o);
+int PyBytes_CheckExact(PyObject *o);
+PyObject* PyBytes_FromString(const char *v);
+PyObject* PyBytes_FromStringAndSize(const char *v, Py_ssize_t len);
+PyObject* PyBytes_FromObject(PyObject *o);
+Py_ssize_t PyBytes_Size(PyObject *o);
+char* PyBytes_AsString(PyObject *o);
+int PyBytes_AsStringAndSize(PyObject *obj, char **buffer, Py_ssize_t *length);
+void PyBytes_Concat(PyObject **bytes, PyObject *newpart);
+void PyBytes_ConcatAndDel(PyObject **bytes, PyObject *newpart);
+```
+
+```c
+// Bytearrays:
+PyByteArrayObject;
+PyTypeObject PyByteArray_Type;
+int PyByteArray_Check(PyObject *o);
+int PyByteArray_CheckExact(PyObject *o);
+PyObject* PyByteArray_FromObject(PyObject *o);
+PyObject* PyByteArray_FromStringAndSize(const char *string, Py_ssize_t len);
+PyObject* PyByteArray_Concat(PyObject *a, PyObject *b);
+Py_ssize_t PyByteArray_Size(PyObject *bytearray);
+char* PyByteArray_AsString(PyObject *bytearray);
+```
+
+En cuanto a los objetos *Unicode* (*strings Python*), existen los tipos `Py_UCS4` (entero de 32 bits), `Py_UCS2` (16 bits), `Py_UCS1` (8 bits) y `Py_UNICODE` (`wchar_t`).
+
+Las funciones de este *API* que trabajan con objetos *Unicode* usan el tipo `PyObject*`, aunque internamente usan los subtipos (dependiendo de los bits por carácter) `PyASCIIObject`, `PyCompactUnicodeObject` y `PyUnicodeObject`.
+
+Es posible escribir en un *string Python*, siempre y cuando solo exista una referencia al objeto (la que tenemos nosotros), ya que son inmutables.
+
+```c
+PyTypeObject PyUnicode_Type;
+int PyUnicode_Check(PyObject *o);
+int PyUnicode_CheckExact(PyObject *o);
+Py_UCS1* PyUnicode_1BYTE_DATA(PyObject *o);
+Py_UCS2* PyUnicode_2BYTE_DATA(PyObject *o);
+Py_UCS4* PyUnicode_4BYTE_DATA(PyObject *o);
+int PyUnicode_KIND(PyObject *o);  // indica cuántos bits usa el string. Posibles valores de retorno:
+// PyUnicode_WCHAR_KIND, PyUnicode_1BYTE_KIND, PyUnicode_2BYTE_KIND o PyUnicode_4BYTE_KIND
+void* PyUnicode_DATA(PyObject *o);
+void PyUnicode_WRITE(int kind, void *data, Py_ssize_t index, Py_UCS4 value);
+Py_UCS4 PyUnicode_READ(int kind, void *data, Py_ssize_t index);
+int PyUnicode_IsIdentifier(PyObject *o);
+int Py_UNICODE_ISSPACE(Py_UNICODE ch);
+int Py_UNICODE_ISLOWER(Py_UNICODE ch);
+int Py_UNICODE_ISUPPER(Py_UNICODE ch);
+int Py_UNICODE_ISTITLE(Py_UNICODE ch);
+int Py_UNICODE_ISLINEBREAK(Py_UNICODE ch);
+int Py_UNICODE_ISDECIMAL(Py_UNICODE ch);
+int Py_UNICODE_ISDIGIT(Py_UNICODE ch);
+int Py_UNICODE_ISNUMERIC(Py_UNICODE ch);
+int Py_UNICODE_ISALPHA(Py_UNICODE ch);
+int Py_UNICODE_ISALNUM(Py_UNICODE ch);
+int Py_UNICODE_ISPRINTABLE(Py_UNICODE ch);
+int Py_UNICODE_TODECIMAL(Py_UNICODE ch);
+int Py_UNICODE_TODIGIT(Py_UNICODE ch);
+double Py_UNICODE_TONUMERIC(Py_UNICODE ch);
+Py_UNICODE_IS_SURROGATE(ch);  // en UTF-16; 0xD800 <= ch <= 0xDFFF
+Py_UNICODE_IS_HIGH_SURROGATE(ch);  // el primero del par
+Py_UNICODE_IS_LOW_SURROGATE(ch);  // el segundo del par
+Py_UNICODE_JOIN_SURROGATES(high, low);  // retorna carácter 32 bits
+PyObject* PyUnicode_New(Py_ssize_t size, Py_UCS4 maxchar);  // maxchar suele ser uno de 127, 255, 65535 o 1114111
+PyObject* PyUnicode_FromKindAndData(int kind, const void *buffer, Py_ssize_t size);
+PyObject* PyUnicode_FromStringAndSize(const char *u, Py_ssize_t size);
+PyObject *PyUnicode_FromString(const char *u);
+Py_ssize_t PyUnicode_GetLength(PyObject *unicode);
+Py_ssize_t PyUnicode_CopyCharacters(PyObject *to, Py_ssize_t to_start, PyObject *from, Py_ssize_t from_start, Py_ssize_t how_many);
+Py_ssize_t PyUnicode_Fill(PyObject *unicode, Py_ssize_t start, Py_ssize_t length, Py_UCS4 fill_char);
+int PyUnicode_WriteChar(PyObject *unicode, Py_ssize_t index, Py_UCS4 character);
+Py_UCS4 PyUnicode_ReadChar(PyObject *unicode, Py_ssize_t index);
+PyObject* PyUnicode_Substring(PyObject *str, Py_ssize_t start, Py_ssize_t end);
+Py_UCS4* PyUnicode_AsUCS4(PyObject *u, Py_UCS4 *buffer, Py_ssize_t buflen, int copy_null);
+Py_UCS4* PyUnicode_AsUCS4Copy(PyObject *u);
+PyObject* PyUnicode_FromWideChar(const wchar_t *w, Py_ssize_t size);
+Py_ssize_t PyUnicode_AsWideChar(PyObject *unicode, wchar_t *w, Py_ssize_t size);
+wchar_t* PyUnicode_AsWideCharString(PyObject *unicode, Py_ssize_t *size);
+PyObject* PyUnicode_Decode(const char *s, Py_ssize_t size, const char *encoding, const char *errors);
+PyObject* PyUnicode_AsEncodedString(PyObject *unicode, const char *encoding, const char *errors);
+PyObject* PyUnicode_Concat(PyObject *left, PyObject *right);
+PyObject* PyUnicode_Split(PyObject *s, PyObject *sep, Py_ssize_t maxsplit);
+PyObject* PyUnicode_Splitlines(PyObject *s, int keepend);
+PyObject* PyUnicode_Join(PyObject *separator, PyObject *seq);
+Py_ssize_t PyUnicode_Find(PyObject *str, PyObject *substr, Py_ssize_t start, Py_ssize_t end, int direction);
+Py_ssize_t PyUnicode_FindChar(PyObject *str, Py_UCS4 ch, Py_ssize_t start, Py_ssize_t end, int direction);
+Py_ssize_t PyUnicode_Count(PyObject *str, PyObject *substr, Py_ssize_t start, Py_ssize_t end);
+PyObject* PyUnicode_Replace(PyObject *str, PyObject *substr, PyObject *replstr, Py_ssize_t maxcount);
+int PyUnicode_Compare(PyObject *left, PyObject *right);
+```
+
+```c
+// Tuplas:
+PyTupleObject;
+PyTypeObject PyTuple_Type;
+int PyTuple_Check(PyObject *p);
+int PyTuple_CheckExact(PyObject *p);
+PyObject* PyTuple_New(Py_ssize_t len);
+PyObject* PyTuple_Pack(Py_ssize_t n, ...);
+Py_ssize_t PyTuple_Size(PyObject *p);
+PyObject* PyTuple_GetItem(PyObject *p, Py_ssize_t pos);
+PyObject* PyTuple_GetSlice(PyObject *p, Py_ssize_t low, Py_ssize_t high);
+int PyTuple_SetItem(PyObject *p, Py_ssize_t pos, PyObject *o);  // solo si no hay referencias fuera de la nuestra (tuplas son inmutables)
+int _PyTuple_Resize(PyObject **p, Py_ssize_t newsize);  // idem
+```
+
+```c
+// Listas:
+PyListObject;
+PyTypeObject PyList_Type;
+int PyList_Check(PyObject *p);
+int PyList_CheckExact(PyObject *p);
+PyObject* PyList_New(Py_ssize_t len);
+Py_ssize_t PyList_Size(PyObject *list);
+PyObject* PyList_GetItem(PyObject *list, Py_ssize_t index);
+int PyList_SetItem(PyObject *list, Py_ssize_t index, PyObject *item);
+int PyList_Insert(PyObject *list, Py_ssize_t index, PyObject *item);
+int PyList_Append(PyObject *list, PyObject *item);
+PyObject* PyList_GetSlice(PyObject *list, Py_ssize_t low, Py_ssize_t high);
+int _PyList_Resize(PyObject **p, Py_ssize_t newsize);
+int PyList_SetSlice(PyObject *list, Py_ssize_t low, Py_ssize_t high, PyObject *itemlist);
+int PyList_Sort(PyObject *list);
+int PyList_Reverse(PyObject *list);
+PyObject* PyList_AsTuple(PyObject *list);
+```
+
+#### Contenedores
+
+```c
+// Diccionarios:
+PyDictObject;
+PyTypeObject PyDict_Type;
+int PyDict_Check(PyObject *p);
+int PyDict_CheckExact(PyObject *p);
+PyObject* PyDict_New();
+void PyDict_Clear(PyObject *p);
+int PyDict_Contains(PyObject *p, PyObject *key);
+PyObject* PyDict_Copy(PyObject *p);
+int PyDict_SetItem(PyObject *p, PyObject *key, PyObject *val);
+int PyDict_SetItemString(PyObject *p, const char *key, PyObject *val);
+int PyDict_DelItem(PyObject *p, PyObject *key);
+int PyDict_DelItemString(PyObject *p, const char *key);
+PyObject* PyDict_GetItem(PyObject *p, PyObject *key);
+PyObject* PyDict_GetItemString(PyObject *p, const char *key);
+PyObject* PyDict_Items(PyObject *p);
+PyObject* PyDict_Keys(PyObject *p);
+PyObject* PyDict_Values(PyObject *p);
+Py_ssize_t PyDict_Size(PyObject *p);
+```
+
+```c
+// Sets:
+PySetObject;
+PyTypeObject PySet_Type;
+PyTypeObject PyFrozenSet_Type;
+int PySet_Check(PyObject *p);
+int PyFrozenSet_Check(PyObject *p);
+int PyAnySet_Check(PyObject *p);
+int PyAnySet_CheckExact(PyObject *p);
+int PyFrozenSet_CheckExact(PyObject *p);
+PyObject* PySet_New(PyObject *iterable);
+PyObject* PyFrozenSet_New(PyObject *iterable);
+Py_ssize_t PySet_Size(PyObject *anyset);
+int PySet_Contains(PyObject *anyset, PyObject *key);
+int PySet_Add(PyObject *set, PyObject *key);
+int PySet_Discard(PyObject *set, PyObject *key);
+PyObject* PySet_Pop(PyObject *set);
+int PySet_Clear(PyObject *set);
+```
+
+#### Objetos función y método
+
+```c
+// Funciones:
+PyFunctionObject;
+PyTypeObject PyFunction_Type;
+int PyFunction_Check(PyObject *o);
+PyObject* PyFunction_New(PyObject *code, PyObject *globals);
+
+// Métodos (bound functions):
+PyTypeObject PyMethod_Type;
+int PyMethod_Check(PyObject *o);
+PyObject* PyMethod_New(PyObject *func, PyObject *self);
+PyObject* PyMethod_Function(PyObject *meth);
+PyObject* PyMethod_Self(PyObject *meth);
+```
+
