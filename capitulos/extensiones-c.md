@@ -366,7 +366,7 @@ Para generar el módulo usando el compilador *GCC* se podrían usar estos comand
 
 ```
 gcc -DNDEBUG -g -O3 -Wall -fPIC
-        -I/usr/local/include/python3.9 -c demo.c -o build/demo.o`
+        -I/usr/local/include/python3.9 -c demo.c -o build/demo.o
 
 gcc -shared build/demo.o -o build/demo.so
 ```
@@ -969,4 +969,3 @@ PyObject* PyMethod_New(PyObject *func, PyObject *self);
 PyObject* PyMethod_Function(PyObject *meth);
 PyObject* PyMethod_Self(PyObject *meth);
 ```
-
