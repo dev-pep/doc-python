@@ -347,7 +347,9 @@ def comparaNums(a, b):
     return b[0] - a[0]
 ```
 
-Así, ***comparaNums*** es una *callback function* directamente, es decir, ya no podríamos llamarla desde *Python*, pero sí pasarla directamente como argumento.
+Así, ***comparaNums*** es una *callback function* directamente, es decir, ya se podría pasar directamente como argumento a una funcion externa que esperase un apuntador a función de las características especificadas.
+
+La función del ejemplo sigue siendo *callable* desde *Python*. En ese caso, deberíamos pasarle como argumentos, no dos números *Python*, sino dos objetos de tipo `POINTER(c_int)`.
 
 Se debe tener en cuenta lo dicho para el tipo `POINTER()` en cuanto al *garbage collector*. Cuando dejen de haber referencias a la función apuntada y al objeto `CFUNCTYPE()`, la función puede ser liberada de memoria en cualquier momento. Hay que tener en cuenta que si se usa el *decorator*, no existe más referencia a la función que la que proporciona el objeto *callback function*.
 
