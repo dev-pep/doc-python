@@ -19,7 +19,6 @@ Biblioteca estándar:
 Otros:
 
 - [Extensiones en C](capitulos/extensiones-c.md)
-- Herramientas (pip, virtualenv)
 - Kivy
 
 ## Bibliografía
