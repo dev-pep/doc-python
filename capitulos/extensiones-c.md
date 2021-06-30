@@ -358,7 +358,7 @@ Las macros `Py_INCREF()` y `Py_DECREF()` no comprueban si el apuntador pasado es
 
 Una extención *C* es un archivo de biblioteca compartida que exporta una función de inicialización. En *Unix* será un archivo ***.so***, y en *Windows* será un archivo ***.pyd***, que básicamente es lo mismo que un archivo ***.dll*** pero con una extensión propia de *Python* para evitar conflictos con otras bibliotecas *DLL*.
 
-Tal archivo debe pues tener el nombre correcto del módulo la extensión adecuada al sistema operativo. Para que sea localizable, debe residir en una de las carpetas de ***PYTHONPATH***.
+Tal archivo debe pues tener el nombre correcto del módulo la extensión adecuada al sistema operativo. Para que sea localizable, debe residir en una de las carpetas de ***PYTHONPATH*** o estar localizable según la variable ***sys.path***.
 
 Este apartado explica cómo construir nuestro módulo sin utilizar directamente un compilador, sino a través de un *script* de creación de un archivo de biblioteca compartida usando el módulo *Python* ***distutils***.
 
