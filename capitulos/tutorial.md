@@ -36,7 +36,7 @@ Para comentarios se usa el carácter `#` (no dentro de literales *string*). Hast
 
 En modo interactivo, entrar una expresión la evalúa y muestra su valor.
 
-El símbolo `/` es el operador división de punto flotante (*float*); la división entera (*int*) es `//` (devuelve el *floor*); resto (módulo) es `%`. Para potencias se usa `**`. Suma es `+`, resta `-`, y asignación `=`.
+El símbolo `/` es el operador división de punto flotante (*float*); la división entera (`int`) es `//` (devuelve el *floor*); resto (módulo) es `%`. Para potencias se usa `**`. Suma es `+`, resta `-`, y asignación `=`.
 
 Las expresiones con enteros y *floats*, convierten los enteros a *float* antes de evaluar.
 
@@ -63,7 +63,7 @@ Un *raw string* toma los caracteres tal cual, no entiende de *escaped characters
 
 ***r'Hola,\\nen'*** (o ***r"Hola,\\nen"***) incluye el carácter '***\\***' entre la coma y la '***n***'.
 
-Para *multiline strings* podemos usar *triple-quoted strings*: ***\"""..."""*** o ***'''...'''*** y todos los *newlines* que tecleemos quedarán también definidos en el *string*.
+Para *multiline strings* podemos usar *triple-quoted strings*: ***\"\"\"...\"\"\"*** o ***\'\'\'...\'\'\'*** y todos los *newlines* que tecleemos quedarán también definidos en el *string*.
 
 De todas formas, si el último carácter de una línea es '***\\***', la línea se concatena con la siguiente, aunque estemos dentro de un *triple-quoted string*. Es la forma de definir una línea lógica, compuesta por dos o más líneas físicas.
 
@@ -135,7 +135,7 @@ Eliminar elementos:
 ['A', 'b', 'f', 'g', 'h']
 ```
 
-La built-in function ***len()*** también se aplica a listas, devolviendo el número de elementos de primer nivel (un elemento lista con varios elementos a su vez, contará como uno).
+La *built-in function* ***len()*** también se aplica a listas, devolviendo el número de elementos de primer nivel (un solo elemento lista con varios elementos a su vez, contará como uno).
 
 ```python
 >>> len(letters)
@@ -152,7 +152,7 @@ Borrar todos los elementos
 
 Las listas son anidables.
 
-Para ver si un elemento 'e' existe en una lista 'L', `e in L` devuelve ***True*** si es cierto y ***False*** de otro modo.
+Para ver si un elemento ***e*** existe en una lista ***L***, `e in L` devuelve ***True*** si es cierto y ***False*** de otro modo.
 
 ### Notas personales
 
@@ -222,7 +222,7 @@ El operador asignación (***=***) simplemente asigna un ID o referencia a la var
 
 ```python
 >>> a = [[1, 2, 3], [11, 22, 33], [111, 222, 333]]
->>> b=a
+>>> b = a
 >>> a is b
 True
 ```
@@ -239,12 +239,12 @@ Si queremos que cada variable sea una referencia a un objeto distinto, debemos h
 
 #### *Shallow copy* / *deep copy*
 
-Siguiendo con el ejemplo anterior, y una vez definido 'a', podemos hacer una *shallow copy* en 'b', de varias formas distintas:
+Siguiendo con el ejemplo anterior, y una vez definido ***a***, podemos hacer una *shallow copy* en ***b***, de varias formas distintas:
 
-- `b=a[:]` - si el objeto *sliced* está a la izquierda del operador asignación, no se crea una *shallow copy*, sino que sirve solamente para manipular los elementos de la lista a los que se refiere, como hemos visto antes.
-- `b=list(a)`
-- `b=a.copy()`
-- `b=copy.copy(a)` (se debe importar el módulo ***copy*** de la biblioteca estándar).
+- `b = a[:]` - si el objeto *sliced* está a la izquierda del operador asignación, no se crea una *shallow copy*, sino que sirve solamente para manipular los elementos de la lista a los que se refiere, como hemos visto antes.
+- `b = list(a)`
+- `b = a.copy()`
+- `b = copy.copy(a)` (se debe importar el módulo ***copy*** de la biblioteca estándar).
 
 Después de ejecutar una de estas acciones:
 
@@ -381,11 +381,11 @@ Genera una secuencia con una progresión aritmética:
 
 `range(10)` genera los valores 0, 1, 2, 3, 4, 5, 6, 7, 8, 9.
 
-`range(5,10)` genera los valores 5, 6, 7, 8, 9.
+`range(5, 10)` genera los valores 5, 6, 7, 8, 9.
 
-`range(0,10,3)` genera los valores 0, 3, 6, 9 (*step* 3).
+`range(0, 10, 3)` genera los valores 0, 3, 6, 9 (*step* 3).
 
-`range(-10,-100,-30)` genera los valores -10, -40, -70.
+`range(-10, -100, -30)` genera los valores -10, -40, -70.
 
 Es un iterable, pero no crea los elementos en memoria, ahorrando espacio. Para crear una lista a partir de cualquier iterable, se usa la función `list()` (construye una lista a partir de un iterable):
 
@@ -489,8 +489,8 @@ def parrot(voltage, state='stiff', action='voom', type='Bluish'):
 
 ```python
 parrot(1000)
-parrot(action = 'VOOOOOM', voltage = 1000000)
-parrot('a thousand', state = 'pushing up the daisies')
+parrot(action='VOOOOOM', voltage=1000000)
+parrot('a thousand', state='pushing up the daisies')
 parrot('a million', 'bereft of life', 'jump')
 ```
 
@@ -627,14 +627,14 @@ El estilo de *Python* definido en el *PEP 8* se toma como oficial:
 
 Las listas tienen también los siguientes métodos (sea 'a' una lista):
 
-- `a.append(x)` - añade un elemento al final de la lista; equivale a `a[len(a):]=[x]`.
-- `a.extend(L)` - añade elementos de cualquier iterable ***L***; equivale a `a[len(a):]=L`.
-- `a.insert(i,x)` - inserta antes del elemento con índice 'i'; si 'i' es igual a `len(a)`, equivale a `append()`. Si es 0, inserta por delante.
-- `a.remove(x)` - elimina el primer elemento cuyo valor es 'x'. Levanta excepción ***RaiseError*** si no hay ninguno.
-- `a.pop([i])` - devuelve el elemento con índice 'i' y lo elimina de la lista; si no especificamos índice 'i' (opcional), usa el último elemento de la lista.
+- `a.append(x)` - añade un elemento al final de la lista; equivale a `a[len(a):] = [x]`.
+- `a.extend(L)` - añade elementos de cualquier iterable ***L***; equivale a `a[len(a):] = L`.
+- `a.insert(i, x)` - inserta antes del elemento con índice ***i***; si ***i*** es igual a `len(a)`, equivale a `append()`. Si es 0, inserta por delante.
+- `a.remove(x)` - elimina el primer elemento cuyo valor es ***x***. Levanta excepción ***RaiseError*** si no hay ninguno.
+- `a.pop([i])` - devuelve el elemento con índice ***i*** y lo elimina de la lista; si no especificamos índice ***i*** (opcional), usa el último elemento de la lista.
 - `a.clear()` - elimina todos los elementos de la lista. Equivale a `del a[:]`.
-- `a.index(x [,start [,end]])` - devuelve el índice del primer elemento con valor 'x'. Los parámetros 'start' y 'end', en numeración de *slice*, limitan la búsqueda a ciertas posiciones. El resultado es siempre relativo al principio absoluto.
-- `a.count(x)` - devuelve cuántos elementos iguales a 'x' hay.
+- `a.index(x [,start [,end]])` - devuelve el índice del primer elemento con valor ***x***. Los parámetros ***start*** y ***end***, en numeración de *slice*, limitan la búsqueda a ciertas posiciones. El resultado es siempre relativo al principio absoluto.
+- `a.count(x)` - devuelve cuántos elementos iguales a ***x*** hay.
 - `a.sort(key=None, reverse=False)` - ordena los elementos.
 - `a.reverse()` - invierte el orden de los elementos.
 - `a.copy()` - devuelve una *shallow copy* de la lista; equivale a `a[:]`.
@@ -645,7 +645,7 @@ Combinar `append()` con `pop()`.
 
 #### 5.1.2 Using Lists as Queues
 
-Mientras que `append()` y `pop()` son eficientes, eliminar por el principio no lo es, ya que se tienen que desplazar una posición todos los elementos a partir del segundo. Para ello es mejor usar el tipo ***collections.deque***, especial para colas, ya que tiene un método `popleft()`.
+Mientras que `append()` y `pop()` son eficientes, eliminar por el principio no lo es, ya que se tienen que desplazar una posición todos los elementos a partir del segundo. Para ello es mejor usar el tipo `collections.deque`, especial para colas, ya que tiene un método `popleft()`.
 
 #### 5.1.3 List Comprehensions
 
@@ -789,7 +789,7 @@ El diccionario vacío se puede definir mediante ***{}***.
 
 Añadir un valor mediante una clave ya existente, simplemente actualiza el *value* correspondiente a esa clave. Mediante `del` podemos eliminar uno de los pares.
 
-Si tenemos un diccionario d, haciendo `list(d)` obtenemos una lista con las claves (con el orden en que fueron insertadas en su momento). Si lo queremos ordenado, lo haremos mediante `sorted(d)`.
+Si tenemos un diccionario ***d***, haciendo `list(d)` obtenemos una lista con las claves (con el orden en que fueron insertadas en su momento). Si lo queremos ordenado, lo haremos mediante `sorted(d)`.
 
 Para saber si una clave existe en el diccionario se puede mirar mediante `'clave' in d`.
 
@@ -888,7 +888,7 @@ No se puede utilizar el operador de asignación (como en *C*) en medio de una ex
     a=3+(b=5)
           ^
 SyntaxError: invalid syntax
->>> a=3+(b:=5)
+>>> a = 3 + (b := 5)
 >>> a
 8
 ```
@@ -1285,7 +1285,7 @@ except <error2>:
 
 Esta es la secuencia de acciones:
 
-- Primero se ejecutan las sentencias de la cláusula `try` (de`try` a `except`).
+- Primero se ejecutan las sentencias de la cláusula `try` (de `try` a `except`).
     - Si no se levanta ninguna excepción en toda la cláusula (incluyendo excepciones no tratadas provenientes de funciones a las que hayamos llamado), se salta las cláusulas `except` y la ejecución sigue tras el bloque `try`.
     - Si se levanta excepción, se salta el resto de la cláusula `try` y se empieza a buscar en las cláusulas `except`, en orden de aparición, hasta encontrar la cláusula `except` pertinente.
         - Si la encuentra, la ejecuta entera (suponiendo que no se produzca otra excepción dentro de ella, que no será tratada, a no ser que dentro de esa cláusula `except` exista a su vez un bloque `try`), para luego saltarse el resto de cláusulas `except`.
@@ -1480,13 +1480,13 @@ Veamos en primer lugar, que para definir atributos de datos desde el código de 
 
 Como vemos, en ***MiClase*** se define un atributo de datos ***peso***, que será compartido por todas las instancias. Si ***x*** e ***y*** son instancias de ***MiClase***, podemos acceder a ***x.peso*** y ***y.peso***, además de ***MiClase.peso***. Además, al instanciar ***x*** e ***y***, se ha creado *para cada instancia* el atributo ***nombre***, al que puede accederse con ***x.nombre*** y ***y.nombre***, sin embargo no se trata de un valor compartido: cada instancia almacena su propio valor. Cambiando ***x.nombre*** no estamos cambiando ***y.nombre*** (además, no existe ***MiClase.nombre***).
 
-Por otro lado, si cambiamos ***MiClase.peso***, sí cambiará ***x.peso*** y ***y.peso***. Sin embargo, si hacemos `x.peso=50`, estamos creando un atributo ***peso*** para ***x*** que enmascara (*overrides*) el atributo ***peso*** de ***MiClase***. Cambiándolo, cambiará solo para ***x***. Si ahora cambiamos ***MiClase.peso***, cambiará para ***y*** también, pero no para ***x*** que tiene su propia versión de este atributo. Sin embargo, si ahora hacemos `del x.peso`, el atributo ***peso*** de ***x*** pasará a tener el valor (compartido) que tiene en ***MiClase***.
+Por otro lado, si cambiamos ***MiClase.peso***, sí cambiará ***x.peso*** y ***y.peso***. Sin embargo, si hacemos `x.peso = 50`, estamos creando un atributo ***peso*** para ***x*** que enmascara (*overrides*) el atributo ***peso*** de ***MiClase***. Cambiándolo, cambiará solo para ***x***. Si ahora cambiamos ***MiClase.peso***, cambiará para ***y*** también, pero no para ***x*** que tiene su propia versión de este atributo. Sin embargo, si ahora hacemos `del x.peso`, el atributo ***peso*** de ***x*** pasará a tener el valor (compartido) que tiene en ***MiClase***.
 
-Si hacemos ahora `del MiClase.peso`, las instancias dejarán de tener atributo ***peso***, a excepción de aquellas que lo hayan definido en sí mismas (como por ejemplo mediante `x.peso=50`).
+Si hacemos ahora `del MiClase.peso`, las instancias dejarán de tener atributo ***peso***, a excepción de aquellas que lo hayan definido en sí mismas (como por ejemplo mediante `x.peso = 50`).
 
-Se pueden ir creando y borrando atributos de datos en instancias y clases sobre la marcha, en cualquier punto del código, mediante asignaciones (`x.peso=50`, `MiClase.peso=0`, etc.) o borrados mediante `del`. Los nombres añadidos pueden enmascarar o cambiar los de la clase, o ser completamente nuevos (`x.speed = 30`, `MiClase.speed = 0`, etc.).
+Se pueden ir creando y borrando atributos de datos en instancias y clases sobre la marcha, en cualquier punto del código, mediante asignaciones (`x.peso = 50`, `MiClase.peso = 0`, etc.) o borrados mediante `del`. Los nombres añadidos pueden enmascarar o cambiar los de la clase, o ser completamente nuevos (`x.speed = 30`, `MiClase.speed = 0`, etc.).
 
-Se puede también añadir/quitar funciones (métodos) en clases e instancias. Supongamos que ***foo()*** es una función cualquiera, se podrían hacer cosas como `x.fun=foo`, `MiClase.f=foo`, `del MiClase.fun`, etc. Se pueden incluso eliminar de la clase funciones incluidas en la definición de la misma.
+Se puede también añadir/quitar funciones (métodos) en clases e instancias. Supongamos que ***foo()*** es una función cualquiera, se podrían hacer cosas como `x.fun = foo`, `MiClase.f = foo`, `del MiClase.fun`, etc. Se pueden incluso eliminar de la clase funciones incluidas en la definición de la misma.
 
 *Desde dentro de un método*, se puede acceder a los miembros (variables y métodos) *de la instancia* mediante el primer parámetro, así: ***self.atributo*** (preferentemente le llamaremos ***self***, por convenio, aunque le podríamos dar cualquier nombre). Para acceder a las variables *de la clase*, lo haremos usando el nombre de la clase: ***MiClase.atributo***. Si no queremos escribir explícitamente el nombre de la clase, se podría hacer mediante `type(self).atributo` (también, aunque menos elegante, ***self.\_\_class\_\_.atributo***). Para acceder a variables globales (módulo donde está definido el método), se hace igual que en funciones ordinarias (mediante `global`).
 
@@ -1500,7 +1500,7 @@ Las funciones se pueden *definir* fuera de la definición de la clase también:
 
 ```python
 def f1(self, x, y):
-    return min(x, x+y)
+    return min(x, x + y)
 class C:
     f = f1
     def g(self):
@@ -1538,9 +1538,9 @@ Una forma de llamar a un método de la clase base es hacerlo directamente como f
 BaseClassName.methodname(self, arguments)
 ```
 
-`isinstance(<obj>,<class>)` devuelve verdadero si ***obj*** es una instancia de la clase ***class*** o de una clase derivada de esta.
+`isinstance(<obj>, <class>)` devuelve verdadero si ***obj*** es una instancia de la clase ***class*** o de una clase derivada de esta.
 
-`issubclass(<class1>,<class2>)` devuelve verdadero si ***class1*** es una clase derivada de ***class2***.
+`issubclass(<class1>, <class2>)` devuelve verdadero si ***class1*** es una clase derivada de ***class2***.
 
 #### 9.5.1 Multiple Inheritance
 
@@ -1550,13 +1550,13 @@ class Deriv(Base1, Base2, Base3):
 
 ```
 
-Para la resolución de nombres de atributos, es del tipo *depth-first*, *left-to-right*. Así, si un atributo no se encuentra en ***Deriv***, se busca en ***Base1***, y luego recursivamente en las clases base de ***Base1***; si tampoco lo encuentra allí, se busca en ***Base2***, luego en sus bases, etc.
+La resolución de nombres de atributos es del tipo *depth-first*, *left-to-right*. Así, si un atributo no se encuentra en ***Deriv***, se busca en ***Base1***, y luego recursivamente en las clases base de ***Base1***; si tampoco lo encuentra allí, se busca en ***Base2***, luego en sus bases, etc.
 
 De hecho, el orden de búsqueda (*MRO*) es algo más complejo (*dynamic ordering*), ya que asegura que las estructuras de diamante serán resueltas sin buscar dos veces en la misma clase. Una estructura de diamante se produce cuando hay más de un camino para llegar a una clase, jerarquía arriba; y si partimos de que en *Python* *todas las clases* (y por consiguiente, todos los tipos) son descendientes de la clase ***object***, tenemos como mínimo un diamante asegurado cuando hay una herencia múltiple.
 
 A parte de evitar múltiples búsquedas en la misma clase, el *dynamic ordering* gestiona el problema de múltiples llamadas a `super()` (llamada al constructor de la clase base). Imaginemos que todas las clases realizan esta llamada desde su propio constructor. La clase a la que se puede llegar por más de una vía sería llamada más de una vez. El *dynamic ordering* lo evita.
 
-Sin embargo, este *dynamic ordering* de *Python* **asegura la búsqueda *left-to-right***, con lo que es posible diseñar clases extensibles y confiables con herencia múltiple.
+Sin embargo, este *dynamic ordering* de *Python* **asegura la búsqueda *left-to-right***, con lo que es posible diseñar clases extensibles y confiables con herencia múltiple (no empezará con la jerarquía de ***Base2*** hasta que no haya terminado con la jerarquía de ***Base1***, etc.).
 
 ### 9.6 Private Variables
 
@@ -1609,7 +1609,7 @@ Todos los iteradores son iterables, aunque no todos los iterables son iteradores
 Los generadores son una herramienta simple y poderosa para *crear iteradores*. Se escriben como una función normal, y usan la sentencia `yield`:
 
 ```python
-def generador(n1,n2,n3):
+def generador(n1, n2, n3):
     yield n1 * 5
     yield n2 * 9
     yield n3 * 14
