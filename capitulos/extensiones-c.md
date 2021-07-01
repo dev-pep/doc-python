@@ -378,6 +378,10 @@ Una función *C* que retorne un objeto a *Python* debe transferir obligatoriamen
 
 Las macros `Py_INCREF()` y `Py_DECREF()` no comprueban si el apuntador pasado es ***NULL*** antes de ejecutarse. Sin embargo, las variantes `Py_XINCREF()` y `Py_XDECREF()` sí lo hacen. En caso de recibir ***NULL*** por parámetro no hacen nada, en lugar de levantar error.
 
+### 2.2 Defining Extension Types: Tutorial
+
+Pendiente.
+
 ### 2.4 Building C and C++ Extensions
 
 Una extensión *C* es un archivo de biblioteca compartida que exporta una función de inicialización. En *Unix* será un archivo ***.so***, y en *Windows* será un archivo ***.pyd***, que básicamente es lo mismo que un archivo ***.dll*** pero con una extensión propia de *Python* para evitar conflictos con otras bibliotecas *DLL*.
