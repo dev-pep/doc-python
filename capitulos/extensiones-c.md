@@ -210,7 +210,37 @@ PyMODINIT_FUNC PyInit_spam(void)
 }
 ```
 
-`PyMODINIT_FUNC` en realidad define un tipo de retorno `PyObject*` con las declaraciones de *linkage* necesarias para que la función sea accesible desde *Python* (por eso no debemos declararla `static`). La función retorna lo retornado por `PyModule_Create()`: el objeto módulo que ha creado. Al retornar el módulo, este queda insertado en ***sys.modules***, listo para su uso.
+`PyMODINIT_FUNC` en realidad define un tipo de retorno `PyObject*` con las declaraciones de *linkage* necesarias para que la función sea accesible desde *Python* (por eso no debemos declararla `static`). La función retorna lo retornado por `PyModule_Create()`: el objeto módulo que ha creado. Al retornar el objeto módulo, este queda insertado en ***sys.modules***, listo para su uso.
+
+Podemos añadir propiedades al módulo, de modo que no solo proporcione funciones, sino también objetos con valores (constantes o no). Para ello se usan funciones como `PyModule_AddObject()`, `PyModule_AddIntConstant()`, `PyModule_AddStringConstant()`, `PyModule_AddIntMacro()` o `PyModule_AddStringMacro()`.
+
+`PyModule_AddObject()` añade un objeto a un módulo. El primer parámetro es el módulo, el segundo el nombre con el que se añadirá, y el tercero es el objeto a añadir. La función roba (*steals*) la referencia a dicho objeto, pero a diferencia de otras funciones que roban referencias, solo decrementa el conteo si la función tiene éxito, por lo que es doblemente importante comprobar si la función ha fallado, en cuyo caso deberemos nosotros decrementar dicho conteo.
+
+`PyModule_AddIntConstant()` y `PyModule_AddStringConstant()` añaden una constante entera (`long int`) o *string* (`const char*`) al módulo. Los parámetros son como los de `PyModule_AddObject()`, solo cambia el tipo del tercer parámetro.
+
+`PyModule_AddIntMacro()` y `PyModule_AddStringMacro()` son equivalentes a las dos anteriores, pero el valor es una macro del tipo adecuado, y prescinden del segundo parámetro, ya que como nombre se usa el nombre de dicha macro.
+
+```c
+#define VALCONST 50
+#define STRINGCONST "Un string cualquiera"
+
+static PyObject *ob;
+static char *stri = "Otro string";
+static const int entero;
+
+/* ... */
+
+PyMODINIT_FUNC PyInit_spam(void)
+{
+    m = PyModule_Create(&spammodule);
+    PyModule_AddObject(m, "atributo1", ob);
+    PyModule_AddIntConstant(m, "atributo2", entero);
+    PyModule_AddStringConstant(m, "atributo3", stri);
+    PyModule_AddIntMacro(m, VALCONST);
+    PyModule_AddStringMacro(m, STRINGCONST);
+    return m;
+}
+```
 
 La función de inicialización es invocada al hacer el `import` desde *Python*.
 
@@ -968,4 +998,20 @@ int PyMethod_Check(PyObject *o);
 PyObject* PyMethod_New(PyObject *func, PyObject *self);
 PyObject* PyMethod_Function(PyObject *meth);
 PyObject* PyMethod_Self(PyObject *meth);
+```
+
+#### Inicialización de módulos (*single-phase*)
+
+```c
+PyObject* PyModule_Create(PyModuleDef *def);
+```
+
+#### Soporte para la creación de módulos
+
+```c
+int PyModule_AddObject(PyObject *module, const char *name, PyObject *value);
+int PyModule_AddIntConstant(PyObject *module, const char *name, long value);
+int PyModule_AddStringConstant(PyObject *module, const char *name, const char *value);
+int PyModule_AddIntMacro(PyObject *module, macro);
+int PyModule_AddStringMacro(PyObject *module, macro);
 ```
