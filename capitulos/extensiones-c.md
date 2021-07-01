@@ -1,12 +1,12 @@
 # Crear extensiones en *C*
 
-El presente documento es un resumen de algunos capítulos del documento *Extending and Embedding Python*, del que se han resumido solo los aspectos básicos para crear un módulo *Python* en lenguaje compilado *C*. Los títulos se han dejado tal cual, sin traducir del inglés. Se ha ampliado el resumen con algunos información del documento *The Python/C API*. Ambos documentos pertenecen a la documentación oficial de *Python*.
+El presente documento es un resumen de algunos capítulos del documento *Extending and Embedding Python*, del que se han resumido solo los aspectos básicos para crear un módulo *Python* en lenguaje compilado *C*. Los títulos se han dejado tal cual, sin traducir del inglés. Se ha ampliado el resumen con información del documento *The Python/C API*. Ambos documentos pertenecen a la documentación oficial de *Python*.
 
 Lo explicado aquí solo sirve para la implementación oficial (*CPython*). Para un proyecto más portable a otras implementaciones, en lugar de crear extensiones se puede utilizar la biblioteca ***ctypes*** o equivalente.
 
-Nos centraremos en el aspecto más habitual: la creación de extensiones (módulos) de *Python* utilizando el lenguaje *C*. Los módulos creados con las técnicas que explicaremos aquí pueden definir nuevas funciones y nuevos tipos de objetos (incluyendo sus propios métodos), pueden llamar a funciones de la biblioteca estándar de *C*, y hacer *system calls*. Y lo más importante, las funciones del módulo serán mucho más rápidas que si las desarrollamos en *Python*.
+Nos centraremos en el aspecto más habitual: la creación de extensiones (módulos) de *Python* utilizando el lenguaje *C*. Las funciones del módulo serán mucho más rápidas que si las desarrollamos en *Python*.
 
-La otra opción es incrustar (*embed*) *Python* dentro de otra aplicación. Por ejemplo, crear una aplicación con *C++* que tenga incrustado el *runtime CPython*, con lo que podrá hacer uso de las funciones de *Python*. Sin embargo, ignoraremos esta parte y nos centraremos en la creación de módulos.
+La otra opción es incrustar (*embed*) *Python* dentro de una aplicación. Por ejemplo, crear una aplicación con *C++* que tenga incrustado el *runtime CPython*, con lo que podría hacer uso de las funciones de *Python*. Sin embargo, ignoraremos esta parte y nos centraremos en la creación de módulos.
 
 ## 2. CREATING EXTENSIONS WITHOUT THIRD PARTY TOOLS
 
@@ -74,7 +74,7 @@ static PyObject * spam_system(PyObject *self, PyObject *args)
 
 En primer lugar, `PyObject*` es el tipo (*C*) base para representar un objeto *Python*. Es el tipo que retorna la función invocada (lógico, ya que es el valor que recogerá *Python*). **Todos** los objetos de *Python* son, de hecho, objetos reservados dinámicamente en memoria. De ahí a usar siempre un apuntador para utilizarlos.
 
-Por otro lado, la función `spam_system()`, que será invocada por *Python* (ya veremos cómo), recibe siempre dos argumentos: el primero (***self*** por convenio) es un apuntador al módulo llamador (si la función correspondiera, por ejemplo, a un método, sería un apuntador a la instancia a la que pertenece).
+Por otro lado, la función `spam_system()`, que será invocada por *Python* (ya veremos cómo), recibe siempre dos argumentos: el primero (***self*** por convenio) es un apuntador al módulo al que pertenece la función (si la función correspondiera, por ejemplo, a un método, sería un apuntador a la instancia a la que pertenece).
 
 El segundo argumento (***args*** por convenio) corresponde a un apuntador a un objeto tupla de *Python* con los argumentos de la llamada. Dichos argumentos son objetos *Python*, con lo que deberemos convertirlos a tipos *C*.
 
@@ -84,7 +84,7 @@ Y eso es lo que hace exactamente la función `PyArg_ParseTuple()`:
 int PyArg_ParseTuple(PyObject *args, const char *format, ...);
 ```
 
-Extrae los elementos de una tupla y los referencia en apuntadores *C*. Usa una *format string* ***format*** que especifica los tipos a los que se deben convertir los objetos. En el ejemplo, un solo elemento *string* (***"s"***). Los argumentos que pasamos a la función pasarán a apuntar al objeto convertido (en este caso, ***command***).
+Extrae los elementos de una tupla y los referencia en apuntadores *C*. Usa una *format string* ***format*** que especifica los tipos a los que se deben convertir los objetos. En el ejemplo, un solo elemento *string* (***"s"***). Los argumentos variables (a partir del tercero) que pasamos a esta función son referencias a un tipo *C*. Es decir, son apuntadores a un tipo *C*. Si se trata de una referencia (apuntador) a `int`, recibiremos el valor de ese entero al dereferenciar el apuntador pasado, es decir, la función escribirá ese valor en la zona de memoria que indica el apuntador que le hemos pasado. Si lo que pasamos es una referencia (apuntador) a un *string* (es decir, a un `char*`), el *string* pasará a apuntar a una zona de memoria que contiene el resultado.
 
 La función retorna 1 si se han convertido con éxito todos los elementos de la tupla, y cero en caso contrario.
 
@@ -92,7 +92,7 @@ Como vemos, si la función ha fallado, retornamos ***NULL***, lo cual es una for
 
 #### 2.1.2 Intermezzo: Errors and Exceptions
 
-Por convenio, si una llamada desde *Python* a nuestra función falla, debe levantar un estado de excepción y retornar un valor de error (normalmente ***NULL***). El estado de error se guarda en una variable global del intérprete. Si el valor de esa variable es ***NULL***, no hay estado de error. Una segunda variable global guarda el valor asociado a la posible excepción. Una tercera variable guarda la pila de *traceback* (solo si la excepción se ha producido en el código *Python*).
+Por convenio, si una llamada desde *Python* a nuestra función falla, debe levantar un estado de excepción y retornar un valor de error (normalmente ***NULL***). Las funciones de esta *API* que construyen objetos (como p.e. `PyLong_FromLong()`) tienen exactamente este comportamiento. El estado de error se guarda en una variable global del intérprete. Si el valor de esa variable es ***NULL***, no hay estado de error. Una segunda variable global guarda el valor asociado a la posible excepción. Una tercera variable guarda la pila de *traceback* (solo si la excepción se ha producido en el código *Python*).
 
 Para establecer un estado de error, la función más común de esta *API* es `PyErr_SetString()`, a la que se debe pasar un objeto excepción (por ejemplo ***PyExc_ZeroDivisionError***, existen objetos predefinidos para todos los tipos de excepción) y un *string C*, que se convierte a un tipo *Python* que pasa a ser el valor asociado a la excepción.
 
@@ -100,15 +100,13 @@ Otra función útil es `PyErr_SetFromErrno()`, que solo recibe un objeto excepci
 
 La función más general es `PyErr_SetObject()` cuyos dos argumentos son el objeto excepción y el objeto con el valor asociado.
 
-No es necesario incrementar el conteo de referencias (se verá más adelante) a ninguno de los objetos pasados a estas funciones.
-
 Para saber si existe una excepción levantada, `PyErr_Occurred()` retorna el objeto excepción actual (o ***NULL*** si no hay).
 
-Cuando una función llama a otra, que a su vez llama a otra, y esta última encuentra un error, debería, a parte de retornar un valor de indicación de error (por ejemplo ***NULL*** si retorna apuntador, o ***-1*** si retorna enteros) levantar excepción. La función llamante debería, a su vez, retornar indicación de error, pero **NO** levantar excepción; las restantes funciones llamadoras también deberían hacer esto, hasta llegar al intérprete de *Python*. Este es el comportamiento que se debe usar generalmente. Si una función llamante debe obligatoriamente levantar una excepción, se perderá la información de la primera excepción levantada.
+Cuando una función llama a otra, que a su vez llama a otra, y esta última encuentra un error, debería, a parte de retornar un valor de indicación de error (por ejemplo ***NULL*** si retorna apuntador, o ***-1*** si retorna enteros) levantar excepción. La función llamante debería, a su vez, retornar indicación de error, pero **NO** levantar excepción; las restantes funciones llamadoras también deberían hacer esto, hasta llegar al intérprete de *Python*. Este es el comportamiento que se debe usar generalmente. Si una función llamante debe obligatoriamente levantar una excepción durante esos retornos, se perderá la información de la primera excepción levantada.
 
-Si no deseamos pasar una excepción levantada a *Python* y queremos gestionarla desde *C*, se puede limpiar el estado de excepción con `PyErr_Clear()`.
+Sin embargo, si no deseamos pasar una excepción levantada a *Python* y queremos gestionarla desde *C*, se puede limpiar el estado de excepción con `PyErr_Clear()`.
 
-Si una función que usa `malloc()` o `realloc()` (***stdlib.h***) recibe un error de estas funciones, debería levantar excepción con `PyErr_NoMemory()` y retornar indicación de error. Las funciones de esta *API* que construyen objetos (como p.e. `PyLong_FromLong()`) tienen exactamente este comportamiento.
+Si una función que usa `malloc()` o `realloc()` (***stdlib.h***) recibe un error de estas funciones, debería levantar excepción con `PyErr_NoMemory()` y retornar indicación de error.
 
 > Indicar que si bien lo habitual en caso de enteros es retornar -1 en caso de error, y positivo o 0 en caso de éxito, la familia de funciones `PyArg_ParseTuple()` no sigue este esquema.
 
@@ -120,11 +118,11 @@ Se pueden crear excepciones a medida:
 PyObject* PyErr_NewException(const char *name, PyObject *base, PyObject *dict);
 ```
 
-Esto retorna una referencia a una nueva clase de excepción. Se la pasa un nombre, que debe terner la forma ***modulo.clase***. En nuestro caso, podría ser ***spam.error***, por ejemplo. El atributo ***\_\_module\_\_*** de la nueva clase se establece a lo que está a la izquierda del último punto (***spam***), y su nombre a lo que está a su derecha (***error***).
+Esto retorna una nueva referencia a una nueva clase de excepción y añade otra referencia al diccionario del módulo. Se la pasa un nombre, que debe tener la forma ***modulo.clase***. En nuestro caso, podría ser ***spam.error***, por ejemplo. El atributo ***\_\_module\_\_*** de la nueva clase se establece a lo que está a la izquierda del último punto (***spam***), y su nombre a lo que está a su derecha (***error***).
 
-Si el segundo argumento es ***NULL***, la clase derivará de `Exception`, aunque podemos indicar aquí la clase base. En cuanto a ***dict*** suele ser ***NULL***, o indicar un diccionario de variables y métodos para la clase.
+Si el segundo argumento es ***NULL***, la clase derivará de `Exception`, aunque podemos indicar aquí otra clase base. En cuanto a ***dict*** suele ser ***NULL***, o indicar un diccionario de variables y métodos para la clase.
 
-La nueva clase retornada se debe almacenar en una variable global de almacenamiento estático. Así, aunque un código externo elimine la clase del módulo (de su diccionario), nosotros seguiremos teniendo acceso a ella a través de esta variable.
+La nueva clase retornada se podría almacenar en una variable global de almacenamiento estático (si lo hacemos debemos incrementar el conteo de referencias también). Así, aunque un código externo elimine la clase del módulo (de su diccionario), nosotros seguiremos teniendo acceso a ella a través de esta variable.
 
 Las variables globales cuyo valor deseemos mantener entre llamadas al módulo, se declararán como `static`, al igual que las funciones que definamos (a excepción de una función, que veremos ahora). Esto es así para asegurarnos que los objetos y funciones no tienen *external linkage*, ya que si fuese así podrían entrar en conflicto con otros elementos de otros módulos. En cambio, con *internal linkage*, *Python* no tendrá acceso a estos elementos globales del módulo.
 
@@ -138,7 +136,7 @@ Ahora ya sabemos que si `PyArg_ParseTuple()` ha fallado, ha levantado la excepci
 
 Ahora ya podemos invocar a `system()` de ***stdlib.h*** y pasarle ese *string*. Recogemos el valor devuelto por esta función en ***sts***, y retornamos ese entero, previa conversión a un entero de *Python* con `PyLong_FromLong()`, que retorna, como de costumbre, un objeto *Python* (`PyObject*`).
 
-Si queremos retornar el objeto *Python* ***None*** mediante ***Py_None*** (no debemos retornar ***NULL***, ya que eso sería retornar error). Debería hacerse así:
+Si queremos retornar el objeto *Python* ***None***, lo haremos mediante ***Py_None*** (no debemos retornar ***NULL***, ya que eso sería retornar error). Debería hacerse así:
 
 ```c
 Py_INCREF(Py_None);
@@ -169,25 +167,21 @@ En cuanto a la *calling convention*, lo habitual es ***METH_VARARGS***, que indi
 
 Si la función no recibe argumentos, se indicará ***METH_NOARGS***.
 
-También es posible indicar ***METH_VARARGS | METH_KEYWORDS***. En este caso, la función pasa también *keyword arguments*. En ese caso, nuestra función recibiría desde *Python* un tercer argumento con un `PyObject` que contiene un diccionario de *keywords*.
+También es posible indicar ***METH_VARARGS | METH_KEYWORDS***. En este caso, la función pasa también *keyword arguments*. En ese caso, nuestra función recibiría desde *Python* un tercer argumento con un `PyObject*` conteniendo un diccionario de *keywords*.
 
-En ese caso, hay que recoger el valor de los argumentos mediante:
-
-```c
-int PyArg_ParseTupleAndKeywords(PyObject *args, PyObject *kw, const char *format, char *keywords[], ...);
-```
+En ese caso, hay que recoger el valor de los argumentos mediante `PyArg_ParseTupleAndKeywords()` (se verá más adelante).
 
 El resto de *calling conventions* disponibles están *deprecated*.
 
-El siguiente paso es inicializar el módulo, que se hará, lógicamente a través de la **función de inicialización** de dicho **módulo**. Para ello necesitaremos proporcionar a esta función toda la información sobre dicho módulo, información que incluiremos en el `struct` de definición del módulo, de tipo `struct PyModuleDef`.
+El siguiente paso es inicializar el módulo, que se hará, lógicamente a través de su **función de inicialización**. Para ello necesitaremos proporcionar a esta función toda la información sobre dicho módulo, información que incluiremos en el `struct` de definición del módulo, de tipo `struct PyModuleDef`.
 
 Los campos más importantes de esta estructura son (en orden de definición):
 
 - ***m_base***: contiene siempre el valor ***PyModuleDef_HEAD_INIT*** (de tipo `PyModuleDef_Base`).
 - ***m_name***: nombre del módulo (*string*).
 - ***m_doc***: *docstring* del módulo (*string*).
-- ***m_size***: si se le da un valor (entero) mayor que 0, el estado del módulo se guardará en una zona de memoria propia, en lugar de en las variables globales estáticas. Esto es útil en caso de sub-intérpretes que carguen el módulo, en cuyo caso cada instancia tendrá su propio estado. Sin embargo, le daremos valor ***-1***, indicando que el módulo no soporta sub-intérpretes, y tiene estado global (tipo `Py_ssize_t`, un tipo de entero).
-- ***m_methods***: un apuntador a la tabla de métodos (`PyMethodDef*`). Puede retornar ***NULL*** si el método no define funciones.
+- ***m_size***: si se le da un valor (entero) mayor que 0, el estado del módulo se guardará en una zona de memoria propia, en lugar de en las variables globales estáticas. Esto es útil en caso de sub-intérpretes que carguen el módulo, en cuyo caso cada instancia tendrá su propio estado. Si no, ***-1*** indica que el módulo no soporta sub-intérpretes, y tiene estado global (este campo tiene tipo `Py_ssize_t`, un tipo de entero).
+- ***m_methods***: un apuntador a la tabla de métodos (`PyMethodDef*`). Puede ser ***NULL*** si el método no define funciones.
 
 En cuanto al tipo `Py_ssize_t`: el compilador *C* dispone del tipo `size_t` (***stddef.h*** y otros), que es un tipo *unsigned*, de mínimo 16 *bits*, capaz de albergar **cualquier índice** a memoria. Entonces, en el presente *API*, `Py_ssize_t` es un tipo de entero basado en `size_t`, aunque es *signed*. Para acceder a memoria es mejor utilizar un tipo de datos como `size_t` que cualquier otro tipo de entero, pero en el caso de *Python*, que admite índices negativos, había que usar un tipo con signo. De ahí al uso de `Py_ssize_t`.
 
@@ -276,7 +270,7 @@ int PyArg_ParseTuple(PyObject *args, const char *format, ...);
 
 Extrae elementos de una tupla. La veremos con más detalle más adelante.
 
-Los objetos recibidos en la función llamadora son *borrowed references* (2.1.10), por lo que no debemos decrementar el conteo de referencias tras usarlos.
+Los objetos *Python* recibidos en la función llamadora son *borrowed references* (2.1.10), por lo que no debemos decrementar el conteo de referencias tras usarlos.
 
 Estas funciones retornan verdadero si todo funciona bien, o falso en caso contrario.
 
@@ -336,7 +330,7 @@ Cuando una función le pasa la *ownership* de una referencia a su llamador, se d
 
 La propiedad de una referencia puede pasarse no solo a través de retornar un objeto, sino también a través del paso del objeto como argumento (aunque no es muy frecuente). Esto se hace cuando la función llamada roba la propiedad de esa referencia al objeto (*stealing the reference*), es decir, la función llamada se convierte en la responsable de llamar a `Py_DECREF()` en el momento que no necesite más la referencia. Si pasamos un objeto a una función así, debemos dejar de considerarnos propietarios de tal referencia, por lo que ya no será necesario decrementar su conteo nunca (ya no tenemos ninguna responsabilidad al respecto).
 
-También se podría pasar una referencia a un objeto como argumento, pero sin transferir la propiedad de dicha referencia. En ese caso, seguimos manteniendo la responsabilidad de decrementar el conteo tras el retorno de dicha función. En este caso, la función llamada puede utilizar la referencia al objeto, sin robar (*steal*) la propiedad de la misma. Se dice en este caso que la función llamada toma prestada (*borrows*) la referencia. Puede utilizar el objeto pero no tiene la propiedad de la referencia, con lo que no decrementará nunca el conteo. Sin embargo, para evitar que se libere el objeto mientras usa la referencia, la función llamada debe tener la seguridad de que el objeto no será liberado de memoria durante su ejecución. Para ello no debe trabajar con tal objeto más allá del momento en que el módulo llamador acabe decrementando la referencia (y posiblemente liberando el objeto).
+También se podría pasar una referencia a un objeto como argumento, pero sin transferir la propiedad de dicha referencia. En ese caso, seguimos manteniendo la responsabilidad de decrementar el conteo tras el retorno de dicha función. Entonces, la función llamada puede utilizar la referencia al objeto, sin robar (*steal*) la propiedad de la misma. Se dice en este caso que la función llamada toma prestada (*borrows*) la referencia. Puede utilizar el objeto pero no tiene la propiedad de la referencia, con lo que no decrementará nunca el conteo. Sin embargo, para evitar que se libere el objeto mientras usa la referencia, la función llamada debe tener la seguridad de que el objeto no será liberado de memoria durante su ejecución. Para ello no debe trabajar con tal objeto más allá del momento en que el módulo llamador acabe decrementando la referencia (y posiblemente liberando el objeto).
 
 En todo caso, mientras se está ejecutando la función llamada, el llamador no ejecuta nada, con lo que la función puede disponer del objeto tranquilamente hasta que retorne. Pero si la función llamada quiere conservar la referencia más tiempo, por ejemplo hasta la siguiente llamada, si no está seguro de que el llamador no decrementará el conteo, tendrá que convertirse en propietaria de la referencia invocando `Py_INCREF()` y almacenando el objeto en una variable global o estática (no en una variable local, que haría perder la referencia al salir del *scope* local). Esto no afecta al llamador, que sigue siendo responsable de la antigua referencia, y no de esta nueva.
 
@@ -386,18 +380,16 @@ Las macros `Py_INCREF()` y `Py_DECREF()` no comprueban si el apuntador pasado es
 
 ### 2.4 Building C and C++ Extensions
 
-Una extención *C* es un archivo de biblioteca compartida que exporta una función de inicialización. En *Unix* será un archivo ***.so***, y en *Windows* será un archivo ***.pyd***, que básicamente es lo mismo que un archivo ***.dll*** pero con una extensión propia de *Python* para evitar conflictos con otras bibliotecas *DLL*.
+Una extensión *C* es un archivo de biblioteca compartida que exporta una función de inicialización. En *Unix* será un archivo ***.so***, y en *Windows* será un archivo ***.pyd***, que básicamente es lo mismo que un archivo ***.dll*** pero con una extensión propia de *Python* para evitar conflictos con otras bibliotecas *DLL*.
 
-Tal archivo debe pues tener el nombre correcto del módulo la extensión adecuada al sistema operativo. Para que sea localizable, debe residir en una de las carpetas de ***PYTHONPATH*** o estar localizable según la variable ***sys.path***.
+Tal archivo debe pues tener el nombre correcto del módulo y la extensión adecuada al sistema operativo. Para que sea localizable, debe residir en una de las carpetas de ***PYTHONPATH*** (o estar localizable según la variable ***sys.path***).
 
-Este apartado explica cómo construir nuestro módulo sin utilizar directamente un compilador, sino a través de un *script* de creación de un archivo de biblioteca compartida usando el módulo *Python* ***distutils***.
+Este apartado explica cómo construir nuestro módulo sin utilizar directamente un compilador, sino a través de un *script* de creación de un archivo de biblioteca compartida usando el módulo *Python* ***distutils***. Sin embargo no vamos a documentar ese proceso.
 
-Para generar el módulo usando el compilador *GCC* se podrían usar estos comandos (en sistemas *Unix*):
+Vamo a ver cómo podríamos generar el módulo usando el compilador *GCC* en sistemas *Unix*. Se podrían usar estos comandos (se pueden usar a discreción, son solo un ejemplo):
 
 ```
-gcc -DNDEBUG -g -O3 -Wall -fPIC
-        -I/usr/local/include/python3.9 -c demo.c -o build/demo.o
-
+gcc -DNDEBUG -g -O3 -Wall -fPIC -I/usr/local/include/python3.9 -c demo.c -o build/demo.o
 gcc -shared build/demo.o -o build/demo.so
 ```
 
@@ -460,7 +452,7 @@ Limpia el estado de error.
 void PyErr_SetString(PyObject *type, const char *message);
 ```
 
-Levanta una excepción. El primer argumento es el objeto excepción pertinente (no hay que incrementar el conteo de referencias), y el segundo es un mensaje de error en un *string* codificado con *UTF-8*, que será el valor asociado a la excepción.
+Levanta una excepción. El primer argumento es el objeto excepción pertinente (no hay que incrementar el conteo de referencias, ya que recibe una *borrowed reference*), y el segundo es un mensaje de error en un *string* codificado con *UTF-8*, que será el valor asociado a la excepción.
 
 ```c
 void PyErr_SetObject(PyObject *type, PyObject *value);
@@ -504,11 +496,11 @@ Extrae los elementos de una tupla. Si alguno de los argumentos extraídos es un 
 
 La *format string* definirá el tipo de datos esperado de los argumentos de la tupla. Siempre hay que pasar la dirección de la variable que almacenará el valor del argumento en cuestión. Si es un apuntador, la dirección del apuntador.
 
-Cuando extraemos un argumento que precisa de un *buffer*, como un *string*, la función asigna al apuntador correspondiente una dirección de memoria a un *buffer* ya existente, gestionado por el objeto *Python* del que extraemos la información. Dicho *buffer* tiene el mismo tiempo de vida que el objeto, con lo que no necesitamos liberarlo de memoria (con las excepciones de los datos tipo ***es***, ***es#***, ***et*** y ***et#***).
+Cuando extraemos un argumento que precisa de un *buffer*, como un *string*, la función asigna al apuntador correspondiente una dirección de memoria a un *buffer* ya existente, gestionado por el objeto *Python* del que extraemos la información. Dicho *buffer* tiene el mismo tiempo de vida que el objeto y no hay que liberarlo de memoria (con las excepciones de los datos tipo ***es***, ***es#***, ***et*** y ***et#***).
 
 En ocasiones, los datos se leen y rellenan una estructura `Py_buffer`, con un *buffer* en el miembro ***buf***. En ese caso, el *buffer* queda bloqueado para escritura (sobre posibles objetos mutables). Para liberarlo una vez se ha terminado de modificar, se debe llamar a `PyBuffer_Release()` para que otro posible hilo pueda escribir sobre él (código *multi-threaded*).
 
-La *format string* está compuesta por unidades de formato, que describen objetos *Python*. Una *format unit* suele ser un solo carácter o una serie de unidades de formato entre paréntesis. Cada unidad proporcionará el valor de un apuntador *C* al tipo adecuado.
+La *format string* está compuesta por unidades de formato, que describen objetos *Python*. Una *format unit* suele ser uno o dos caracteres o una serie de unidades de formato entre paréntesis. Cada unidad proporcionará un valor o una dirección de memoria.
 
 Algunas unidades de formato retornan la longitud del argumento (***s#***, ***y#***,...). Tal longitud es un entero, del tipo `int`, aunque es mejor que retorne un tipo `Py_ssize_t`, como se ha visto anteriormente. Para que esto sea así, hay que definir la macro `PY_SSIZE_T_CLEAN` **antes** de incluir ***Python.h***:
 
@@ -533,7 +525,7 @@ Posibles *format units* del *string* de formato:
 - ***Y*** extrae un objeto `bytearray` directamente, sin convertir. El tipo *C* será `PyObject*` o `PyByteArrayObject*` (pasaremos apuntador a uno de estos tipos).
 - ***U*** extrae un *string Unicode* directamente, sin convertir. El tipo *C* será `PyObject*` (pasaremos apuntador a `Py_Object*`).
 - ***w\**** es como ***y\****, pero permite lectura y escritura en el *buffer* obtenido. Una vez se ha terminado de modificar el *buffer* se debe desbloquear para escritura con `PyBuffer_Release()`.
-- ***es*** variación de ***s*** que permite establecer la codificación del *string*. Necesita dos argumentos: el primero se utiliza como entrada, no salida: es un `const char*` que apunta al nombre de la codificación deseada (debe ser conocida por *Python*); si es ***NULL***, se entenderá *UTF-8*. El segundo es `char**`, es decir, un apuntador a un *buffer* de elementos `char` (se puede ver como un apuntador a un *array* de caracteres). El apuntador que referenciamos pasará a apuntar a un *buffer* con el texto solicitado. Para ello, la función reservará la memoria necesaria para el *buffer*, que no es gestionado por el objeto *Python*, con lo que cuando hayamos terminado de trabajar con él deberemos invocar `PyMem_Free()` para liberarlo. Debemos pasar como argumentos a `PyArg_ParseTuple()`, pues, uno de tipo `const char*` (es de entrada) y un apuntador a `char**`.
+- ***es*** es una variación de ***s*** que permite establecer la codificación del *string*. Necesita dos argumentos: el primero se utiliza como entrada, no salida: es un `const char*` que apunta al nombre de la codificación deseada (debe ser conocida por *Python*); si es ***NULL***, se entenderá *UTF-8*. El segundo es `char**`, es decir, un apuntador a un *buffer string*. El apuntador que referenciamos pasará a apuntar a un *buffer* con el texto solicitado. Para ello, la función reservará la memoria necesaria para el *buffer*, que no es gestionado por el objeto *Python*, con lo que cuando hayamos terminado de trabajar con él deberemos invocar `PyMem_Free()` para liberarlo. Debemos pasar como argumentos a `PyArg_ParseTuple()`, pues, uno de tipo `const char*` (es de entrada) y una referencia a un apuntador a un *string*, es decir, un apuntador a un apuntador a un *buffer* caracteres, es decir, un `char***`.
 - ***et*** es como ***es***, pero acepta también objetos `bytes` (o `bytearray`), en cuyo caso, el resultado se pasará sin codificar (se asumirá que la codificación del `bytes` o `bytearray` ya es la deseada).
 - ***es#*** es como ***es***, pero por un lado permite datos de entrada con caracteres nulos, y por otro lado requiere de un tercer argumento (pasaremos apuntador a `int` o a `Py_ssize_t`), en el que colocará la longitud del *buffer* de salida. En este caso hay dos modos de funcionamiento:
     - si el apuntador al *buffer* es nulo inicialmente, funcionará como de costumbre;
@@ -564,6 +556,7 @@ Posibles *format units* del *string* de formato:
 Si en la *format string* se indican paréntesis, dentro de los cuales hay (opcionalmente) *format units*, definimos una secuencia *Python* con los elementos indicados. Pueden anidarse.
 
 Existen otros caracteres (no permitidos dentro de paréntesis):
+
 - ***|*** indica que los argumentos a continuación son opcionales. Si no existen, la función no hace nada con el argumento *C* correspondiente.
 - ***$*** indica que el resto de los argumentos son *keyword only* (solo en `PyArg_ParseTupleAndKeywords()`).
 - ***:*** indica que la lista de *format units* ha terminado; tras ***:*** se indica el nombre de función que aparecerá en los posibles mensajes de error (valor asociado de la excepción que se levante).
@@ -720,7 +713,7 @@ PyObject* PyMapping_Items(PyObject *o);
 
 `PyTypeObject` es una estructura *C* usada para describir tipos *built-in* en *Python*.
 
-`PyType_Type` es un **objeto** *Python* (por tanto, de tipo `PyObject*`). Es un objeto tipo (o clase). En *Python* en es objeto ***type*** (el tipo del objeto base).
+`PyType_Type` es un **objeto** *Python* (por tanto, de tipo `PyObject*`). Es un objeto tipo (o clase). En *Python* es un objeto ***type*** (el tipo del objeto base).
 
 ```c
 int PyType_Check(PyObject *o);
@@ -747,10 +740,11 @@ Los objetos *Python* son de tipo apuntador a `PyObject`. Este tipo tiene subtipo
 
 Las funciones que retornan un entero (la mayoría de las que empiezan por `PyLong_As`) retornan ***-1*** en caso de error, lo cual puede confundirse precisamente con un valor numérico. Para saber si se ha producido error en ese caso, habrá que consultar `PyErr_Occurred()`.
 
-Las funciones que comprueban que un objeto sea de un tipo determinado, comprueban que el tipo del objeto sea un objeto del tipo adecuado. Por ejemplo, la función `PyLong_Check()` comprueba que el objeto que le pasamos tenga como tipo asociado un objeto `PyLong_Type`. Si el objeto es realmente un entero *Python*, será un objeto que ***en *C*** será del tipo `PyObject*` o subtipo `PyLongObject*`, lo cual es una estructura que describe el tipo que tiene el objeto ***en *Python***, para lo cual uno de los campos de esta estructura tiene una referencia al tipo *Python* pertinente, en este caso una instancia del objeto `PyLong_Type` (que a su vez es de tipo `PyTypeObject`).
+Las funciones que comprueban que un objeto sea de un tipo determinado, comprueban que el tipo del objeto sea un objeto del tipo adecuado. Por ejemplo, la función `PyLong_Check()` comprueba que el objeto que le pasamos tenga como tipo asociado un objeto `PyLong_Type`. Si el objeto es realmente un entero *Python*, será un objeto que **en *C*** será del tipo `PyObject*` o subtipo `PyLongObject*`, lo cual es una estructura que describe el tipo que tiene el objeto **en *Python***, para lo cual uno de los campos de esta estructura tiene una referencia al tipo *Python* pertinente, en este caso una instancia del objeto `PyLong_Type` (que a su vez es de tipo `PyTypeObject`).
+
+Enteros:
 
 ```c
-// Enteros:
 PyLongObject;
 PyTypeObject PyLong_Type;
 int PyLong_Check(PyObject *p);
@@ -771,8 +765,9 @@ unsigned long long PyLong_AsUnsignedLongLong(PyObject *pylong);
 double PyLong_AsDouble(PyObject *pylong);
 ```
 
+Booleanos (subtipo de entero):
+
 ```c
-// Booleanos (subtipo de entero):
 int PyBool_Check(PyObject *o);
 PyObject* Py_False;  // objeto falso
 PyObject* Py_True;  // objeto verdadero
@@ -781,8 +776,9 @@ Py_RETURN_TRUE;  // macro que incrementa conteo y retorna
 PyObject* PyBool_FromLong(long v);
 ```
 
+Punto flotante:
+
 ```c
-// Punto flotante:
 PyFloatObject;
 PyTypeObject PyFloat_Type;
 int PyFloat_Check(PyObject *p);
@@ -791,8 +787,9 @@ PyObject* PyFloat_FromDouble(double v);
 double PyFloat_AsDouble(PyObject *pyfloat);
 ```
 
+Complejos:
+
 ```c
-// Complejos:
 typedef struct {
     double real;
     double imag;
@@ -810,8 +807,9 @@ Py_complex PyComplex_AsCComplex(PyObject *op);
 
 #### Secuencias
 
+Bytes:
+
 ```c
-// Bytes:
 PyBytesObject;
 PyTypeObject PyBytes_Type;
 int PyBytes_Check(PyObject *o);
@@ -826,8 +824,9 @@ void PyBytes_Concat(PyObject **bytes, PyObject *newpart);
 void PyBytes_ConcatAndDel(PyObject **bytes, PyObject *newpart);
 ```
 
+Bytearrays:
+
 ```c
-// Bytearrays:
 PyByteArrayObject;
 PyTypeObject PyByteArray_Type;
 int PyByteArray_Check(PyObject *o);
@@ -904,8 +903,9 @@ PyObject* PyUnicode_Replace(PyObject *str, PyObject *substr, PyObject *replstr, 
 int PyUnicode_Compare(PyObject *left, PyObject *right);
 ```
 
+Tuplas:
+
 ```c
-// Tuplas:
 PyTupleObject;
 PyTypeObject PyTuple_Type;
 int PyTuple_Check(PyObject *p);
@@ -919,8 +919,9 @@ int PyTuple_SetItem(PyObject *p, Py_ssize_t pos, PyObject *o);  // solo si no ha
 int _PyTuple_Resize(PyObject **p, Py_ssize_t newsize);  // idem
 ```
 
+Listas:
+
 ```c
-// Listas:
 PyListObject;
 PyTypeObject PyList_Type;
 int PyList_Check(PyObject *p);
@@ -941,8 +942,9 @@ PyObject* PyList_AsTuple(PyObject *list);
 
 #### Contenedores
 
+Diccionarios:
+
 ```c
-// Diccionarios:
 PyDictObject;
 PyTypeObject PyDict_Type;
 int PyDict_Check(PyObject *p);
@@ -963,8 +965,9 @@ PyObject* PyDict_Values(PyObject *p);
 Py_ssize_t PyDict_Size(PyObject *p);
 ```
 
+Sets:
+
 ```c
-// Sets:
 PySetObject;
 PyTypeObject PySet_Type;
 PyTypeObject PyFrozenSet_Type;
@@ -985,14 +988,18 @@ int PySet_Clear(PyObject *set);
 
 #### Objetos función y método
 
+Funciones:
+
 ```c
-// Funciones:
 PyFunctionObject;
 PyTypeObject PyFunction_Type;
 int PyFunction_Check(PyObject *o);
 PyObject* PyFunction_New(PyObject *code, PyObject *globals);
+```
 
-// Métodos (bound functions):
+Métodos (*bound functions*):
+
+```c
 PyTypeObject PyMethod_Type;
 int PyMethod_Check(PyObject *o);
 PyObject* PyMethod_New(PyObject *func, PyObject *self);
