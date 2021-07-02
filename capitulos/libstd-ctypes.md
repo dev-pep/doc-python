@@ -2,7 +2,7 @@
 
 Este es un resumen del apartado 16.16 de la documentación oficial sobre la biblioteca estándar de *Python*. Los títulos se han dejado sin traducir.
 
-Esta biblioteca proporciona tipos de datos compatibles con *C* y permite llamar a funciones en bibliotecas compartidas (***.so*** en sistamas *Unix* y ***.dll*** en *Windows*).
+Esta biblioteca proporciona tipos de datos compatibles con *C* y permite llamar a funciones en bibliotecas compartidas (***.so*** en sistemas *Unix* y ***.dll*** en *Windows*).
 
 ## 16.16.1 ctypes tutorial
 
@@ -40,7 +40,7 @@ Al pasar argumentos a las funciones de una librería, solo pueden pasarse tal cu
 *ctypes* define una serie de tipos compatibles con los tipos primitivos de *C*. Se crean pasando un valor adecuado al constructor:
 
 | Tipo ctypes    | Tipo C                 | Tipo Python         |
-| :------------- | :--------------------- | :-------------------|
+| :------------- | :--------------------- | :------------------ |
 | c_bool         | _Bool                  | bool                |
 | c_char         | char                   | bytes (longitud 1)  |
 | c_wchar        | wchar_t                | string (longitud 1) |
@@ -169,7 +169,7 @@ Para especificar, por ejemplo, un tipo apuntador a estructura ***RECT***: `POINT
 
 ### *Arrays*
 
-Un *array* es una secuencia conteniendo instancias del mismo tipo. Las estructuras pueden contener campos *array*. A su vez, los *arrays* pueden ser de tipo estructura.
+Un *array* es una secuencia conteniendo instancias del mismo tipo. Las estructuras pueden contener campos *array*. A su vez, los elementos de los *arrays* pueden ser de tipo estructura.
 
 Para definir un tipo *array*, lo recomendable es multiplicar un tipo base:
 
@@ -193,7 +193,7 @@ Es posible iterar sobre los elementos del *array*.
 
 ### Apuntadores
 
-Para crear una instancia de tipo apuntador se usa la función `pointer()`, a la que pasamos el objeto al que deseamos apuntar. El atributo ***contents*** de la instancia apuntador retorna el objeto apuntado. Sin embargo, no es estrictamente el mismo objeto, ya que se construye uno copia nueva a cada acceso al atributo.
+Para crear una instancia de tipo apuntador se usa la función `pointer()`, a la que pasamos el objeto al que deseamos apuntar. El atributo ***contents*** de la instancia apuntador retorna el objeto apuntado. Sin embargo, no es estrictamente el mismo objeto, ya que se construye una copia nueva a cada acceso al atributo.
 
 ```python
 >>> i = c_int(42)
@@ -216,7 +216,7 @@ c_int(42)
 c_int(99)
 ```
 
-Es posible crear un **tipo de apuntador** pasando un tipo básico (que puede ser apuntador a su vez) a la función `POINTER()`. Esto retorna el tipo derivado.
+Es posible crear un **tipo de apuntador** pasando un tipo base (que puede ser apuntador a su vez) a la función `POINTER()`. Esto retorna el tipo derivado.
 
 ```python
 tipo_ap = POINTER(c_int)  # tipo apuntador a entero
