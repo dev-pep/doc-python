@@ -378,10 +378,12 @@ Una función *C* que retorne un objeto a *Python* debe transferir obligatoriamen
 
 Las macros `Py_INCREF()` y `Py_DECREF()` no comprueban si el apuntador pasado es ***NULL*** antes de ejecutarse. Sin embargo, las variantes `Py_XINCREF()` y `Py_XDECREF()` sí lo hacen. En caso de recibir ***NULL*** por parámetro no hacen nada, en lugar de levantar error.
 
-Para finalizar, hay que tener en cuenta qué tipos de objetos entrarán en esta dinámica del conteo de referencias: objetos *Python* cuyo tiempo de vida se extienda más allá de la ejecución actual de la función. Quedarán, por tanto, fuera de este mecanismo, todos los objetos *C*, sea cual sea su tiempo de vida, ya que no es el *garbage collector*, sino nosotros mismos, los responsables de liberarlos, si procede:
+Para finalizar, hay que tener en cuenta qué tipos de objetos entrarán en esta dinámica del conteo de referencias: referencias a objetos *Python* cuyo tiempo de vida se extienda más allá de la ejecución actual de la función. Quedarán, por tanto, fuera de este mecanismo, todos los objetos *C*, sea cual sea su tiempo de vida, ya que no es el *garbage collector*, sino nosotros mismos, los responsables de liberarlos, si procede:
 
 - Un objeto *C* (no apuntador) declarado `static` o en una variable global se liberará automáticamente al terminar el programa.
 - Una zona de memoria reservada en el *heap* (con `malloc()` o similar) deberá ser liberada (con `free()`) adecuadamente, ya sea en la ejecución actual, o en una futura (en cuyo caso deberemos guardar un apuntador estático o global para la futura ejecución).
+
+Si asignamos a una variable local un objeto *Python* ya existente, no hace falta incrementar el conteo de referencias, ya que esta variable local dejará de referenciar al objeto al retornar la función.
 
 ### 2.2 Defining Extension Types: Tutorial
 
