@@ -118,7 +118,7 @@ Se pueden crear excepciones a medida:
 PyObject* PyErr_NewException(const char *name, PyObject *base, PyObject *dict);
 ```
 
-Esto retorna una nueva referencia a una nueva clase de excepción y añade otra referencia al diccionario del módulo. Se la pasa un nombre, que debe tener la forma ***modulo.clase***. En nuestro caso, podría ser ***spam.error***, por ejemplo. El atributo ***\_\_module\_\_*** de la nueva clase se establece a lo que está a la izquierda del último punto (***spam***), y su nombre a lo que está a su derecha (***error***).
+Esto retorna una nueva referencia a una nueva clase de excepción y añade otra referencia al diccionario del módulo. Se la pasa un nombre, que debería tener la forma ***modulo.clase*** (en nuestro caso, ***spam.error***). El atributo ***\_\_module\_\_*** de la nueva clase se establece a lo que está a la izquierda del último punto (***spam***), y su nombre a lo que está a su derecha (***error***). Aunque podemos poner cualquier nombre que deseemos, se debería usar este convenio.
 
 Si el segundo argumento es ***NULL***, la clase derivará de `Exception`, aunque podemos indicar aquí otra clase base. En cuanto a ***dict*** suele ser ***NULL***, o indicar un diccionario de variables y métodos para la clase.
 
@@ -208,7 +208,7 @@ PyMODINIT_FUNC PyInit_spam(void)
 
 Podemos añadir propiedades al módulo, de modo que no solo proporcione funciones, sino también objetos con valores (constantes o no). Para ello se usan funciones como `PyModule_AddObject()`, `PyModule_AddIntConstant()`, `PyModule_AddStringConstant()`, `PyModule_AddIntMacro()` o `PyModule_AddStringMacro()`.
 
-`PyModule_AddObject()` añade un objeto a un módulo. El primer parámetro es el módulo, el segundo el nombre con el que se añadirá, y el tercero es el objeto a añadir. La función roba (*steals*) la referencia a dicho objeto, pero a diferencia de otras funciones que roban referencias, solo decrementa el conteo si la función tiene éxito, por lo que es doblemente importante comprobar si la función ha fallado, en cuyo caso deberemos nosotros decrementar dicho conteo.
+`PyModule_AddObject()` añade un objeto a un módulo. El primer parámetro es el módulo, el segundo el nombre con el que se añadirá, y el tercero es el objeto a añadir. La función roba (*steals*) la referencia a dicho objeto, pero a diferencia de otras funciones que roban referencias, solo decrementa el conteo si la función tiene éxito, por lo que es doblemente importante comprobar si la función ha fallado, en cuyo caso deberemos nosotros decrementar dicho conteo. En caso de que nos robe la referencia, el módulo pasa a ser el nuevo propietario del objeto, es decir, si un código lo saca del mismo, el conteo se decrementará.
 
 `PyModule_AddIntConstant()` y `PyModule_AddStringConstant()` añaden una constante entera (`long int`) o *string* (`const char*`) al módulo. Los parámetros son como los de `PyModule_AddObject()`, solo cambia el tipo del tercer parámetro.
 
@@ -464,13 +464,13 @@ Limpia el estado de error.
 void PyErr_SetString(PyObject *type, const char *message);
 ```
 
-Levanta una excepción. El primer argumento es el objeto excepción pertinente (no hay que incrementar el conteo de referencias, ya que recibe una *borrowed reference*), y el segundo es un mensaje de error en un *string* codificado con *UTF-8*, que será el valor asociado a la excepción.
+Levanta una excepción. El primer argumento es el objeto excepción pertinente (no hay que incrementar el conteo de referencias, ya que lo trata como una *borrowed reference*), y el segundo es un mensaje de error en un *string* codificado con *UTF-8*, que será el valor asociado a la excepción.
 
 ```c
 void PyErr_SetObject(PyObject *type, PyObject *value);
 ```
 
-Es como `PyErr_SetString()`, pero indicando un objeto *Python* como valor de la excepción.
+Es como `PyErr_SetString()`, pero indicando un objeto *Python* como valor de la excepción (no robará tampoco la *ownership* de ese objeto valor).
 
 ```c
 PyObject* PyErr_Occurred();
@@ -1033,4 +1033,14 @@ int PyModule_AddIntConstant(PyObject *module, const char *name, long value);
 int PyModule_AddStringConstant(PyObject *module, const char *name, const char *value);
 int PyModule_AddIntMacro(PyObject *module, macro);
 int PyModule_AddStringMacro(PyObject *module, macro);
+```
+
+#### Soporte para la creación de objetos
+
+```c
+Py_TYPE(o);
+int Py_IS_TYPE(PyObject *o, PyTypeObject *type);
+void Py_SET_TYPE(PyObject *o, PyTypeObject *type);
+Py_REFCNT(o);
+void Py_SET_REFCNT(PyObject *o, Py_ssize_t refcnt);
 ```
