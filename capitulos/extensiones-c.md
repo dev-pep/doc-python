@@ -388,12 +388,12 @@ Una extensión *C* es un archivo de biblioteca compartida que exporta una funci�
 
 Tal archivo debe pues tener el nombre correcto del módulo y la extensión adecuada al sistema operativo. Para que sea localizable, debe residir en una de las carpetas de ***PYTHONPATH*** (o estar localizable según la variable ***sys.path***).
 
-Este apartado explica cómo construir nuestro módulo sin utilizar directamente un compilador, sino a través de un *script* de creación de un archivo de biblioteca compartida usando el módulo *Python* ***distutils***. Sin embargo no vamos a documentar ese proceso.
+Este apartado explica cómo construir nuestro módulo sin utilizar directamente un compilador, sino a través de un *script* de creación de un archivo de biblioteca compartida usando el módulo *Python* ***distutils***. Sin embargo no vamos a documentar ese proceso, ya que dicho módulo está en fase de desaparición (será marcado como *deprecated* próximamente).
 
-Vamo a ver cómo podríamos generar el módulo usando el compilador *GCC* en sistemas *Unix*. Se podrían usar estos comandos (se pueden usar a discreción, son solo un ejemplo):
+Vamos a ver cómo podríamos generar el módulo usando el compilador *GCC* en sistemas *Unix*. Se podrían usar estos comandos (se pueden usar a discreción, son solo un ejemplo):
 
 ```
-gcc -DNDEBUG -g -O3 -Wall -fPIC -I/usr/local/include/python3.9 -c demo.c -o build/demo.o
+gcc -DNDEBUG -g -O3 -std=c18 -Wall -fPIC -I/usr/local/include/python3.9 -c demo.c -o build/demo.o
 gcc -shared build/demo.o -o build/demo.so
 ```
 
@@ -402,6 +402,7 @@ La primera orden genera el código objeto en ***demo.o***:
 - `-DNDEBUG` define el nombre de macro ***NDEBUG***, que según el estándar *C*, desactiva las *assertions* (***assert.h***).
 - `-g` compila con símbolos para depuración de código.
 - `-O3` activa optimizaciones.
+- `-std=c18` indica el estándar a utilizar (en este caso, *C18*).
 - `-Wall` activa todos los avisos (*warnings*) del compilador.
 - `-fPIC` genera código relocalizable (*position-independent code*), necesario en bibliotecas compartidas.
 - `-I/usr/local/include/python3.9` incluye el directorio ***/usr/local/include/python3.9*** en la lista de directorios donde buscar archivos de cabecera ***.h***.
