@@ -167,9 +167,9 @@ En cuanto a la *calling convention*, lo habitual es ***METH_VARARGS***, que indi
 
 Si la función no recibe argumentos, se indicará ***METH_NOARGS***.
 
-También es posible indicar ***METH_VARARGS | METH_KEYWORDS***. En este caso, la función pasa también *keyword arguments*. En ese caso, nuestra función recibiría desde *Python* un tercer argumento con un `PyObject*` conteniendo un diccionario de *keywords*.
+También es posible indicar ***METH_VARARGS | METH_KEYWORDS***. En este caso, la función recibe también *keyword arguments*. Nuestra función recibiría desde *Python* un tercer argumento con un `PyObject*` conteniendo un diccionario con esos *keyword arguments*.
 
-En ese caso, hay que recoger el valor de los argumentos mediante `PyArg_ParseTupleAndKeywords()` (se verá más adelante).
+En tal caso, hay que recoger el valor de los argumentos mediante `PyArg_ParseTupleAndKeywords()` (se verá más adelante).
 
 El resto de *calling conventions* disponibles están *deprecated*.
 
