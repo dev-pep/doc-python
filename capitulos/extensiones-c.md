@@ -600,7 +600,7 @@ Existen otros caracteres (no permitidos dentro de paréntesis):
 int PyArg_ParseTupleAndKeywords(PyObject *args, PyObject *kw, const char *format, char *keywords[], ...);
 ```
 
-Esta función es como `PyArg_ParseTuple()`, pero aquí proporcionamos, a parte de ***args*** (argumentos posicionales), el diccionario de argumentos ***kw***, que es el que ha recibido nuestra función. Por otro lado, indicamos el formato de cada uno en ***format***, y la secuencia (orden) de parseo de argumentos en el *array* de *strings* ***keywords***, que es un *array NULL-terminated* con los nombres de los *keyword arguments* en el orden deseado (los nombres vacíos indican parámetro *positional only*). El valor de retorno es como el de `PyArg_ParseTuple()`.
+Esta función es como `PyArg_ParseTuple()`, pero aquí proporcionamos, a parte de ***args*** (argumentos posicionales), el diccionario de argumentos ***kw***, que es el que ha recibido nuestra función. Por otro lado, indicamos el formato de cada uno en ***format***, y la secuencia (orden) de parseo de argumentos en el *array* de *strings* ***keywords***, que es un *array NULL-terminated* (el último elemento debe ser ***NULL***) con los nombres de los *keyword arguments* en el orden deseado (los nombres vacíos indican parámetro *positional only*). El valor de retorno es como el de `PyArg_ParseTuple()`.
 
 ```c
 int PyArg_UnpackTuple(PyObject *args, const char *name, Py_ssize_t min, Py_ssize_t max, ...);
