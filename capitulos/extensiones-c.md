@@ -159,17 +159,39 @@ static PyMethodDef SpamMethods[] = {
 
 El identificador de la tabla puede ser cualquiera, pero debe ser de tipo `PyMethodDef`.
 
-Para cada función, proporcionamos 4 datos: nombre de la función en el módulo (*string*), identificador de la función, *calling convention*, y una descripción de la función (*docstring*).
+Para cada función, proporcionamos 4 datos: nombre de la función en el módulo (*string C*), referencia a la función, *calling convention*, y una descripción de la función (*docstring* expresada como *string C*).
 
-El último elemento debe estar a ***NULL*** para marcar el fin de la tabla.
+El último elemento de la tabla debe estar a ***NULL*** para marcar el fin de la tabla.
 
-En cuanto a la *calling convention*, lo habitual es ***METH_VARARGS***, que indica que los argumentos de *Python* se pasarán en una tupla que se podrá procesar correctamente mediante `PyArg_ParseTuple()`.
+El primer y cuarto dato de cada registro no merece más explicación que ser simples *strings C*.
 
-Si la función no recibe argumentos, se indicará ***METH_NOARGS***.
+El segundo de los datos debe ser de tipo `PyCFunction`, que se define así:
 
-También es posible indicar ***METH_VARARGS | METH_KEYWORDS***. En este caso, la función recibe también *keyword arguments*. Nuestra función recibiría desde *Python* un tercer argumento con un `PyObject*` conteniendo un diccionario con esos *keyword arguments*.
+```c
+PyObject *PyCFunction(PyObject *self, PyObject *args);
+```
 
-En tal caso, hay que recoger el valor de los argumentos mediante `PyArg_ParseTupleAndKeywords()` (se verá más adelante).
+En cuanto al tercer dato, la *calling convention* que usará *Python*, suele tener el valor ***METH_VARARGS***, que indica que los argumentos de *Python* se pasarán en una tupla que se podrá procesar correctamente mediante `PyArg_ParseTuple()`.
+
+Si la función no recibe argumentos, se indicará ***METH_NOARGS***. La función debe ser también del tipo `PyCFunction`, aunque en el segundo parámetro recibirá ***NULL***.
+
+También es posible indicar ***METH_VARARGS | METH_KEYWORDS***. En este caso, la función recibirá también los *keyword arguments* en un tercer argumento con un `PyObject*` conteniendo un diccionario con esos *keyword arguments*. Por lo tanto, la función que escribiremos ya no será del tipo `PyCFunction`, sino del tipo `PyCFunctionWithKeywords`, que se define así:
+
+```c
+PyObject *PyCFunctionWithKeywords(PyObject *self, PyObject *args, PyObject *kwargs);
+```
+
+En tal caso, podemos extraer los argumentos como queramos, pero hay una función frecuentemente usada en estos casos: `PyArg_ParseTupleAndKeywords()` (se verá más adelante).
+
+Sin embargo, en este caso, a la hora de registrar nuestra función en la tabla de métodos, no podemos hacerlo tal cual, ya que le estaremos pasando como referencia a la función un identificador de tipo `PyCFunctionWithKeywords` cuando la estructura espera un tipo `PyCFunction`. Debemos solucionarlo, simplemente, con un *cast* a este último:
+
+```c
+static PyMethodDef SpamMethods[] = {
+    {"miFunc", (PyCFunction)spam_miFunc, METH_VARARGS | METH_KEYWORDS, "Hace cosas."},
+    /* ... */
+    {NULL, NULL, 0, NULL}
+};
+```
 
 El resto de *calling conventions* disponibles están *deprecated*.
 
