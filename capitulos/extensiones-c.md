@@ -591,7 +591,7 @@ Si en la *format string* se indican paréntesis, dentro de los cuales hay (opcio
 
 Existen otros caracteres (no permitidos dentro de paréntesis):
 
-- ***|*** indica que los argumentos a continuación son opcionales. Si no existen, la función no hace nada con el argumento *C* correspondiente.
+- ***|*** indica que los argumentos a continuación son opcionales. Si no existen, la función no hace nada con el argumento *C* correspondiente. Las variables que van a recoger argumentos opcionales deberían inicializarse con su valor por defecto.
 - ***$*** indica que el resto de los argumentos son *keyword only* (solo en `PyArg_ParseTupleAndKeywords()`).
 - ***:*** indica que la lista de *format units* ha terminado; tras ***:*** se indica el nombre de función que aparecerá en los posibles mensajes de error (valor asociado de la excepción que se levante).
 - ***;*** similar a ***:***, pero indica el mensaje de error en lugar del mensaje de error por defecto. ***:*** y ***;*** se excluyen mutuamente.
@@ -600,13 +600,42 @@ Existen otros caracteres (no permitidos dentro de paréntesis):
 int PyArg_ParseTupleAndKeywords(PyObject *args, PyObject *kw, const char *format, char *keywords[], ...);
 ```
 
-Esta función es como `PyArg_ParseTuple()`, pero aquí proporcionamos, a parte de ***args*** (argumentos posicionales), el diccionario de argumentos ***kw***, que es el que ha recibido nuestra función. Por otro lado, indicamos el formato de cada uno en ***format***, y la secuencia (orden) de parseo de argumentos en el *array* de *strings* ***keywords***, que es un *array NULL-terminated* (el último elemento debe ser ***NULL***) con los nombres de los *keyword arguments* en el orden deseado (los nombres vacíos indican parámetro *positional only*). El valor de retorno es como el de `PyArg_ParseTuple()`.
+Esta función es como `PyArg_ParseTuple()`, pero aquí proporcionamos, a parte de ***args*** (argumentos posicionales), el diccionario de argumentos *keyword*, ***kw***, que es el que ha recibido nuestra función como tercer argumento. Por otro lado, indicamos el formato de cada argumento en ***format***, y la secuencia (orden) de los argumentos en el *array* de *strings* ***keywords***, que es un *array NULL-terminated* (el último elemento debe ser ***NULL***) con los nombres de los *keyword arguments* en el orden deseado (los nombres vacíos indican parámetro *positional only*). El valor de retorno es como el de `PyArg_ParseTuple()`.
+
+En una **llamada** a una función desde *Python*, los argumentos posicionales van antes de los *keyword arguments*. Con `PyArg_ParseTuple`, no se recogerá ningún *keyword argument* (solo los posicionales). De los argumentos posicionales podemos indicar cuántos serán obligatorios y cuantos opcionales mediante el cáracter ***|*** en la *format string*. Por ejemplo, el string ***ii|iii*** admitirá solamente entre 2 y 5 argumentos posicionales. Cualquier otro número de argumentos posicionales generará error.
+
+En cuanto a `PyArg_ParseTupleAndKeywords()`, la lista de *keywords* definirá cuántos de los argumentos son posicionales y cuántos son *keyword arguments*. En todo caso, a la hora de definir esta lista, siempre se deben indicar los posicionales antes de los *keyword*, así:
+
+```c
+char *keys[] = {"", "", "primero", "segundo", "tercero", NULL};
+```
+
+En este caso, los dos primeros argumentos no pueden pasarse como *keyword* (son *positional-only*). Los tres restantes se pueden pasar como posicionales o como *keyword* (en este último caso, en el orden que se quiera). También es posible indicar qué argumentos son opcionales mediante ***|***, que puede estar en cualquier punto de la *string* (en medio de los posicionales, o de los *keyword*, etc.). Cualquiera de estas llamadas es correcta (y equivalente):
+
+```python
+foo(4, 10, 70, 5, 0)
+foo(4, 10, primero=70, segundo=5, tercero=0)
+foo(4, 10, tercero=0, primero=70, segundo=5)
+foo(4, 10, 70, 5, tercero=0)
+```
+
+Estas son incorrectas:
+
+```python
+foo(4, 10, 70, 5)  # faltan argumentos
+foo(4, arg=10, primero=70, segundo=5, tercero=0)  # ¿qué es 'arg'?
+foo(4, 10, 70, tercero=0, primero=5)  # 'primero' está repetido, y faltan argumentos
+```
+
+Si queremos que a partir de cierto punto los argumentos solo se puedan indicar como *keyword* en la llamada (*keyword-only arguments*), se puede incluir el carácter ***$*** en la *format string*. Por ejemplo, siguiendo con el ejemplo anterior, ***iii$ii*** indicaría que los argumentos ***segundo*** y ***tercero*** son *keyword-only*.
+
+> Indicar ***|*** y ***$*** en el mismo punto puede dar problemas si se indica como ***$|***. Mejor hacerlo como ***|$***.
 
 ```c
 int PyArg_UnpackTuple(PyObject *args, const char *name, Py_ssize_t min, Py_ssize_t max, ...);
 ```
 
-Esta forma de parsear la tupla de entrada no precisa de *format string*. Aquí la tupla ***args*** debe tener un mínimo de ***min*** elementos y un máximo de ***max*** (ambos números pueden ser iguales). Se deben proporcionar argumentos adicionales, apuntadores a `PyObject*`, que irán llenándose con los elementos de la tupla, sin conversiones. Los argumentos opcionales que no estén presentes en la tupla no modificarán el valor del correspondiente argumento (deberá ser inicializado anteriormente). El parámetro ***name*** es el nombre de función que se usará en un posible mensaje de error. Una función que parsee los argumentos de este modo debe declararse con ***METH_VARARGS*** en la tabla de funciones. Los objetos recibidos son *borrowed references*. La función retorna 1 si tiene éxito y 0 en caso contrario.
+Esta forma de parsear la tupla de entrada no precisa de *format string*. Aquí la tupla ***args*** debe tener un mínimo de ***min*** elementos y un máximo de ***max*** (ambos números pueden ser iguales). Se deben proporcionar argumentos adicionales, apuntadores a `PyObject*`, que irán llenándose con los elementos de la tupla, sin conversiones. Los argumentos opcionales que no estén presentes en la tupla no modificarán el valor del correspondiente argumento (deberá ser inicializado anteriormente). El parámetro ***name*** es el nombre de función que se mostrará en un posible mensaje de error. Una función que parsee los argumentos de este modo debe declararse con ***METH_VARARGS*** en la tabla de funciones. Los objetos recibidos son *borrowed references*. La función retorna 1 si tiene éxito y 0 en caso contrario.
 
 ### *Building values*
 
