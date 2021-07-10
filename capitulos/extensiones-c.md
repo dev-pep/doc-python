@@ -591,7 +591,7 @@ Si en la *format string* se indican paréntesis, dentro de los cuales hay (opcio
 
 Existen otros caracteres (no permitidos dentro de paréntesis):
 
-- ***|*** indica que los argumentos a continuación son opcionales. Si no existen, la función no hace nada con el argumento *C* correspondiente. Las variables que van a recoger argumentos opcionales deberían inicializarse con su valor por defecto.
+- ***|*** (barra *pipe*) indica que los argumentos a continuación son opcionales. Si no existen, la función no hace nada con el argumento *C* correspondiente. Las variables que van a recoger argumentos opcionales deberían inicializarse con su valor por defecto.
 - ***$*** indica que el resto de los argumentos son *keyword only* (solo en `PyArg_ParseTupleAndKeywords()`).
 - ***:*** indica que la lista de *format units* ha terminado; tras ***:*** se indica el nombre de función que aparecerá en los posibles mensajes de error (valor asociado de la excepción que se levante).
 - ***;*** similar a ***:***, pero indica el mensaje de error en lugar del mensaje de error por defecto. ***:*** y ***;*** se excluyen mutuamente.
@@ -629,7 +629,7 @@ foo(4, 10, 70, tercero=0, primero=5)  # 'primero' está repetido, y faltan argum
 
 Si queremos que a partir de cierto punto los argumentos solo se puedan indicar como *keyword* en la llamada (*keyword-only arguments*), se puede incluir el carácter ***$*** en la *format string*. Por ejemplo, siguiendo con el ejemplo anterior, ***iii$ii*** indicaría que los argumentos ***segundo*** y ***tercero*** son *keyword-only*.
 
-> Indicar ***|*** y ***$*** en el mismo punto puede dar problemas si se indica como ***$|***. Mejor hacerlo como ***|$***.
+> Indicar **|** y **$** en el mismo punto puede dar problemas si se indica como **$|**. Mejor hacerlo como **|$**.
 
 ```c
 int PyArg_UnpackTuple(PyObject *args, const char *name, Py_ssize_t min, Py_ssize_t max, ...);
