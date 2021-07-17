@@ -964,6 +964,8 @@ Py_ssize_t PyUnicode_FindChar(PyObject *str, Py_UCS4 ch, Py_ssize_t start, Py_ss
 Py_ssize_t PyUnicode_Count(PyObject *str, PyObject *substr, Py_ssize_t start, Py_ssize_t end);
 PyObject* PyUnicode_Replace(PyObject *str, PyObject *substr, PyObject *replstr, Py_ssize_t maxcount);
 int PyUnicode_Compare(PyObject *left, PyObject *right);
+const char* PyUnicode_AsUTF8AndSize(PyObject *unicode, Py_ssize_t *size);
+const char* PyUnicode_AsUTF8(PyObject *unicode);
 ```
 
 Tuplas:
