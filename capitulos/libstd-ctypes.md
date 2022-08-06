@@ -1,4 +1,4 @@
-# 16.16 ctypes — A foreign function library for Python
+# 16.16 ctypes - A foreign function library for Python
 
 Este es un resumen del apartado 16.16 de la documentación oficial sobre la biblioteca estándar de *Python*. Los títulos se han dejado sin traducir.
 
