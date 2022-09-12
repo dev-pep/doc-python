@@ -299,7 +299,7 @@ Ambos objetos apuntan al mismo lugar, por tanto:
 
 Si queremos que cada variable sea una referencia a un objeto distinto, debemos hacer copias del objeto original.
 
-#### Copia superficial (*Shallow copy*) y copia profunda (*deep copy*)
+#### Copia superficial (*shallow copy*) y copia profunda (*deep copy*)
 
 Siguiendo con el ejemplo anterior, y una vez definido ***a***, podemos hacer una *shallow copy* en ***b***, de varias formas distintas:
 
