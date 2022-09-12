@@ -1,6 +1,6 @@
 # Biblioteca estándar de Python: tipos *builtin*
 
-El presente documento es un resumen de una parte específica de la biblioteca estándar de *Python* 3.9. Los títulos se han mantenido en inglés, que es el idioma del documento que se ha utilizado como base para este resumen.
+El presente documento es un resumen de una parte específica de la biblioteca estándar de *Python* 3.10. Los títulos se han mantenido en inglés, que es el idioma del documento que se ha utilizado como base para este resumen.
 
 ## 4. BUILT-IN TYPES
 
@@ -268,7 +268,7 @@ Retorna el índice más bajo donde el *substring* ***sub*** se encuentra dentro 
 
 `str.format(*args,**kwargs)`
 
-Formatea un *string*, dando valor a los campos delimitados por llaves ***{}***. Se verá en detalle en *format specification*.
+Formatea un *string*, dando valor a los campos delimitados por llaves ***{}***. Se verá en detalle en el apartado de especificación de formato.
 
 `str.format_map(mapping)`
 

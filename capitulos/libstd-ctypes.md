@@ -1,6 +1,6 @@
 # 16.16 ctypes - A foreign function library for Python
 
-Este es un resumen del apartado 16.16 de la documentación oficial sobre la biblioteca estándar de *Python*. Los títulos se han dejado sin traducir.
+Este es un resumen del apartado 16.16 de la documentación oficial sobre la biblioteca estándar de *Python* 3.10. Los títulos se han dejado sin traducir.
 
 Esta biblioteca proporciona tipos de datos compatibles con *C* y permite llamar a funciones en bibliotecas compartidas (***.so*** en sistemas *Unix* y ***.dll*** en *Windows*).
 

@@ -1,8 +1,22 @@
-# Apuntes de *Python*
+# Apuntes de Python
 
-Estos son mis apuntes de *Python* 3.9.
+La intención del presente texto es dar una explicación exhaustiva de los detalles más relevantes del lenguaje *Python* (versión 3.10). Se trata de un **resumen completo**, extraído de la documentación oficial. Se han añadido aclaraciones y ampliaciones relevantes donde se ha estimado necesario. Sin embargo, **el contenido de estos apuntes puede resultar demasiado denso para un principiante sin conocimientos de programación**.
 
-## Tabla de contenido
+Se incluye un resumen del tutorial y la referencia oficiales, así como de componentes básicos de de la biblioteca estándar. Para finalizar, se da una explicación del *API C*, utilizado para crear módulos *Python* en lenguaje *C*.
+
+## Copias y actualizaciones
+
+Este trabajo está en permanente actualización.
+
+Para obtener una copia impresa, o un *ebook* de estos apuntes (podría no ser la versión más actual):
+
+[Enlace pendiente]
+
+Puede acceder de forma gratuita a la versión más actualizada de esta obra, visitando el siguiente repositorio en *GitHub*:
+
+<https://github.com/dev-pep/doc-python>
+
+## Sumario
 
 Lenguaje:
 
@@ -12,14 +26,13 @@ Lenguaje:
 Biblioteca estándar:
 
 1. [Builtins](capitulos/libstd-builtins.md)
-2. [Tipos builtin](capitulos/libstd-tipos-builtin.md)
-3. [Formato](capitulos/libstd-formato.md)
-4. [ctypes](capitulos/libstd-ctypes.md)
+1. [Tipos builtin](capitulos/libstd-tipos-builtin.md)
+1. [Formato de strings](capitulos/libstd-formato.md)
+1. [ctypes](capitulos/libstd-ctypes.md)
 
 Otros:
 
 - [Extensiones en C](capitulos/extensiones-c.md)
-- VirtualEnv
 
 ---
 

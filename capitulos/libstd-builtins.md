@@ -1,6 +1,6 @@
 # Biblioteca estándar de Python: *builtins*
 
-El presente documento es un resumen de una parte específica de la biblioteca estándar de *Python* 3.9. Los títulos se han mantenido en inglés, que es el idioma del documento que se ha utilizado como base para este resumen.
+El presente documento es un resumen de una parte específica de la biblioteca estándar de *Python* 3.10. Los títulos se han mantenido en inglés, que es el idioma del documento que se ha utilizado como base para este resumen.
 
 ## 2. BUILT-IN FUNCTIONS
 
@@ -157,7 +157,7 @@ Si no se le da argumento, retorna 0.0.
 
 `format(value [,format_spec])`
 
-Retorna una representación en *string* del valor indicado, formateado según la *format string* ***format_spec***. Normalmente debería seguir la especificación de formato estándar (ver *format specification*), aunque el objeto puede definir su propia especificación. `format(a, form)` se traduce a `type(a).__format__(form)`, *bypassing* el método de la instancia, si lo hubiere.
+Retorna una representación en *string* del valor indicado, formateado según la *format string* ***format_spec***. Normalmente debería seguir la especificación de formato estándar (véase el apartado de especificación de formato), aunque el objeto puede definir su propia especificación. `format(a, form)` se traduce a `type(a).__format__(form)`, *bypassing* el método de la instancia, si lo hubiere.
 
 Si no se indica el *string* de formato, se asumirá un *string* vacío, que tiene el mismo efecto que llamar a `str()`.
 

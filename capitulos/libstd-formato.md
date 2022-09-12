@@ -2,7 +2,7 @@
 
 ## Specification
 
-La especificación de formato viene definida como base en el **PEP 3101**. Con el tiempo se han añadido otras características. Se ha seguido la estructura del mencionado *PEP* para realizar el presente resumen, pero se ha ampliado la información según la documentación de la biblioteca estándar de *Python* 3.9.
+La **especificación de formato** viene definida como base en el **PEP 3101**. Con el tiempo se han añadido otras características. Se ha seguido la estructura del mencionado *PEP* para realizar el presente resumen, pero se ha ampliado la información según la documentación de la biblioteca estándar de *Python* 3.10.
 
 Los títulos se han mantenido en inglés, que es el idioma de la documentación que se ha utilizado como base para este resumen.
 
