@@ -879,9 +879,11 @@ El estilo de *Python* definido en el *PEP 8* se toma como oficial:
 - Codificación de texto estándar. *UTF-8* va bien, o incluso *ASCII* puro y duro.
 - No se deberían usar caracteres fuera del *ASCII* puro si alguien de otro idioma va a tener que ver el código.
 
-El documento *PEP 8* indica también, entre otras, cómo partir una línea lógica en distintas líneas físicas. Ya sabemos que una forma es mediante la barra `\` a final de línea, pero existe también la unión implícita de líneas (*implicit joining*) dentro de paréntesis, corchetes o llaves (siempre y cuando no partamos un nombre en dos).
+El documento *PEP 8* indica también, entre otras, cómo partir una línea lógica en distintas líneas físicas. Ya sabemos que una forma es mediante la barra `\` a final de línea, pero existe también la **unión implícita** de líneas (*implicit joining*) dentro de **paréntesis, corchetes o llaves** (siempre y cuando no partamos un nombre en dos).
 
-En la definición de una función, hay dos opciones para la lista de parámetros:
+Sintácticamente, cuando hay unión de líneas físicas, la indentación de las líneas de continuación es irrelevante: solo importa la de la primera. Pero *PEP 8* incide en lo que se consideran buenas prácticas.
+
+En una indentación implícita, por ejemplo dentro de la lista de parámetros en la definición de una función, habría dos opciones aceptables:
 
 ```python
 # Opción 1. Alineación con el elemento inicial:
@@ -891,11 +893,11 @@ def funcion(var1, var2, var3,
 
 # Opción 2. Un número de espacios distinto al
 # correspondiente con la indentación del cuerpo
-# de la función:
+# del bloque interior (hanging indent):
 def funcion_con_nombre_largo(
         var1, var2, var3,
         var4, var5):
-    print(var1)
+    print(var1)  # indentación del bloque interior
 ```
 
 Los *hanging indents* (línea terminada en un paréntesis de apertura) pueden tener cualquier número de espacios que se desee, no es obligatorio que sean 4:
@@ -906,14 +908,14 @@ foo = funcion_con_nombre_largo(
   var4, var5)
 ```
 
-En caso de que no sea un *hanging indent*, hay que alinear con el elemento inicial:
+En caso de que no sea un *hanging indent*, habría que alinear con el elemento inicial:
 
 ```python
 v = foo(var1, var2,
         var3, var4)  # var3 alineado con var1
 ```
 
-En cuanto al paréntesis, llave o corchete de cierre, puede ir al final de la última línea de elementos, o quedar en su propia línea, alineado con los elementos anteriores:
+En cuanto al **paréntesis, llave o corchete de cierre**, puede ir al final de la última línea de elementos, o quedar en su propia línea, alineado con los elementos anteriores:
 
 ```python
 matrix1 = [1, 2, 3,

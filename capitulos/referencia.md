@@ -4,39 +4,47 @@ El presente documento es un resumen de los aspectos más relevantes de la refere
 
 ## 2. LEXICAL ANALYSIS
 
-El archivo de código se pasa a una lista de *tokens*. La conversión la hace el analizador sintáctico, que pasa luego los *tokens* al *parser*. Veamos cómo.
+(Análisis léxico.)
+
+El archivo de código fuente se traduce a una secuencia de *tokens*. La conversión la hace el analizador sintáctico, que pasa luego los *tokens* al *parser*. Veamos cómo.
 
 ### 2.1 Line structure
+
+(Estructura de líneas.)
 
 Un programa *Python* está formado por **líneas lógicas**.
 
 #### 2.1.1 Logical lines
 
-Una línea lógica termina con el *token NEWLINE*. Corresponde a una o más líneas físicas.
+(Líneas lógicas.)
+
+Una línea lógica termina con el *token NEWLINE*. Corresponde a una o más líneas físicas, unidas mediante unión implícita (dentro de paréntesis, llaves o corchetes) o explícita (***\\*** al final) de líneas.
 
 #### 2.1.2 Physical lines
+
+(Líneas físicas.)
 
 Secuencias de caracteres terminadas con una secuencia de fin de línea (en *Unix LF*, en *Windows CR-LF*, en antiguos *Mac CR*; cualquiera de ellas vale en cualquier plataforma). En los literales *string*, ***\\n*** representa fin de línea.
 
 #### 2.1.3 Comments
 
-Empieza por un ***#*** (que no forme parte de un literal *string*), y termina al final de la línea física. No puede estar en medio de una línea lógica, con lo que su presencia marca el fin de una línea lógica. Los comentarios se ignoran (no generan *tokens*).
+(Comentarios.)
+
+Empieza por una almohadilla ***#*** que no forme parte de un literal *string*; el comentario termina al final de la línea física. No puede estar en medio de una línea lógica, con lo que su presencia marca el fin de una línea lógica. Los comentarios se ignoran (no generan *tokens*).
 
 #### 2.1.4 Encoding declarations
 
-Codificación del archivo fuente por defecto es *UTF-8*. Si es otra, especificar comentario (***#***) en 1ª o 2ª línea, que contenga coincidencia con la expresión regular:
+(Declaraciones de codificación.)
 
-```
-coding[=:]\s*([-\w.]+)
-```
+La codificación del archivo (de texto) fuente por defecto es *UTF-8*. Si el archivo está codificado de forma distinta, se debe especificar la codificación en un comentario (***#***) en la primera línea. Dicha especificación podría estar en la segunda línea, siempre y cuando la primera fuese también un comentario (por ejemplo, la línea *shebang*). La especificación de codificación debe coincidir con la expresión regular `coding[=:]\s*([-\w.]+)`.
 
-Ejemplo, reconocido por *emacs*:
+Ejemplo (reconocido por editor *emacs*):
 
 ```
 # -*- coding: utf-16 -*-
 ```
 
-Reconocido por *Vim*:
+Otro ejemplo (reconocido por editor *Vim*):
 
 ```
 # vim:fileencoding=latin-1
@@ -46,90 +54,127 @@ La codificación concreta indicada tiene que ser reconocida por *Python*.
 
 #### 2.1.5 Explicit line joining
 
-Línea física terminada con *backslash* (***\\***), que no forma parte de un literal *string* o comentario, seguido de *newline*, se junta a la siguiente (desaparece el backslash y el *newline*). No se puede usar para partir *tokens* (excepto literales *string*). No se puede usar en un línea con comentario.
+(Unión explícita de líneas.)
+
+La unión explícita de líneas se consigue con una línea física terminada con *backslash* (***\\***, que no forma parte de un literal *string* o comentario), seguido del carácter de fin de línea. Dicha línea se junta a la siguiente línea física (desaparece el backslash y el *newline*) formando una sola línea lógica. No se puede usar para partir *tokens* (excepto literales *string*). Tampoco se puede usar en un línea con comentario.
 
 #### 2.1.6 Implicit line joining
 
-Las expresiones entre paréntesis, corchetes o llaves pueden escribirse en varias líneas, siempre que no rompamos *tokens*. Las líneas físicas así partidas sí pueden tener su comentario. Se aceptan líneas en blanco, y la indentación de las líneas (excepto la primera) es irrelevante. Los *triple-quoted strings* también se pueden romper en líneas
-implícitamente, pero no pueden llevar comentarios.
+(Unión implícita de líneas.)
+
+Las expresiones entre **paréntesis, corchetes o llaves** pueden escribirse en varias líneas físicas, siempre que no rompamos *tokens*. Las físicas así partidas sí pueden tener su comentario. Se aceptan líneas en blanco, y la indentación de las líneas (excepto la de la línea inicial) es irrelevante (aunque *PEP 8* da una serie de recomendaciones al respecto). Los *triple-quoted strings* también se pueden romper en líneas implícitamente, pero no pueden llevar comentarios.
 
 #### 2.1.7 Blank lines
 
-Una línea en blanco (espacios, tabs seguidos de *newline*) en el código fuente no generan un nuevo *token NEWLINE*. Se ignora.
+(Líneas en blanco.)
+
+Una línea en blanco (espacios y/o tabuladores seguidos de un *newline*) no generan un nuevo *token NEWLINE*, sino que son ignoradas.
 
 #### 2.1.8 Indentation
 
-La indentación (espacios y tabs) marca el nivel de indentación de una **línea lógica**: si hay varias líneas físicas, es la primera de ellas la que marca el nivel de indentación. La indentación no se puede partir en líneas físicas: el nivel lo marca el número de espacios antes del primer carácter no blanco (incluido un posible *backslash* de *explicit line joining*). Se van generando *tokens* *INDENT* y *DEDENT* para marcar los cambios de indentación.
+(Indentación.)
+
+La indentación (espacios y tabuladores) marca el nivel de indentación de una **línea lógica**: si hay varias líneas físicas, es la primera de ellas la que marca el nivel de indentación. La indentación no se puede partir en líneas físicas: el nivel lo marca el número de espacios antes del primer carácter no blanco (incluido un posible *backslash* de la unión explícita de líneas). Se van generando *tokens* *INDENT* (aumento de indentación) y *DEDENT* (disminución de indentación) para marcar los cambios de indentación.
 
 #### 2.1.9 Whitespace between tokens
 
-El espacio blanco (espacios, tabs) no tiene significado en sí, excepto para separar *tokens*; a excepción del espacio de indentación al principio de las líneas lógicas, y dentro de literales *string*.
+(Espacios entre *tokens*.)
+
+El espacio blanco (espacios y tabuladores) no tiene significado en sí, excepto para separar *tokens* (a excepción del espacio de indentación al principio de las líneas lógicas, y dentro de literales *string*).
 
 ### 2.2 Other tokens
 
-A parte de *NEWLINE*, *INDENT* y *DEDENT*, existen varias categorías de *tokens*: *identifiers*, *keywords*, *literals*, *operators*, y *delimiters*.
+(Otros *tokens*.)
+
+A parte de *NEWLINE*, *INDENT* y *DEDENT*, existen varias categorías de *tokens*: identificadores (*identifiers*), palabras clave (*keywords*), literales (*literals*), operadores (*operators*), y delimitadores (*delimiters*).
 
 ### 2.3 Identifiers and keywords
 
-Los nombres de identificadores dentro de los caracteres *ASCII*, son como en *C* ('\_', 'a'-'z', 'A'-'Z', y, a excepción del primer carácter, '0'-'9'). Si añadimos caracteres fuera del estándar *ASCII*, hay otras reglas: véase *PEP 3131*.
+(Identificadores y palabras clave.)
 
-La longitud de los identificadores es ilimitada. *Case sensitive*.
+Los nombres de identificadores dentro de los caracteres *ASCII*, son como en *C* ('\_', 'a'-'z', 'A'-'Z', y, a excepción del primer carácter del identificador, '0'-'9'). Si añadimos caracteres fuera del estándar *ASCII*, hay otras reglas: véase *PEP 3131*.
+
+La longitud de los identificadores es ilimitada. Los nombres de identificadores son sensibles a las mayúsculas.
 
 #### 2.3.1 Keywords
 
-`False`, `None`, `True`, `and`, `as`, `assert`, `async`, `await`, `break`, `class`, `continue`, `def`, `del`, `elif`, `else`, `except`, `finally`, `for`, `from`, `global`, `if`, `import`, `in`, `is`, `lambda`, `nonlocal`, `not`, `or`, `pass`, `raise`, `return`, `try`, `while`, `with`, `yield`.
+(Palabras clave.)
 
-#### 2.3.2 Reserved classes of identifiers
+Las palabras clave de *Python* son:
 
-***\_\**** no se importan en `from <modulo> import *`.
+`False`, `None`, `True`, `and`, `as`, `assert`, `async`, `await`, `break`, `class`, `continue`, `def`, `del`, `elif`, `else`, `except`, `finally`, `for`, `from`, `global`, `if`, `import`, `in`, `is`, `lambda`, `nonlocal`, `not`, `or`, `pass`, `raise`, `return`, `try`, `while`, `with` y `yield`.
 
-***\_\_\*\_\_*** son *system-defined names*; no usar este tipo de nombre.
+Se trata de palabras reservadas que no pueden usarse como identificadores.
+
+#### 2.3.2 Soft Keywords
+
+(Palabras clave débiles.)
+
+Algunos identificadores solo están reservados dentro de ciertos contextos. Es el caso de `match`, `case` y `_`, que solo están reservados dentro de un bloque `match`.
+
+#### 2.3.3 Reserved classes of identifiers
+
+(Clases reservadas de identificadores.)
+
+***\_\**** no se importan con `from <modulo> import *`.
+
+***\_*** es un comodín (*wildcard*) dentro de un bloque `match`. Fuera de él, no tiene ningún significado especial.
+
+***\_\_\*\_\_*** son nombres definidos por el sistema; no se debería usar este tipo de nombre.
 
 ***\_\_\**** son reemplazados por la forma *mangled* dentro de la definición de una clase.
 
 ### 2.4 Literals
 
+(Literales.)
+
+Los literales son una notación específica para denotar un valor de un tipo *builtin* concreto.
+
 #### 2.4.1 String and Bytes literals
 
-La codificación del *source character set* (caracteres del archivo fuente) es el especificado en la codificación del archivo fuente (2.1.4).
+(Literales *string* y *bytes*.)
 
-Los *strings* y *bytes* puede ir entre comillas dobles o simples. Pero entonces no pueden incluir ese tipo de comilla (si no es *escaped*).
+La codificación del *source character set* (caracteres del archivo fuente) está especificado en la codificación del archivo fuente (2.1.4). Por defecto es *UTF-8*.
 
-También entre grupos de 3 comillas simples o dobles (se pueden incluir *unescaped newlines* y ambos tipos de comillas).
+Los *strings* y *bytes* puede ir entre comillas dobles o simples. Pero entonces no pueden incluir ese tipo de comilla (si no es *escaped*, precedida del caràcter ***\\***). También pueden ir delimitados por grupos de 3 comillas simples o dobles, en cuyo caso, los saltos de línea presentes en el literal serán tomados como tal.
 
-El *backslash* se usa como carácter escape. Si queremos un *backslash* en sí, hay que incluirlo *escaped* (***\\\\***).
+El *backslash* (***\\***) se usa como carácter *escape*. Si queremos un *backslash* en sí, hay que incluirlo *escaped* (***\\\\***).
 
-Un literal *bytes* tiene como prefijo ***b*** o ***B***. Solo admite caracteres *ASCII*. Para valores superiores a 127, *escaped*.
+Un literal *bytes* tiene como prefijo ***b*** o ***B***. Solo admite caracteres *ASCII*. Para valores superiores a 127, deben ir *escaped*. El elemento básico es el *byte*, mientras que en los *strings* es el carácter.
 
-Tanto *bytes* como *strings* pueden tener prefijo ***r*** o ***R*** (*raw string*), en cuyo caso el *backslash* se toma literalmente.
+Tanto *bytes* como *strings* pueden tener prefijo ***r*** o ***R*** (*raw string* o *raw bytes*), en cuyo caso el *backslash* se toma literalmente.
 
-El prefijo ***u*** o ***U*** se sigue manteniendo en *strings*, pero es *legacy*, para compatibilidad con *Python* 2 (lo ignoraremos).
+El prefijo ***u*** o ***U*** se sigue manteniendo en *strings*, pero su única utilidad es para compatibilidad con *Python* 2 (se ignora).
 
-El prefijo ***f*** o ***F*** es para *formatted string literals* (lo veremos más adelante). Solo para *strings* (no *bytes*).
+El prefijo ***f*** o ***F*** es para literales con formato (*formatted string literals*, se verán más adelante). Solo para *strings* (no *bytes*).
 
-El orden (y *case*) de dos prefijos, en caso de coincidir, es indiferente. En el caso de *bytes*, pueden coincidir ***r*** y ***b***. En *strings*, pueden coincidir ***r*** y ***f***.
+El orden de dos prefijos, en caso de coincidir, es indiferente. En el caso de *bytes*, pueden coincidir ***r*** y ***b***. En *strings*, pueden coincidir ***r*** y ***f***.
 
-*Escape sequences*: ***\\newline*** (se ignoran los dos caracteres), ***\\\\***, ***\\'***, ***\\"***, ***\\a*** (*bell*), ***\\b*** (*backspace*), ***\\f*** (*FF*), ***\\n*** (*LF*), ***\\r*** (*CR*), ***\\t*** (*TAB*), ***\\v*** (*TAB* vertical), ***\\⁠ooo*** (hasta 3 caracteres octales), ***\\xhh*** (2 caracteres hexadecimales).
+Secuencias de escape (*escape sequences*): ***\\*** + salto de línea (se ignoran ambos), ***\\\\***, ***\\'***, ***\\"***, ***\\a*** (*bell*), ***\\b*** (*backspace*, retroceso), ***\\f*** (*FF*), ***\\n*** (*LF*), ***\\r*** (*CR*), ***\\t*** (tabulador), ***\\v*** (tabulador vertical), ***\\⁠ooo*** (hasta 3 caracteres octales), ***\\xhh*** (2 caracteres hexadecimales).
 
-En los literales *string*, las secuencias *escape* octal y hexa denotan un carácter *Unicode*; en un literal *bytes*, el valor del *byte*.
+En los literales *string*, las secuencias *escape* octal y hexadecimal denotan un carácter *Unicode*; en un literal *bytes*, el valor del *byte*.
 
-En *strings* (no en *bytes*) se acepta: ***\\N{nombre}*** (carácter con ese nombre en la base de datos *Unicode*), ***\\uhhhh*** (hexa, 16 bits, se pueden poner *surrogate pairs*), ***\\Uhhhhhhhh*** (hexa, 32 bits, cualquier carácter *Unicode* se puede especificar así).
+En *strings* (no en *bytes*) se acepta: ***\\N{nombre}*** (carácter con ese nombre en la tabla *Unicode*), ***\\uhhhh*** (hexadecimal, 16 bits, se pueden poner *surrogate pairs*), ***\\Uhhhhhhhh*** (hexadecimal, 32 bits, cualquier carácter *Unicode* se puede especificar así).
 
-Las *escape sequences* no reconocidas, se dejan tal cual. Un *raw string* no puede terminar en un número impar de backslashes (aunque igualmente no los procesa). Si una línea de un *raw string* termina en ***\\newline***, se mantendrá tal cual en el *string*.
+Las *escape sequences* no reconocidas se dejan tal cual. Un *raw string* no puede terminar en un número impar de *backslashes*, aunque igualmente no los procesa. Si una línea de un *raw string* termina en ***\\*** + salto de línea, se mantendrá tal cual en el *string*.
 
 #### 2.4.2 String literal concatenation
 
-Varios literales *string* o *bytes* consecutivos separados únicamente por *white space* (incluyendo comentarios) son concatenados automáticamente, si están en la misma línea lógica (pueden estar en distintas líneas físicas). Esto es así aunque sean de distinto tipo (*raws*, *formatted*, *triple-quoted*, etc.).
+(Concatenación de literales *string*.)
 
-Ello se realiza en *compile time*; para concatenar *strings* en *run time* (evaluación de expresiones), utilizar el operador de concatenación '***+***'.
+Varios literales *string* o *bytes* consecutivos separados únicamente por espacio en blanco (incluyendo comentarios) son concatenados automáticamente, si están en la misma línea lógica (pueden estar en distintas líneas físicas). Esto es así aunque sean de distinto tipo (*raws*, *formatted*, *triple-quoted*, etc.).
+
+Esta concatenación se realiza en tiempo de compilación; para concatenar *strings* en tiempo de ejecución (evaluación de expresiones), se utiliza el operador de concatenación ***+***.
 
 #### 2.4.3 Formatted string literals
 
-Contienen campos (expresiones entre llaves) que se reemplazan en *run time*. Si queremos incluir un signo llave en sí, se debe escribir doblado (***{{*** o ***}}***).
+(Literales *string* con formato.)
+
+Estos literales contienen campos (expresiones entre llaves) que se reemplazan en tiempo de ejecución. Si queremos incluir un signo llave en sí, se debe escribir doblado (***{{*** o ***}}***).
 
 Tras la expresión, dentro de las llaves, se puede añadir un campo de conversión, tras un signo de exclamación (***!***), o un campo de formato, tras dos puntos (***:***). Con ***!s*** el resultado es pasado a `str()`, con ***!r*** a `repr()` y con ***!a*** a `ascii()`. Finalmente el valor obtenido es pasado al método `__format__()` del objeto resultante, junto con el especificador de formato (tras los dos puntos); si no se especifica, se pasa un *string* vacío como especificador de formato.
 
-En cuanto a los valores incluidos en el especificador de formato, pueden ser a su vez campos entre llaves que serán remplazado en *run time*. Estos *nested fields* pueden tener sus propios especificadores de formato, que ya no pueden ser campos, sino valores concretos.
+En cuanto a los valores incluidos en el especificador de formato, pueden ser a su vez campos entre llaves que serán remplazados en tiempo de ejecución. Estos campos anidados pueden tener sus propios especificadores de formato, que ya no pueden ser campos, sino valores concretos.
 
 En la biblioteca se hablará del mini-lenguaje de especificadores de formato.
 
@@ -137,11 +182,11 @@ No se pueden incluir expresiones vacías. Una expresión lambda o una expresión
 
 Cada una de las expresiones se evalúa de izquierda a derecha.
 
-Los *f-strings* se pueden concatenar con cualquier tipo de *string*, pero los campos no se pueden partir entre dos literales *string*.
+Los *f-strings* se pueden concatenar con cualquier tipo de *string*, pero los campos no se pueden partir entre dos literales *string* a concatenar.
 
-Se debe tener cuidado que las expresiones no contengan posibles comillas que entren en conflicto con las comillas delimitadoras del *string*.
+Se debe tener cuidado con que las expresiones no contengan posibles comillas que entren en conflicto con las comillas delimitadoras del *string*.
 
-Las expresiones de los campos no pueden contener *backslashes*. Si necesitamos un valor que tenga, por ejemplo, un carácter *escaped*, crear una variable temporal con ese valor y usarla en lugar del literal con el *backslash* directamente.
+Las expresiones de los campos no pueden contener *backslashes*. Si necesitamos un valor que tenga, por ejemplo, un carácter *escaped*, se deberá crear una variable temporal con ese valor y se usará en lugar del literal con el *backslash* directamente.
 
 Los *docstrings* pueden ser de cualquier tipo de *string*, excepto *f-string*.
 
