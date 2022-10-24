@@ -1297,6 +1297,8 @@ No pueden incluirse varias sentencias compuestas en una sola línea.
 
 Sentencias compuestas: `if`, `while`, `for`, `try`, `with`, `match`, `def` y `class`.
 
+La mayor parte se ha visto en el tutorial. Veremoa a continuación algunos conceptos adicionales relacionados con las dos últimas.
+
 ### 8.7 Function definitions
 
 Ya hemos visto cómo se definen las funciones. Podríamos añadir que las funciones son anidables en *Python*, es decir, una función puede definirse dentro de otra, dentro de una clase, de un bloque de código, etc.
