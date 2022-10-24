@@ -2303,7 +2303,7 @@ Los generadores son una herramienta simple y poderosa para *crear iteradores*. S
 28
 ```
 
-En el ejemplo, ***generador*** es un objeto función, y ***generador(2, 2, 2)*** es un objeto generador, que tiene todas las características de un iterador. Un generador crea automáticamente los métodos `__iter__()` y `__next__()`, y levanta la excepción ***StopIteration*** cuando hace falta.
+En el ejemplo, ***generador*** es un **objeto función**, y ***generador(2, 2, 2)*** es un **objeto generador** (la llamada a la función retorna tal objeto), que tiene todas las características de un iterador. Un generador crea automáticamente los métodos `__iter__()` y `__next__()`, y levanta la excepción ***StopIteration*** cuando hace falta.
 
 Lo que hace el generador cuando se itera en él es ejecutarse hasta el primer `yield`, retornando ese primer valor; al volver a ejecutarse (`next()`, siguiente iteración) para buscar el segundo valor, seguirá la ejecución donde la había dejado la primera vez (guarda el estado de ejecución completo), y acabará retornando el segundo valor (segundo `yield`); y así sucesivamente hasta el final. Tras retornar el último `yield` y volver a ejecutarse `next()`, se ejecutará todo el código tras ese último `yield` hasta el final (fin del código o sentencia `return`) y levantará la excepción ***StopIteration***.
 

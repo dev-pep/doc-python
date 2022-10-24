@@ -192,203 +192,229 @@ Los *docstrings* pueden ser de cualquier tipo de *string*, excepto *f-string*.
 
 #### 2.4.4 Numeric literals
 
-Tipos de literal numérico: entero, punto flotante e imaginario.
+(Literales numéricos.)
 
-Los literales numéricos no incluyen signo: ***-5*** es el operador `-` y el literal entero `5`.
+Tipos de literal numérico: entero, punto flotante y número imaginario.
+
+Los literales numéricos no incluyen signo: ***-5*** es el operador `-` y el literal entero ***5***.
 
 #### 2.4.5 Integer literals
 
-No hay límite de tamaño.
+(Literales enteros.)
 
-- Decimal: secuencia de números de ***0*** a ***9***. No puede empezar por ***0***. El cero puede representarse mediante uno o más ceros.
-- Binario: ***0b*** (o ***0B***) seguido de uno o más dígitos binarios (***0*** o ***1***).
+Los literales entero no tienen límite de tamaño. Existen cuatro tipos, según su base:
+
+- Decimal: secuencia de números de ***0*** a ***9***. No puede empezar por ***0***, aunque el número cero puede representarse mediante uno o más ceros.
+- Binario: ***0b*** (o ***0B***) seguido de uno o más dígitos binarios (***0*** y ***1***).
 - Octal: ***0o*** (o ***0O***) seguido de uno o más dígitos octales (***0*** a ***7***).
 - Hexadecimal: ***0x*** (o ***0X***) seguido de uno o más dígitos hexadecimales (***0*** a ***F*** o ***f***).
 
-Para aumentar legibilidad podemos incluir guiones bajos en los literales, entre los dígitos, y/o entre el prefijo de base y el número en sí (***0x\_00ff\_0050***). Para la evaluación del número son ignorados.
+Para aumentar la legibilidad podemos insertar guiones bajos en los literales, entre los dígitos, y/o entre el prefijo de base y el número en sí (***0x\_00ff\_0050***). Para la evaluación del valor son ignorados.
 
 #### 2.4.6 Floating point literals
 
-Un número con punto decimal. En este caso, se puede omitir la parte entera o la fraccionaria, pero no ambas. Opcionalmente puede seguir la parte del exponente: ***e*** o ***E***, seguido por signo opcional y los dígitos (sin punto decimal) del mismo.
+(Literales de punto flotante.)
 
-En el caso de que hayamos incluido la parte del exponente, el número inicial puede ir sin punto decimal.
+Se trata de un número que incluye punto decimal. En este caso, se puede omitir la parte entera o la fraccionaria, pero no ambas. Opcionalmente puede seguir una parte de exponente: ***e*** o ***E*** seguido por signo opcional y los dígitos (sin punto decimal) del mismo.
 
-Tanto el número como el exponente son decimales, y pueden empezar por ***0*** si quieren.
+En el caso de incluir la parte del exponente, el número puede omitir el punto decimal.
 
-Se pueden incluir guiones bajos entre los números, tanto en la parte entera, como en la fraccionaria, como en el número del exponente.
+Tanto la parte numérica como el exponente son decimales, y pueden empezar por ***0*** si se desea.
+
+Se pueden incluir guiones bajos entre los dígitos, tanto en la parte entera, como en la fraccionaria, así como en el número del exponente.
 
 #### 2.4.7 Imaginary literals
 
-Literal *float*, o solo la parte entera (sin punto), seguido por ***j*** o ***J***. Un número complejo se almacena como un *float* + un *imaginary*: ***5+3j***.
+(Literales imaginarios.)
+
+Se trata de un literal *float* o entero seguido por el sufijo ***j*** o ***J***. Un número complejo se almacena como un *float* más un imaginario: ***5+3j***.
 
 ### 2.5 Operators
 
+(Operadores.)
+
 `+`, `-`, `*`, `**`, `/`, `//`, `%`, `@`, `<<`, `>>`, `&`, `|`, `^`, `~`, `:=`, `<`, `>`, `<=`, `>=`, `==`, `!=`.
-
-### 2.6 Delimiters
-
-Poca utilidad práctica.
 
 ## 3. DATA MODEL
 
+(Modelo de datos.)
+
 ### 3.1 Objects, values and types
 
-Los datos de *Python* se almacenan como objetos. Todo objeto tiene una *identidad* única que nunca cambia (`id()`; `is` compara la identidad de dos objetos), un *tipo*, que tampoco cambia (`type()`;
-marca qué valores puede tener y qué operaciones pueden hacerse en el objeto; un tipo, es de hecho un objeto también, de tipo ***type***), y un *valor* (que puede cambiar si el objeto es mutable, aunque un contenedor inmutable puede contener objetos mutables). La mutabilidad depende del tipo del objeto. En la implementación *CPython*, `id()` es la dirección de memoria del objeto.
+(Objetos, valores y tipos.)
 
-Existe *garbage collection*, de objetos no referenciables. Los recursos "externos" que tiene un objeto son liberados cuando es *collected*, pero como la *garbage collection* no está garantizada, mejor liberar recursos explícitamente (normalmente métodos llamados `close()`). Un buen mecanismo para asegurar que no quedan recursos abiertos es mediante
-`try ... finally`, o con `with`.
+Los datos de *Python* se almacenan como objetos. Todo objeto tiene una *identidad* única que nunca cambia, y se puede obtener mediante `id()`. En la implementación *CPython* (la implementación de *Python* por defecto), `id()` es la dirección de memoria del objeto. El operador `is` compara la identidad de dos objetos).
+
+Todo objeto tiene también un *tipo*, que tampoco cambia. Puede obtenerse el tipo de un objeto mediente `type()`. El tipo de un objeto marca qué valores puede tener y qué operaciones acepta. El tipo de un objeto está descrito, de hecho, mediante un objeto, de tipo ***type***.
+
+Un objeto tiene un tipo y un **valor**. Este último puede cambiar solo si el objeto es **mutable**, aunque un contenedor inmutable puede contener objetos mutables, por ejemplo. La mutabilidad depende del tipo del objeto.
+
+Existe *garbage collection*, de objetos no referenciados. Los recursos "externos" que tiene un objeto son liberados cuando es *collected*, pero como la *garbage collection* no está garantizada, es mejor liberar recursos explícitamente (normalmente mediante métodos llamados `close()`) si deseamos tener control sobre la liberación de los mismos. Un buen mecanismo para asegurar que no quedan recursos abiertos es mediante `try ... finally`, o con `with`.
 
 Cuando hablamos del valor de un contenedor (cualquier objeto que tenga referencias a otros objetos), nos referimos a los valores, no las identidades de sus elementos. Cuando hablamos de la mutabilidad del contenedor, entonces sí nos referimos a las identidades de sus elementos. Si un contenedor inmutable, como una tupla, contiene elementos mutables, al cambiar el valor de alguno de esos elementos, cambia el valor de esa tupla.
 
-Si a dos identificadores les asignamos un valor inmutable, estos pueden tener o no tener el mismo `id()`; pero si lo hacemos con valores mutables, los `id()` serán siempre distintos: si hacemos `a=1` y `b=1`, entonces `a is b` puede ser ***True*** o ***False*** (depende de la implementación), pero si hacemos `a = [1, 2, 3]` y `b = [1, 2, 3]`, entonces `a is b` es siempre ***False*** (sin embargo, si hacemos `a = b = [1, 2, 3]`, tendremos que `a is b` es
-***True***).
+Si a dos identificadores les asignamos un valor inmutable, estos pueden tener o no tener el mismo `id()`; pero si lo hacemos con valores mutables, los `id()` serán siempre distintos: si hacemos `a=1` y `b=1`, entonces `a is b` puede ser ***True*** o ***False*** (depende de la implementación), pero si hacemos `a = [1, 2, 3]` y `b = [1, 2, 3]`, entonces `a is b` es siempre ***False*** (sin embargo, si hacemos `a = b = [1, 2, 3]`, tendremos que `a is b` es ***True***).
 
 ### 3.2 The standard type hierarchy
 
-Los tipos inmutables pueden ser hashables, los mutables no.
+(La jerarquía estándar de tipos.)
 
-Valores especiales:
+A continuación se describen los tipos *built in* dentro de *Python*.
 
-- ***None*** - sin valor; p.e., lo retornan las funciones que no retornan nada explícitamente; *truth value is false*.
-- ***NotImplemented*** - algunos métodos pueden retornarlo si la operación no está definida para los operandos facilitados; en cuanto a su *truth value*, no se debe evaluar en entornos booleanos.
-- ***Ellipsis*** - también se escribe `...`; *truth value is true*.
+- ***None*** - este tipo solo tiene un valor posible: ***None***. Indica "sin valor". Lo retornan, por ejemplo, las funciones que no retornan un valor explícitamente. Su valor booleano es falso.
+- ***NotImplemented*** - al igual que pasaba con ***None***, este tipo solo acepta un valor (***NotImplemented***). Algunos métodos pueden retornarlo si la operación no está definida para los operandos facilitados, en cuyo caso el intérprete intentará ejecutar la operación reflejada. No se debe evaluar su valor booleano.
+- ***Ellipsis*** - también acepta un solo valor: ***Ellipsis***, también escrito como `...`; su valor booleano es verdadero.
 
-Cada uno de ellos es de un tipo especial que solo puede tomar ese valor.
+**Números**: son inmutables. Su valor booleano es falso cuando el número tiene valor 0 y verdadero en cualquier otro caso.
 
-**Números**: son inmutables.
+- ***int*** - enteros, positivos y negativos. No tienen límite de tamaño.
+- ***bool*** - ***True*** o ***False***. Al convertirse a ***int***, ***float*** o ***complex*** obtienen el valor 0 o 1, 0.0 o 1.0, o 0j o 1+0j respectivamente. Al convertir a ***string***, su valor es ***False*** o ***True***.
+- ***float*** - números de punto flotante de doble precisión.
+- ***complex*** - almacenado como un par de ***float***. Atributos ***real*** e ***imag***.
 
-- `int` - enteros, positivos y negativos. No tienen límite.
-    - `bool` - ***True*** o ***False***. Al convertirse a número, se convierten, respectivamente, a 0 y 1 (o 0.0 y 1.0). A `string`, ***'True'*** y ***'False'***.
-- `float` - números de punto flotante de doble precisión.
-- `complex` - almacenado como un par de `float`. Atributos `real` e `imag`.
+**Secuencias**: conjuntos finitos indexados por enteros positivos y cero (el primer elemento). La función `len()` retorna el número de elementos que contiene la secuencia. Se accede por un índice entre corchetes (`a[i]`). Un *slice*, del tipo `a[i:j]` es una lista del mismo tipo que la original, desde el elemento con índice ***i*** (incluido) hasta el ***j*** (no incluido). Un *slice* crea una copia de la secuencia original, que a su vez se puede indexar (empezando por 0). Algunas secuencias admiten un *slice* extendido: `a[i:j:k]`, siendo ***k*** la magnitud de los incrementos del índice.
 
-**Secuencias**: conjuntos finitos indexados por enteros positivos y cero (el primero). `len()` devuelve el número de elementos. Selección con `a[i]`. *Slice* `a[i:j]` es una lista del mismo tipo, con los elementos ***i \<= j \< k***. Un *slice* crea una copia del mismo tipo, que a su vez se puede indexar empezando por 0. Algunas secuencias admiten *extended slice*: `a[i:j:k]`, siendo ***k*** el *\"step"*.
+Las secuencias pueden ser mutables o inmutables.
 
-- **Secuencias inmutables**: contienen siempre los mismos objetos (aunque sean objetos mutables).
-    - ***Strings***: secuencias de caracteres *Unicode* (***U+0000*** a ***U+10FFFF***). No existe el tipo carácter: el *string* no es más que una sucesión de *strings* de longitud 1. `ord()` convierte un elemento de un *string* a entero (índice *Unicode*). `chr()` hace la operación inversa hacia un *string* de longitud 1. `str.encode()` pasa de *string* a *bytes*, y `bytes.decode()` hace la operación inversa.
-    - **Tuplas**: *comma-separated* expressions; una sola expresión seguida de coma (*singleton*), o tupla vacía mediante ***()***.
-    - ***Bytes***: *array* de *bytes* (8 bits). Se crean con literales *byte*, o con la *built-in function* `bytes()`. Decodificables con método `decode()`.
+- **Secuencias inmutables**: contienen siempre los mismos objetos (aunque estos objetos sean mutables).
+    - ***Strings***: secuencias de caracteres *Unicode* (***U+0000*** a ***U+10FFFF***). No existe el tipo carácter: cualquier *string* no es más que una sucesión de *strings* de longitud 1. La función `ord()` retorna el índice *Unicode* (número entero) de un elemento de un *string*. La función `chr()` hace la operación inversa: retorna un *string* de longitud 1 a partir de un número de índice *Unicode*. Por otro lado, el método `str.encode()` pasa de *string* a *bytes*, y `bytes.decode()` hace la operación inversa.
+    - **Tuplas**: expresiones separadas por comas; una sola expresión seguida de coma (tupla de un solo elemento o *singleton*), o tupla vacía, expresada como ***()***.
+    - ***Bytes***: *array* de *bytes* (8 bits). Se crean con literales *byte*, o con el constructor `bytes()`. Decodificables con método `decode()`.
 - **Secuencias mutables**: mediante índice o *slicing* se puede asignar valor a los elementos, o borrarlos (con `del`).
-    - **Listas**: *comma-separated expressions* entre corchetes.
-    - ***Byte arrays***: creados con el constructor `bytearray()`. Se comportan exactamente igual que un elemento `bytes`, pero es mutable.
+    - **Listas**: 0 o más expresiones separadas por comas, entre corchetes.
+    - ***Byte arrays***: creados con el constructor `bytearray()`. Se comportan exactamente igual que un elemento `bytes`, pero son mutables.
 
-***Set types***: conjuntos no ordenados (no indexables) de objetos inmutables y únicos. Se pueden iterar; disponen de `len()`. Aceptan operadores de conjuntos matemáticos.
+***Sets***: **conjuntos** no ordenados (no indexables) de objetos inmutables y únicos. La forma que tiene *Python* para localizar los objetos del conjunto es mediante *hashes*, con lo que estos deben ser *hashables*. Este tipo de acceso se realiza a través del valor, no de la identidad. Es por ello que solo puede contener elementos inmutables, ya que los elementos mutables no son *hashables*. Un *set* se puede iterar; acepta `len()` y operadores de conjuntos matemáticos.
 
 - ***Sets***: mutables. Constructor `set()`.
 - ***Frozen sets***: set inmutable, constructor `frozenset()`.
 
-***Mappings***: conjunto de objetos indexados por un conjunto de índices del tipo ***a[k]***, donde ***k*** es una clave, y se puede usar para acceder o asignar valor a los elementos, o borrarlos (con ***del***). Dispone de `len()`.
+***Mappings***: conjunto de objetos indexados por un conjunto de claves, que actúan como índice. El acceso a los elementos del *mapping* se realiza mediante ***a[k]***, donde ***k*** es una clave, y se puede usar para acceder o asignar valor a los elementos, o borrarlos (con ***del***). Acepta `len()`. Solo hay un tipo de *mapping*:
 
-- **Diccionarios**: son *mappings* mutables. Las *keys* deben ser inmutables, y no pueden contener elementos mutables (para que los elementos tengan un *hash* constante durante todo su tiempo de vida). Los elementos del diccionario conservan siempre el orden de inserción de los elementos. La notación se realiza mediante llaves (***{}***).
+- **Diccionarios**: son *mappings* mutables. Las claves deben ser inmutables, ya que el acceso se hace a través de *hash*. Los elementos del diccionario conservan siempre el orden de inserción de los elementos. La notación se realiza mediante llaves (***{}***).
 
-***Callable types***: se puede realizar la llamada a función con ellos.
+Tipos ***Callable*** (invocables): se pueden llamar o invocar, mediante la sintaxis de llamada a función.
 
-- ***User-defined functions***: algunos atributos especiales: ***\_\_doc\_\_*** (*docstring*), ***\_\_name\_\_***, ***\_\_module\_\_*** (donde fue definida), ***\_\_defaults\_\_*** (tupla con los valores por defecto de los parámetros), ***\_\_code\_\_*** (objeto código con el cuerpo de la función compilado), ***\_\_globals\_\_*** (diccionario con las variables globales de la función, es decir, los atributos del módulo donde fue definida; *read-only*), ***\_\_dict\_\_*** (diccionario donde se ven los atributos arbitrarios que hemos definido al objeto función), ***\_\_annotations\_\_*** (diccionario con las anotaciones de los parámetros; las claves son los nombres de parámetro, y ***return*** si hay anotación para el valor de retorno), ***\_\_kwdefaults\_\_*** (diccionario con los *default values* de los *keyword arguments*). En el caso de que una variable de estas no tenga elementos, no será un diccionario sino ***None***. Solo se pueden añadir atributos arbitrarios (del tipo `foo.pepe = 5`) a las funciones definidas por el usuario.
-- ***Instance methods***: atributos especiales: ***\_\_self\_\_*** (instancia asociada), ***\_\_func\_\_*** (objeto función), ***\_\_doc\_\_*** (*docstring* de la función), ***\_\_name\_\_***, ***\_\_module\_\_***. Los métodos pueden acceder (pero no modificar) a los atributos arbitrarios de la función a la que están vinculados.
-- ***Generator functions***
-- ***Coroutine functions***
-- ***Asynchronous generator functions***
-- ***Built-in functions***: tienen ***\_\_doc\_\_***, ***\_\_name\_\_***, ***\_\_self\_\_*** (es ***None***) y ***\_\_module\_\_***.
-- ***Built-in methods***: como una *built-in function*, pero además tienen un objeto pasado implícitamente a la función. En este caso, el atributo ***\_\_self\_\_*** (*read-only*) devuelve ese objeto.
-- **Clases**: son llamables. Normalmente crean instancias de sí mismas, a no ser que definan el método `__new__()`. Inicialización es típicamente con `__init__()`.
-- **Instancias de una clase**: las podemos hacer llamables si definen el método `__call__()`.
+- **Funciones definidas por el usuario**. Poseen algunos atributos especiales: ***\_\_doc\_\_*** (*docstring*), ***\_\_name\_\_*** (nombre de la función), ***\_\_module\_\_*** (módulo donde está definida), ***\_\_defaults\_\_*** (tupla con los valores por defecto de los parámetros), ***\_\_code\_\_*** (objeto código con el cuerpo de la función compilado), ***\_\_globals\_\_*** (diccionario con las variables globales de la función, es decir, los atributos del módulo donde fue definida; es de solo lectura), ***\_\_dict\_\_*** (diccionario donde se ven los atributos arbitrarios que hemos definido sobre el objeto función), ***\_\_annotations\_\_*** (diccionario con las anotaciones de los parámetros; las claves son los nombres de parámetro, y ***return*** si hay anotación para el valor de retorno), ***\_\_kwdefaults\_\_*** (diccionario con los valores por defecto de los argumentos *keyword-only*). En el caso de que una variable de estas no tenga elementos, no será un diccionario vacío sino ***None***. Solo se pueden añadir atributos arbitrarios (del tipo `foo.pepe = 5`) a las funciones definidas por el usuario.
+- **Métodos** de una instancia: atributos especiales: ***\_\_self\_\_*** (instancia asociada), ***\_\_func\_\_*** (objeto función), ***\_\_doc\_\_*** (*docstring* de la función), ***\_\_name\_\_*** (nombre del método), ***\_\_module\_\_*** (módulo donde está definido). Los métodos pueden acceder (pero no modificar) a los atributos arbitrarios de la función a la que están vinculados.
+- **Generadores** (*generator functions*), vistas en el tutorial.
+- **Corrutinas** (*coroutine functions*). Se verán más adelante.
+- **Generadores asíncronos** (*asynchronous generator functions*): es como un generador pero definido con `async def`. Retorna un **iterador asíncrono** que puede utilizarse en una sentencia `async for`. El método `__anext__()` de dicho iterador retorna un *awaitable* (véase más adelante) que al ser esperado se ejecutará hasta que proporcione un valor mediante `yield`. Tras la última iteración levantará una excepción ***StopAsyncIteration***.
+- Funciones *built-in*: tienen los atributos ***\_\_doc\_\_***, ***\_\_name\_\_***, ***\_\_self\_\_*** (es ***None***) y ***\_\_module\_\_***.
+- **Métodos** ***built-in***: como una función *built-in*, pero además tienen un objeto pasado implícitamente a la función. En este caso, el atributo ***\_\_self\_\_*** (solo lectura) retorna ese objeto.
+- **Clases**: son invocables. Normalmente crean instancias de sí mismas, a no ser que definan el método `__new__()`. Inicialización es típicamente con `__init__()`.
+- **Instancias de una clase**: las podemos hacer invocables si definen el método `__call__()`.
 
-**Módulos**: el atributo ***\_\_dict\_\_*** (*read-only*) es la definición de los elementos del *namespace* del módulo, donde están las referencias a sus atributos; las referencias a un atributo de un módulo ***m***, del tipo `m.x` equivalen a `m.__dict__['x']`. El atributo ***\_\_globals\_\_*** de las funciones definidas en el módulo es una referencia a este atributo.
+**Módulos**: el atributo ***\_\_dict\_\_*** (solo lectura) es la definición de los elementos del *namespace* del módulo, donde están las referencias a sus atributos; las referencias a un atributo de un módulo ***m***, del tipo `m.x` equivalen a `m.__dict__['x']`. El atributo ***\_\_globals\_\_*** de las funciones definidas en el módulo es una referencia a este atributo del módulo.
 
-Otros atributos son ***\_\_name\_\_***, ***\_\_doc\_\_*** (*docstring* del módulo) o ***\_\_file\_\_*** (*path* del archivo desde el que se leyó el módulo). ***\_\_annotations\_\_*** es un diccionario con las anotaciones de variables del módulo que se han ido produciendo en la ejecución del mismo.
+Otros atributos disponibles en un módulo son ***\_\_name\_\_*** (nombre), ***\_\_doc\_\_*** (*docstring* del módulo) o ***\_\_file\_\_*** (ruta completa del archivo desde el que se leyó el módulo). ***\_\_annotations\_\_*** es un diccionario con las anotaciones de variables del módulo que se han ido produciendo en la ejecución del mismo.
 
-***Custom classes***: el *namespace* está en ***\_\_dict\_\_*** (atributos de la clase); otros atributos pueden ser ***\_\_name\_\_***, ***\_\_module\_\_***, ***\_\_bases\_\_*** (tupla con las base clases, en orden), ***\_\_doc\_\_*** o ***\_\_annotations\_\_***.
+**Clases definidas por el usuario**: el atributo ***\_\_dict\_\_*** contiene un diccionario con otros atributos de la clase; también tiene atributos como ***\_\_name\_\_***, ***\_\_module\_\_***, ***\_\_bases\_\_*** (tupla con las clases base, en orden jerárquico), ***\_\_doc\_\_*** o ***\_\_annotations\_\_***.
 
-***Class instances***: tienen su propio ***\_\_dict\_\_***. Si un *lookup* no encuentra el nombre aquí, lo busca en el diccionario de la clase; si no, sube por la jerarquía; si aun y así no lo encuentra, y la clase tiene definido el método `__getattr__()`, lo llama. Asignaciones y borrados de atributos modifican el diccionario de la instancia, no de la clase. Si la clase tiene definidos `__setattr__()` o `__delattr__()`, los llama para añadir o borrar atributos respectivamente, sin modificar el diccionario directamente. El atributo
-***\_\_class\_\_*** es la clase de la instancia.
+**Instancias**: tienen su propio ***\_\_dict\_\_***. Si un *lookup* de atributo no encuentra el nombre en este diccionario, lo busca en el diccionario de la clase; si no, sube por la jerarquía; si aun así no lo encuentra, y la clase tiene definido el método `__getattr__()`, lo ejecuta. Asignaciones y borrados de sus atributos modifican el diccionario de la instancia, no de la clase. Si la clase tiene definidos `__setattr__()` o `__delattr__()`, los llama para añadir o borrar atributos respectivamente, sin modificar el diccionario directamente. El atributo
+***\_\_class\_\_*** es el objeto clase de la instancia.
 
-***I/O objects*** (*file objects*): representan archivos. Destacar ***sys.stdin***, ***sys.stdout*** y ***sys.stderr*** (input, output y error streams).
+**Objetos de entrada/salida** (objetos archivo): representan archivos. Destacar ***sys.stdin***, ***sys.stdout*** y ***sys.stderr*** (*streams* de entrada, salida y error estándar).
 
-**Tipos internos**: utilizados internamente por el intérprete. ***Code objects***, ***frame objects***, ***traceback objects*** y ***slice objects***.
+**Tipos internos**: utilizados internamente por el intérprete, como objetos de código, *frame*, *traceback* o *slice*.
 
-***Slice objects***.
-
-***Static method objects***: constructor `staticmethod()`.
-
-***Class method objects***: constructor `classmethod()`.
+Los **métodos estáticos** retornados por el constructor `staticmethod()` y los **métodos de clase** retornados por el construntor `classmethod()` se verán en el apartado de *builtins* de la biblioteca.
 
 ### 3.3 Special method names
 
-Métodos con funcionalidades especiales.
+(Nombres de métodos especiales.)
+
+Existen ciertos nombres de método que indican cómo se llevan a cabo ciertas operaciones sobre objetos de la clase que los define. Cuando una clase define el valor de uno de estos nombres a ***None***, la operación que representa no puede realizarse sobre un objeto de esa clase.
 
 #### 3.3.1 Basic customization
 
-Métodos que puede implementar una clase.
+(Personalización básica.)
 
-`__new__(clase [,args])`
-
-Es un *static method* (aunque en este caso no hace falta declararlo como tal). Se llama a la hora de crear una nueva instancia de ***clase*** si queremos más control sobre esta creación. Los argumentos opcionales son los que pasamos al constructor al llamar a la clase para crear la instancia. Este método devuelve normalmente la nueva instancia (de clase ***clase***).
-
-Típicamente, `__new__()` llamará al `__new__()` de la clase base, por ajemplo así:
+Métodos especiales que puede implementar una clase.
 
 ```python
-super().__new__(clase [,args])
+__new__(clase [,...])
 ```
-o
+
+Es un método estático (aunque en este caso no hace falta declararlo como tal). Se llama a la hora de crear una nueva instancia de ***clase*** si queremos más control sobre esta creación. Los argumentos adicionales son los que pasamos al constructor de la clase para crear la instancia. Este método retorna normalmente la nueva instancia de tipo ***clase***.
+
+Típicamente, `__new__()` llamará a `__new__()`de la clase base:
 
 ```python
-Base.__new__(clase [,args])
+super().__new__(clase [,...])
 ```
 
-Obsérvese que hay que pasarle la clase. Nosotros la recibimos automáticamente, pero al llamar manualmente al de la clase padre, debemos especificar el tipo (clase) de la instancia a crear. Este método de la clase padre retornará el objeto creado, y la clase derivada lo recibe, pudiéndolo modificar antes de retornarlo a su vez.
+Obsérvese que hay que pasarle la clase como argumento. La clase actual la recibe automáticamente, pero al llamar manualmente al método de la clase padre, se debe especificar el tipo (clase) de la instancia a crear. Este método de la clase padre retornará el objeto creado, y la clase derivada lo recibirá, pudiéndolo modificar, a su vez, antes de retornarlo.
 
-`__new__()` retorna la instancia creada. Si, efectivamente, retorna un objeto de tipo ***clase*** (el tipo de clase que ha recibido el `__new__()` primero), entonces el método `__init__()` de esa nueva instancia es llamado, pasándole como argumentos los mismos que se
-le pasaron a `__new__()`. Si, en cambio, no devuelve una instancia de ***clase***, no se llama a `__init__()`.
+`__new__()` retorna la instancia creada. Si, efectivamente, retorna un objeto de tipo ***clase*** (el tipo de clase que ha recibido el `__new__()` primero), entonces el método `__init__()` de esa nueva instancia es llamado, pasándole como argumentos los mismos que se le pasaron a `__new__()`. Si, en cambio, no retorna una instancia de ***clase***, no se llama a `__init__()`.
 
-Si `__new__()` no está definido, se crea la instancia de forma automática y se llama a `__init__()` (si está definido). Siempre habrá un `__new__()`, aunque sea heredado (como mínimo de ***object***).
+Si `__new__()` no está definido, se crea la instancia de la forma predeterminada y se llama a `__init__()` (si está definido). Siempre habrá un `__new__()`, aunque sea heredado (como mínimo de ***object***).
 
-`__init__(self [,args])`
+```python
+__init__(self [,...])
+```
 
-Inicializador. Los argumentos son los que pasamos al constructor al llamar a la clase para crear la instancia. Es llamado después de la creación de la instancia (con `__new__()`), y antes de volver de la *constructor expression* del *caller*. Si lo definimos y la clase base también, hay que llamar también al de la clase base (`Base.__init__(self [,args]`), puesto que lo *overrides* (a no ser que no queramos que se ejecute el inicializador de la base). No debe retornar ningún valor (***None***).
+Inicializador de instancia. Los argumentos son los que se pasan al invocar a la clase para crear la instancia. Es llamado después de la creación de la instancia (mediante `__new__()`), y antes de retornar la instancia creada al llamador. Si lo definimos y la clase base también, hay que llamar también al de la clase base (`super().__init__()`), puesto que lo sobreescribe (a no ser que no queramos que se ejecute el inicializador de la base). No debe retornar ningún valor (***None***).
 
-`__del__(self)`
+```python
+__del__(self)
+```
 
 Destructor (mejor llamarle finalizador). Si la instancia tiene varias referencias (apuntadores) a ella y hacemos `del x`, se decrementa el contador de referencias; el destructor sólo se ejecuta cuando el contador llega a 0. Si la definimos y la clase base también, deberíamos llamarla para asegurar el borrado de la parte base. Debido a lo precario de las circunstancias en que se llama al destructor, las excepciones que ocurren durante su ejecución son ignoradas; solo se imprime un *warning* en ***sys.stderr***.
 
-`__repr__(self)`
+```python
+__repr__(self)
+```
 
-Se usa su valor de retorno para la función `repr()`. Debe ser una representación "oficial" del objeto mediante un *string*. Debería parecer una **expresión válida** que permita recrear el objeto utilizando esa expresión; si no es posible, debería ser una descripción útil (se usa básicamente para *debugging*). Si `__str__()` no está definida y `__repr__()` sí, se usará el valor de esta última como valor de retorno para `str()` también.
+Se usa su valor de retorno para la función `repr()`. Debe ser una representación "oficial" del objeto mediante un *string*. Debería parecer una **expresión válida** ***Python***, es decir, código *Python* que permita recrear el objeto utilizando dicha expresión; si no es posible, debería ser una descripción útil (se usa básicamente para depuración de código). Si `__str__()` no está definida y `__repr__()` sí, se usará el valor de esta última como valor de retorno para `str()` también.
 
-`__str__(self)`
+```python
+__str__(self)
+```
 
-Representación "informal" (*nicely printable*) del objeto en un *string*, usada por `format()`, `print()` y `str()`.
+Representación "informal" en un *string*, legible para un humano, del objeto en cuestión. Es usado por las funciones `format()`, `print()` y `str()`.
 
-`__bytes__(self)`
+```python
+__bytes__(self)
+```
 
-Representación del objeto en un string de tipo `bytes`. Llamado por `bytes()`.
+Representación del objeto en un *string* de `bytes`. Es el valor retornado por la función `bytes()`.
 
-`__format__(self, format_spec)`
+```python
+__format__(self, format_spec)
+```
 
-Retorna la representación, en un *string*, del objeto, según el formato dado por ***format_spec***. Es llamado cuando el objeto aparece en la función `format()` o en el método `format()` de un *string*.
+Retorna la representación del objeto en un *string*, según el formato dado en ***format_spec***. Es llamado cuando el objeto aparece en la función `format()` o en el método `format()` de un *string*.
 
-`__lt__(self, other)`
+```python
+__lt__(self, other)
+```
 
-Compara el objeto (*self*) con otro objeto (*other*). Cuando hacemos `x < y`, se llamará a `x.__lt__(y)`. En teoría, debería devolver ***True*** si ***self*** es menor que ***other***, y ***False*** en caso contrario, pero de hecho puede devolver cualquier tipo de valor. En caso de que Python necesite un booleano y la función devuelva otro tipo, convertirá ese valor a booleano con `bool()`. Si la operación no está implementada para esos tipos de operando, puede devolver ***NotImplemented***.
+Compara el objeto (***self***) con otro objeto (***other***). Cuando hacemos `x < y`, se llamará a `x.__lt__(y)`. En teoría, debería retornar ***True*** si ***self*** es menor que ***other***, y ***False*** en caso contrario, pero de hecho puede retornar cualquier tipo de valor. En caso de que *Python* necesite un booleano y la función retorne otro tipo, convertirá ese valor a booleano mediante `bool()`. Si la operación no está implementada para esos tipos de operando, puede retornar ***NotImplemented***.
 
-`__gt__(self, other)` - idem para `>`.
+```python
+__gt__(self, other)
+__le__(self, other)
+__ge__(self, other)
+__eq__(self, other)
+__ne__(self, other)
+```
 
-`__le__(self, other)` - idem para `<=`.
+Estos métodos son similares a `__lt__()`, pero para los operadores `>`, `<=`, `>=`, `==` y `!=` respectivamente.
 
-`__ge__(self, other)` - idem para `>=`.
+El funcionamiento por defecto de `__eq__()` es retornar ***True*** si ***is*** retorna ***True***. De lo contrario retorna ***NotImplemented***. Por otro lado, `__ne__()` retorna ***False*** si ***is*** retorna ***True***, y ***NotImplemented*** en caso contrario.
 
-`__eq__(self, other)` - idem para `==`.
+```python
+__hash__(self)
+```
 
-`__ne__(self, other)` - idem para `!=`. Por defecto delega en *`__eq__()` e invierte el resultado.
+Retorna el *hash* del objeto; este valor debe ser un entero. El valor se usa para incluir el objeto en colecciones *hashed*. Estas colecciones no están ordenadas; se accede a sus elementos a través del número *hash* calculado en esta función (que depende del valor del elemento), y no mediante un índice numérico secuencial. Es decir, el número utilizado para acceder al objeto dependerá de su número *hash*, el cual depende a su vez del valor del objeto. Por lo tanto, su número de localización depende de su valor.
 
-`__hash__(self)`
-
-Retorna el *hash* del objeto; este valor debe ser un entero. El valor se usa para incluir el objeto en *hashed collections* (no ordenadas: diccionarios y *sets*), o como valor de retorno de la función `hash()`. Esta trunca el valor devuelto por `__hash__()` (típicamente a 8 *bytes* en
-sistemas de 64 *bits* y 4 *bytes* en sistemas de 32 *bits*).
+En este tipo de colecciones podemos encontrar los diccionarios y *sets*. La función *bultin* `hash()`, por otro lado, trunca el valor devuelto por el método `__hash__()` (típicamente a 8 *bytes* en sistemas de 64 *bits* y 4 *bytes* en sistemas de 32 *bits*), y retorna dicho valor.
 
 Dos objetos que se comparan iguales deben tener el mismo *hash*.
 
-Es buena idea coger todos los componentes del objeto que intervengan en las comparaciones de objetos, empaquetarlos en un una tupla y devolver el *hash* de esa tupla como *hash* del objeto:
+Es buena idea tomar todos los componentes que compongan el valor del objeto, relevantes para la comparación de objetos, y empaquetarlos en una tupla para retornar el *hash* de esa tupla como *hash* del objeto:
 
 ```python
 def __hash__(self):
@@ -399,113 +425,137 @@ Si una clase no define `__eq__()`, no debería definir tampoco `__hash__()`.
 
 Si una clase no define `__hash__()`, no es *hashable*, con lo que sus instancias no se pueden usar como elementos de colecciones *hashables*.
 
-Si una clase define elementos mutables, no debe definir `__hash__()` (los elementos *hashables* deben ser inmutables para que no varíe nunca su *hash*).
+Si una clase contiene elementos mutables, no debe definir `__hash__()`: los elementos *hashables* deben ser inmutables para que no varíe nunca su número *hash*, de lo contrario su llave de localización cambiaría al cambiar su valor, lo cual produciría problemas en la memoria.
 
 Las clases definidas por el usuario tienen métodos `__hash__()` y `__eq__()` por defecto: todos los objetos se comparan distintos excepto con ellos mismos, es decir, `x == y` es verdadero si y solo si `x is y` lo es, y `hash(x) == hash(y)`.
 
-Una clase que *overrides* `__eq__()` y no define `__hash__()`, tendrá su `__hash__()` ímplicitamente a ***None*** y levantará un ***TypeError*** si se pasa una instancia a la función `hash()`; además será identificada como no *hashable*.
+Una clase que sobreescribe (*overrides*) `__eq__()` y no define `__hash__()`, tendrá su `__hash__()` ímplicitamente a ***None*** y levantará un ***TypeError*** si se pasa una instancia como argumento a la función `hash()`; además será identificada como no *hashable*. Si una clase redefine `__eq__()` pero quiere retener la funcionalidad *hash* de una clase base, debe indicarlo explícitamente mediante `__hash__ = BaseClass.__hash__` para que no pierda dicha funcionalidad.
 
 Una clase cuyo `__hash__()` no sea igual a ***None*** es identificada como *hashable*, aunque levante explícitamente un ***TypeError***. Si se quiere que una clase sea no *hashable*, se debe definir en ella `__hash__ = None`.
 
-Si una clase quiere retener la funcionalidad *hash* de una clase base, debe indicarlo explícitamente mediante `__hash__ = BaseClass.__hash__`
+Los objetos *string* y *bytes* tienen valores de *hash* aleatorios, aunque se mantienen constantes a lo largo de la ejecución del proceso.
 
-Los objetos *string* y *bytes* tienen valores de *hash* aleatorios.
+```python
+__bool__(self)
+```
 
-`__bool__(self)`
-
-Retorna lo que devuelve la builtin `bool()` sobre el objeto. Debe retornar ***False*** o ***True***. Si no está definido, se llama a `__len__()` que devolverá ***True*** si contiene más de 0 elementos. Si tampoco está definida, será siempre ***True***.
+Retorna el valor booleano del objeto. Es el valor que retornará la función *builtin* `bool()` sobre el objeto. Debe retornar ***False*** o ***True***. Si no está definido, se llama a `__len__()` que por defecto retornará ***True*** si contiene más de 0 elementos y ***False*** en caso contrario. Si tampoco está definido este método, retornará siempre ***True***.
 
 #### 3.3.2 Customizing attribute access
 
-`__getattr__(self,name)`
+(Personalización del acceso a los atributos.)
 
-Se llama cuando no se ha encontrado el atributo ***name*** por vías normales (ni en la instancia ni en la jerarquía de clases). Debe devolver el valor del atributo especificado en el *string* ***name***, o indicar que tampoco se ha encontrado ese atributo, levantando
-***AttributeError***.
+```python
+__getattr__(self, nombre)
+```
 
-`__getattribute__(self,name)`
+Se llama cuando no se ha encontrado el atributo ***nombre*** por vías normales (ni en la instancia ni en la jerarquía de clases). Debe retornar el valor del atributo especificado en el *string* ***nombre***, o indicar que tampoco se ha encontrado ese atributo, levantando ***AttributeError***.
+
+```python
+__getattribute__(self, nombre)
+```
 
 Todos los accesos a los atributos (métodos y datos) se hacen llamando a este método, obligatoriamente (toda clase lo tiene, porque lo hereda de ***object***, como mínimo). Si `__getattr__()` también está definido (puede no estarlo, porque ***object*** no lo tiene), no será llamado a no ser que `__getattribute__()` lo llame explícitamente o genere una excepción ***AttributeError***.
 
-Si necesitamos hacer referencia a un atributo desde esta función, normalmente será a un atributo existente de la clase o instancia; si lo hacemos directamente (***self.x***) se genera un bucle infinito (el acceso volverá a llamar a `__getattribute__()`, y así recursivamente). Para evitarlo, se debe obtener el valor del atributo accediendo a él a través del `__gettatribute__()` de una clase base (o desde cualquier otra clase u otro lado), pasándole la instancia actual como parámetro, que lo único que hará será devolver el valor de ese atributo existente:
+Si necesitamos hacer referencia a un atributo desde esta función, normalmente será a un atributo existente de la clase o instancia; si lo hacemos directamente (***self.x***) se genera un bucle recursivo infinito (el acceso volverá a llamar a `__getattribute__()` recursivamente). Para evitarlo, se debe obtener el valor del atributo accediendo a él a través del método `__gettatribute__()` de una clase base (o desde cualquier otro lado fuera de la clase), pasándole la instancia actual como parámetro, que lo único que hará será retornar el valor de ese atributo existente:
 
 ```python
 Base.__getattribute__(self, nombre)
 ```
 
-Si no tiene clases base, se puede hacer desde la clase ***object***:
+Si no existen clases base, se puede hacer desde la clase ***object***:
 
 ```python
 object.__getattribute__(self, nombre)
 ```
 
-Recordemos que aunque el atributo no esté definido en la clase base, el valor será bien devuelto, porque lo extrae de ***self***, que se le pasa también por parámetro: estamos llamando a través de la clase, es decir, directamente a la función (*unbound*), no como método.
+Recordemos que aunque el atributo no esté definido en la clase base, el valor será bien retornado, porque lo extrae de ***self***, que se le pasa también por parámetro: estamos llamando a través de la clase, es decir, directamente a la función (*unbound*), no como método.
 
-Importante: `__getattr__()` sufre el mismo problema cuando intentamos acceder a un atributo inexistente, con la diferencia de que al no disponer ***object*** de este método, deberemos definir esa función (pasándole una referencia a la instancia y el nombre del atributo
-deseado) en algún lado (en la clase base de nuestra clase, por ejemplo).
+Importante: `__getattr__()` sufre el mismo problema cuando intentamos acceder a un atributo inexistente, con la diferencia de que al no disponer ***object*** de este método, deberemos definir esa función (pasándole una referencia a la instancia y el nombre del atributo deseado) en algún lado (en la clase base de nuestra clase, por ejemplo).
 
-`__setattr__(self,name,valor)`
+```python
+`__setattr__(self, nombre, valor)`
+```
 
-Para establecer o cambiar valores. El comportamiento por defecto es cambiar el diccionario de la instancia. En el caso de que quiera asignar un valor a un atributo, para evitar recursión infinita debe hacerlo a través del `__setattr__()` de la clase base (u ***object***, o cualquier otro lado).
+Para establecer o cambiar valores. El comportamiento por defecto es cambiar el diccionario de la instancia. En el caso de que se desee asignar un valor a un atributo, para evitar recursión infinita debe hacerse a través del `__setattr__()` de la clase base (u ***object***, o cualquier otro lado).
 
-`__delattr__(self,name)`
+```python
+__delattr__(self, nombre)
+```
 
-Como `__setattr__()` pero para eliminación.
+Como `__setattr__()` pero para eliminar el atributo.
 
-`__dir__(self)`
+```python
+__dir__(self)
+```
 
-Retorna una secuencia, normalmente con el diccionario de nombres de la instancia. Es lo que retorna `dir()`. Esta función convierte la secuencia en lista y la ordena.
+Retorna una secuencia, normalmente con el diccionario de nombres de la instancia. Es lo que retorna la función *builtin* `dir()`. Esta función convierte la secuencia en lista y la ordena.
 
 #### Customizing module attribute access
 
-Se puede definir la función `__getattr__()` dentro de un módulo, que se ejecuta cuando no se encuentra un atributo del módulo de la forma habitual. La función acepta un *string* con el nombre del atributo, y debe devolver su valor, o levantar ***AttributeError***.
+(Personalización del acceso a los atributos de un módulo.)
 
-También se puede definir `__dir__()` de un módulo, que *overrides* completamente el comportamiento de `dir()` sobre el módulo. Si implementamos la función, no acepta argumentos, y debe devolver una lista de *strings* con los nombres de la tabla de nombres del módulo.
+Se puede definir la función `__getattr__()` dentro de un módulo, que se ejecuta cuando no se encuentra un atributo de dicho módulo de la forma habitual. La función acepta un *string* con el nombre del atributo, y debe retornar su valor, o levantar la excepción ***AttributeError***.
+
+También se puede definir `__dir__()` de un módulo, que sustituye (*overrides*) completamente el comportamiento de `dir()` sobre el módulo. Si implementamos la función, no acepta argumentos, y debe retornar una lista de *strings* con los nombres de la tabla de nombres del módulo.
 
 #### Implementing Descriptors
 
-Un descriptor es una instancia de una clase que define por lo menos uno de los métodos siguientes: `__get__()`, `__set__()` o `__delete__()`. Un descriptor se usa dentro de otra clase (*owner*) como atributo. Para que una clase *owner* tenga un descriptor, debe definir un atributo de tipo descriptor o debe definirlo una de sus clases base. En resumen, la clase propietaria debe tener una instancia del descriptor.
+(Implementación de descriptores.)
 
-`__get__(self, instance, owner)`
+Un descriptor es una instancia de una clase que define por lo menos uno de los métodos siguientes: `__get__()`, `__set__()` o `__delete__()`. Un descriptor se usa dentro de otra clase propietaria (*owner*) como atributo. Para que una clase *owner* tenga un descriptor, debe definir un atributo de tipo descriptor o debe definirlo una de sus clases base. En resumen, la clase propietaria debe contener una instancia del descriptor.
 
-***self*** es el objeto (instancia) descriptor, ***instance*** es la instancia de la clase *owner*, y ***owner*** es la clase *owner*. Si ***instance*** es ***None***, es que estamos accediendo al atributo a través de la clase (***owner***) y no a través de una instancia de la misma. El método devuelve el valor del atributo solicitado, es decir, el valor de la instancia del descriptor.
+```python
+__get__(self, instancia, owner)
+```
 
-Si p.e. ***Descrip*** es una clase que implementa `__get__()`, y diseñamos otra clase ***Own*** que tiene un data attribute ***a*** de tipo ***Descrip***, entonces ***Own.a*** invocará a dicha función.
+***self*** es el objeto (instancia) descriptor, ***instancia*** es la instancia de la clase propietaria, y ***owner*** es la clase propietaria. Si ***instance*** es ***None***, es que estamos accediendo al atributo a través de la clase (***owner***) y no a través de una instancia de la misma. El método retorna el valor del atributo solicitado, es decir, el valor de la instancia del descriptor.
 
-`__set__(self, instance, valor)`
+Si p.e. ***Descrip*** es una clase que implementa `__get__()`, y diseñamos otra clase ***Own*** que tiene un *data attribute* ***a*** de tipo ***Descrip***, entonces ***Own.a*** invocará a dicha función.
+
+```python
+__set__(self, instancia, valor)
+```
 
 Cambia el valor del atributo (la instancia del descriptor) al que se refiere el descriptor.
 
-`__delete__(self, instance)`
+```python
+__delete__(self, instancia)
+```
 
 Se invoca cuando eliminamos el atributo (instancia del descriptor) de la instancia de la clase propietaria.
 
 #### Invoking Descriptors
 
-Normalmente, el acceso a un atributo de una instancia se hace con un *lookup* al diccionario de la instancia. Si ***a*** es una instancia de la clase ***A***, con un atributo ***x***, entonces `a.x` empezará buscando en `a.__dict__['x']`; si no lo encuentra, seguirá por `type(a).__dict__['x']` (la clase), y seguirá por las clases base. Pero si el atributo es un descriptor, entonces se accede directamente al objeto descriptor:
+(Invocar descriptores.)
+
+Normalmente, el acceso a un atributo de una instancia se hace con una consulta (*lookup*) al diccionario de dicha instancia. Si ***a*** es una instancia de la clase ***A***, con un atributo ***x***, entonces `a.x` empezará buscando en `a.__dict__['x']`; si no lo encuentra, seguirá por `type(a).__dict__['x']` (la clase), y seguirá por las clases base. Pero si el atributo es un descriptor, entonces se accede directamente al objeto descriptor:
 
 - `x.__get__(a)` - invocación directa.
 -  `a.x` - *instance binding*; se transforma automáticamente en `type(a).__dict__['x'].__get__(a, type(a))`; se hace desde `type(a)` porque este atributo está en la tabla de nombres de la clase, no de la instancia.
 - `A.x` - *class binding*; pasa a `A.__dict__['x'].__get__(None, A)`.
 
-Si se accede al atributo `a.x` y el descriptor no define `__get__()`, lo que devolverá es la instancia del objeto descriptor, a no ser que exista un atributo con ese nombre en el diccionario de la instancia.
+Si se accede al atributo `a.x` y el descriptor no define `__get__()`, lo que retornará es la instancia del objeto descriptor, a no ser que exista un atributo con ese nombre en el diccionario de la instancia.
 
-Del mismo modo, si el atributo descriptor está definido en la instancia y no en la clase, no funciona: al hacer `a.x` devuelve el objeto descriptor tal cual.
+Del mismo modo, si el atributo descriptor está definido en la instancia y no en la clase, no funciona: al hacer `a.x` retorna el objeto descriptor tal cual.
 
 Si un descriptor define `__set__()` y/o `__delete__()`, es un *data descriptor*, mientras que si no, es un *non-data descriptor*.
 
-Los *data descriptors* suelen definir `__get__()` y `__set__()`, mientras que los *non-data descriptors* solo suelen definir `__get__()`. Los *non-data descriptors* pueden ser *overriden* por la instancia, mientras que los *data descriptors* no.
+Los *data descriptors* suelen definir `__get__()` y `__set__()`, mientras que los *non-data descriptors* solo suelen definir `__get__()`. Los *non-data descriptors* pueden ser redefinidos (*overriden*) por la instancia, mientras que los *data descriptors* no.
 
 #### \_\_slots\_\_
 
-Antes, una pequeña explicación: los lenguajes con *garbage collection* suelen implementar el concepto de *weak references*. Una variable que referencie a un objeto es una *strong reference*. Mientras exista por lo menos una *strong reference*, el objeto sigue vivo. Cuando no quedan *strong references*, el objeto puede ser *garbage collected*, pero mientras tanto sigue accesible (vivo) a través de posibles *weak references* (si las hemos creado). Se pueden crear y gestionar *weak references* a objetos mediante el módulo ***weakref***. Cuando ha sido *collected*, las *weak references* ya están *cleared*. Las *strong references* de un objeto se guardan en el diccionario ***\_\_dict\_\_***, y las *weak references* en otro llamado ***\_\_weakref\_\_***. Son diccionarios que enlazan cada nombre al objeto que referencian.
+(Ranuras.)
 
-Así, las instancias tienen su diccionario donde se guardan sus atributos (***\_\_dict\_\_***). Si tenemos *muchas* instancias con pocos atributos, esto consume muchísima memoria de forma ineficiente, con tanto diccionario. En cambio si la clase define la variable (atributo) ***\_\_slots\_\_***, este puede contener una secuencia (cualquier iterable) de *strings* con los nombres de las variables (atributos) que podrán tener las instancias de esa clase, y en esas instancias se reservará internamente el mínimo espacio necesario para almacenar sus valores de forma extremadamente eficiente, en lugar de utilizar los diccionarios ***\_\_dict\_\_*** o ***\_\_weakref\_\_***, que simplemente no serán creados.
+> Los lenguajes con *garbage collection* suelen implementar el concepto de referencias débiles (*weak references*). Una variable que referencie a un objeto es una referencia fuerte (*strong reference*). Mientras exista por lo menos una *strong reference*, el objeto sigue vivo. Cuando no quedan *strong references*, el objeto puede ser recogido por el *garbage collector*, pero mientras esto no suceda, el objeto sigue accesible (presente en memoria) a través de posibles *weak references* (si las hay). Se pueden crear y gestionar *weak references* a objetos mediante el módulo ***weakref***. Cuando finalmente el objeto es recogido (*collected*), las *weak references* son eliminadas. Las *strong references* de un objeto se guardan en el diccionario ***\_\_dict\_\_***, y las *weak references* se encuentran en otro diccionario llamado ***\_\_weakref\_\_***. Tanto uno como otro son diccionarios que enlazan **cada nombre** al **objeto** que referencian.
+
+Una instancia cualquiera tienen su propio diccionario donde almacena sus atributos (***\_\_dict\_\_***). Si tenemos **muchas** instancias con pocos atributos, se consume muchísima memoria de forma ineficiente, por la existencia de tantos diccionarios. En cambio si la clase define la variable (atributo) ***\_\_slots\_\_***, este puede contener una secuencia (cualquier iterable) de *strings* con los nombres de las variables (atributos) que podrán tener las instancias de esa clase, y en esas instancias se reservará internamente el mínimo espacio necesario para almacenar sus valores de forma extremadamente eficiente, en lugar de utilizar los diccionarios ***\_\_dict\_\_*** o ***\_\_weakref\_\_***, que simplemente no serán creados.
 
 ***\_\_slots\_\_*** nos dice qué atributos se pueden añadir a la instancia. Solo podremos añadirle esos atributos, pero no es obligatorio definirlos todos. Sin embargo, a la clase en sí se le pueden añadir todos los atributos que queramos, aunque la clase tampoco tiene diccionarios ***\_\_dict\_\_*** ni ***\_\_weakref\_\_***.
 
 No se pueden añadir, pues, atributos no listados en *slots* a una instancia; si necesitamos hacerlo, deberemos añadir ***\_\_dict\_\_*** a la lista de *slots*.
 
-No se pueden crear *weak references* a un objeto con slots. Si se necesita crearlas, hay que añadir manualmente ***\_\_weakref\_\_*** a la lista de *slots*.
+No se pueden crear *weak references* a un objeto con *slots*. Si se necesita crearlas, hay que añadir manualmente ***\_\_weakref\_\_*** a la lista de *slots*.
 
 Si una subclase hereda de una clase sin *slots*, sí tendrá diccionarios ***\_\_dict\_\_*** y ***\_\_weakref\_\_***, aunque en estos diccionarios no se incluirán los atributos definidos en ***\_\_slots\_\_***.
 
@@ -519,96 +569,131 @@ Si se utiliza un iterador para definir *slots*, se crearán los descriptores cor
 
 #### 3.3.3 Customizing class creation
 
-Es una técnica bastante avanzada, y no se aplica a la mayoría de casos de uso. Solo una pequeña pincelada:
+(Personalización de la creación de clases.)
 
-Si un objeto instancia es creado según se especifica en el objeto clase, ¿en qué se basa para crear un objeto clase? Pues a su vez se especifica mediante un objeto metaclase. Por defecto, la metaclase de las clases definidas por el usuario es ***type***. Es posible crear nuestras propias metaclases.
+Se trata de una técnica compleja, que no se aplica a la mayoría de casos de uso, por lo que no se verá en profundidad.
+
+A nivel informativo, si un **objeto instancia** se crea según se especifica en el **objeto clase** (tipo), ¿en qué se basa la creación de un objeto clase? La respuesta es en un **objeto metaclase**.
+
+Por defecto, la metaclase utilizada para la creación de clases definidas por el usuario es ***type***. Sin embargo, es posible crear metaclases personalizadas.
 
 #### 3.3.4 Customizing instance and subclass checks
 
-Métodos usados para override el comportamiento de `isinstance()` y `issubclass()`:
+(Personalización de las comprobaciones de instancia y subclase.)
 
-`__instancecheck__(self, object)` debe retornar ***True*** si ***object*** debe ser considerado instancia de la clase que define el método. ***False*** si no.
+Es posible sobreescribir (*override*) el comportamiento de `isinstance()` y `issubclass()` en una clase determinada. Para ello habrá que redefinir los siguientes métodos de la misma:
 
-`__subclasscheck__(self, class)` debe retornar ***True*** si ***class*** debe ser considerada subclase de la clase que define el método. ***False*** si no.
+```python
+__instancecheck__(self, objeto)
+```
 
-Hay que decir que estos métodos no se definen en la clase en sí, sino en la metaclase de la clase que deseamos chequear.
+El método debe retornar ***True*** si el objeto ***object*** debe ser considerado instancia de la clase que define el método. ***False*** en caso contrario.
 
-#### 3.3.5 Emulating generic types
+```python
+__subclasscheck__(self, clase)
+```
 
-Innecesario también en la mayoría de casos de uso.
+Debe retornar ***True*** si el objeto ***clase*** debe ser considerado subclase de la clase que define el método. ***False*** en caso contrario.
+
+> Es importante recalcar que estos métodos **no se definen en la clase en sí, sino en la metaclase** de la clase que deseamos chequear. De este modo, ***self*** no se refiere a una instancia, sino a la clase en sí.
 
 #### 3.3.6 Emulating callable objects
 
+(Emular objetos invocables.)
+
 Para que se pueda llamar a la instancia, como si fuera una función:
 
-`__call__(self [,argumentos])` - si llamamos una instancia ***x*** así:
+```python
+__call__(self [,argumentos])
+```
+
+Si utilizamos la llamada sobre una instancia ***x***:
 
 ```python
-x(a1,a2,...)
+x(a1, a2,...)
 ```
+
 Será equivalente a:
 
 ```python
-x.__call__(a1,a2,...)
+x.__call__(a1, a2,...)
 ```
 
 #### 3.3.7 Emulating container types
+
+(Emular tipos de contenedor.)
 
 Los contenedores pueden ser secuencias (como listas o tuplas) o *mappings* (como los diccionarios), aunque puede haber otros tipos. La diferencia entre secuencias y diccionarios es que en las primeras, las claves (*keys*) son índices enteros de 0 a N-1 (N elementos) u objetos *slice*.
 
 Los *mappings* deberían definir los métodos `keys()`, `values()`, `items()`, `get()`, `clear()`, `setdefault()`, `pop()`, `popitem()`, `copy()` y `update()`, y comportarse de forma análoga a como lo hacen en los diccionarios de *Python*.
 
-Las **secuencias mutables** deberían definir los métodos `append()`, `count()`, `index()`, `extend()`, `insert()`, `pop()`, `remove()`, `reverse()` y `sort()`, y que se comporten de forma análoga a como lo hacen en las listas de *Python*.
+Las **secuencias mutables** deberían definir los métodos `append()`, `count()`, `index()`, `extend()`, `insert()`, `pop()`, `remove()`, `reverse()` y `sort()`, y comportarse de forma análoga a como lo hacen en las listas de *Python*.
 
 **Todas las secuencias** deberían definir la adición (concatenación) y multiplicación (repetición) mediante los métodos `__add__()`, `__radd__()`, `__iadd__()`, `__mul__()`, `__rmul__()` y `__imul__()`, y no definir otros operadores aritméticos.
 
-Todos los contenedores, en general, deberían implementar `__contains__()` para *membership tests* (`in`, que en el caso de diccionarios, debería buscar en las claves), e `__iter__()` para iteración de sus elementos (en *mappings* debería iterar por todas las claves).
+Todos los contenedores, en general, deberían implementar `__contains__()` para *tests* de pertenencia (`in`, que en el caso de diccionarios, debería buscar en las claves), e `__iter__()` para iteración de sus elementos (en *mappings* debería iterar por todas las claves).
 
-`__len__(self)`
+```python
+__len__(self)
+```
 
-Para la función *builtin* `len()`. Devuelve un entero no negativo; normalmente, el número de elementos del contenedor. Un objeto cuyo `len()` es 0 y no define `__bool__()`, se considera ***False***.
+Se utiliza para la función *builtin* `len()`. Retorna un entero no negativo; normalmente, el número de elementos del contenedor. Un objeto cuyo `len()` es 0 y no define `__bool__()`, se considera ***False***.
 
-`__length_hint__(self)`
+```python
+__length_hint__(self)
+```
 
-Estimación del *expected size*; se usa para *presize* *containers*, para optimizar el funcionamiento interno, y no es obligatorio. Puede devolver ***NotImplemented***, que es como si no estuviese definido.
+Estimación del tamaño esperado; se usa para preasignar el tamaño de un contenedor, de tal modo que se optimiza el funcionamiento interno, aunque nunca es obligatorio. Puede retornar ***NotImplemented***, que equivale a no definir este método.
 
-Nota: el *slicing* utiliza únicamente los siguientes 3 métodos. `a[1:2] = b` se transforma automáticamente en `a[slice(1, 2, None)] = b`. Los argumentos que faltan en la llamada se rellenan siempre con ***None***.
+El *slicing* se lleva a cabo utilizando únicamente los métodos `__getitem__()`, `__setitem__()` y `__delitem__()`, que veremos a continuación. Un *slice*, del tipo `a[1:2] = b` se transforma automáticamente en `a[slice(1, 2, None)] = b`. Los argumentos que faltan en la llamada a `slice()` se rellenan siempre con ***None***.
 
-`__getitem__(self, key)`
+```python
+__getitem__(self, key)
+```
 
-Para evaluar `self[key]`. Para secuencias, las claves son enteros o *slices*. La interpretación de los índices negativos depende totalmente de esta función. Si ***key*** es de un tipo inapropiado, se puede levantar ***TypeError***. En el caso de *mappings*, si ***key*** no existe, levantar ***KeyError***. Para índices fuera de rango, se levanta ***IndexError*** (los bucles `for` lo usan para detectar el final).
+Para evaluar `self[key]`. Para secuencias, las claves son enteros o *slices*. La interpretación de los índices negativos depende totalmente de esta función. Si ***key*** es de un tipo inapropiado, se puede levantar ***TypeError***. En el caso de *mappings*, si ***key*** no existe, se acostumbra a levantar ***KeyError***. Para índices fuera de rango, se levanta ***IndexError*** (los bucles `for` lo usan para detectar el final).
 
-`__missing__(self,key)`
+```python
+__setitem__(self, key, value)
+```
 
-Es llamado por `__getitem__()` para implementar `self[key]` cuando la clave no está en el diccionario.
+Todo lo dicho para índices en `__getitem__()` se aplica aquí, pero para escribir en lugar de leer. Debe ser posible ese cambio de valores, así como añadir valores nuevos. En cuanto a las excepciones a levantar, son las mismas que en el caso de `__getitem__()`.
 
-`__setitem__(self,key,value)`
+```python
+__delitem__(self, key)
+```
 
-Todo lo dicho para índices en `__getitem__()` se aplica aquí, pero para escribir en lugar de leer. Debe ser posible ese cambio de valores, así como añadir valores nuevos. Mismas excepciones que `__getitem__()`.
+Para eliminar un elemento `self[key]`. Se aplica lo dicho en `__getitem__()`. Debe ser posible la eliminación. Mismas excepciones que `__getitem__()`.
 
-`__delitem__(self, key)`
+```python
+__missing__(self, key)
+```
 
-Para borrar `self[key]`. Se aplica lo dicho en `__getitem__()`. Debe ser posible la eliminación. Mismas excepciones que `__getitem__()`.
+Para tratar claves inexistentes en el contenedor. Es llamado por `__getitem__()` para implementar `self[key]` cuando la clave no está en el diccionario.
 
-`__missing__(self,key)`
+```python
+__iter__(self)
+```
 
-Para tratar claves inexistentes en el contenedor.
+Debe retornar un iterador que itere sobre los elementos del contenedor. En *mappings*, debe iterar por las claves. Los iteradores también implementan este método para retornarse a sí mismos.
 
-`__iter__(self)`
+```python
+__reversed__(self)
+```
 
-Debe devolver un iterador que itere sobre los elementos del contenedor. En *mappings*, debe iterar por las claves. Los iteradores también implementan este método para retornarse a sí mismos.
+Retorna también un iterador, pero que itera en el orden inverso. Es lo que retorna la *built-in function* `reversed()` sobre el objeto. Si `__reversed__()` no está definido, `reversed()` lo implementa usando `__len__()` y `__getitem__()`, por lo que sólo deberíamos definir este método si va a ser más eficiente que esta implementación por defecto.
 
-`__reversed__(self)`
+```python
+__contains__(self,item)
+```
 
-Devuelve también un iterador, pero que itera en el orden inverso. Es lo que devuelve la *built-in function* `reversed()` sobre el objeto. Si `__reversed__()` no está definido, `reversed()` lo implementa usando `__len__()` y `__getitem__()`, por lo que sólo deberíamos definir este método si va a ser más eficiente que esta implementación por defecto.
-
-`__contains__(self,item)`
-
-Para membership tests (`in`, `not in`). Devuelve ***True*** o ***False***. En *mappings* debería centrarse en las *keys*. Si no está definido, se hace automáticamente, iterando por los elementos, por lo que sólo deberíamos definir este método si va a ser más eficiente.
+Para comprobaciones de pertenencia (*membership tests*) mediante `in` y `not in`. Retorna ***True*** o ***False***. En *mappings* debería centrarse en las *keys*. Si no está definido, se hace automáticamente, iterando por los elementos, por lo que sólo deberíamos definir este método si va a ser más eficiente que no definirlo.
 
 #### 3.3.8 Emulating numeric types
 
-Habría que definir solo las operaciones que pueden realizarse sobre el objeto.
+(Emular tipos numéricos.)
+
+Es posible definir las operaciones matemáticas que se pueden realizar con los objetos.
 
 Métodos:
 
@@ -616,45 +701,47 @@ Métodos:
 
 Corresponden respectivamente a los operadores:
 
-`+`, `-`, `\*`, `@`, `/`, `//`, `%`, `divmod()`, `pow()` (y `**`), `<<`, `>>`, `&`, `^` y `|`.
+`+`, `-`, `*`, `@`, `/`, `//`, `%`, `divmod()`, `pow()` (y `**`), `<<`, `>>`, `&`, `^` y `|`.
 
-`A ** B` equivale a `pow(A, B)`. Y `pow(A, B, C)` debería equivaler a `A ** B % C`. Aunque nosotros podemos definirlo como queramos para nuestras clases.
+`A ** B` equivale a `pow(A, B)`. Y `pow(A, B, C)` debería equivaler a `A ** B % C`. Aunque pueden definirse como se desee.
 
-Se debería definir `pow()` para 3 argumentos. `divmod(A, B)` debería devolver una tupla (`A // B`, `A % B`). `@` es multiplicación de matrices.
+Se debería definir `pow()` para 3 argumentos. `divmod(A, B)` debería retornar una tupla (`A // B`, `A % B`). `@` es multiplicación de matrices.
 
-Si la función no implementa la operación con el argumento que se le ha pasado, debería devolver ***NotImplemented*** (o simplemente no definirla).
+Si la función no implementa la operación con el argumento que se le ha pasado, debería retornar ***NotImplemented***.
 
 Si ***x*** es una instancia de una clase que tiene `__add__()` definido, entonces `x + y` llamaría a `x.__add__(y)`.
 
-Cuando el operando de la izquierda no soporta la operación, es decir, cuando ese método no está definido o retorna ***NotImplemented***, hay dos opciones. Si el operando de la derecha es del mismo tipo, hemos terminado: la operación no está definida. Pero si es de un tipo distinto, podemos mirar si esa clase define la operación en esos casos, es decir, si define lo que se llama la operación reflejada, con los operandos intercambiados. Estos métodos especiales del operando de la derecha son:
+Cuando el operando de la izquierda no soporta la operación, es decir, cuando ese método no está definido o retorna ***NotImplemented***, hay dos opciones. Si el operando de la derecha es del mismo tipo, hemos terminado: la operación no está definida. Pero si es de un tipo distinto, podemos mirar si esa clase define la denominada **operación reflejada**, es decir, si define la operación con los operandos intercambiados. Estos métodos especiales del operando de la derecha son:
 
 `__radd__(self, otro)`,`__rsub__(self, otro)`, `__rmul__(self, otro)`, `__rmatmul__(self, otro)`, `__rtruediv__(self, otro)`, `__rfloordiv__(self, otro)`, `__rmod__(self, otro)`, `__rdivmod__(self, otro)`, `__rpow__(self, otro)`, `__rlshift__(self, otro)`, `__rrshift__(self, otro)`, `__rand__(self, otro)`, `__rxor__(self, otro)` y `__ror__(self, otro)`.
 
 Estos métodos se corresponden a los anteriores, solo en caso de operaciones reflejadas.
 
-En este caso concreto, `pow()` con 3 argumentos no intentará llamar a `__rpow__()` (muy complejo implementar la operación reflejada).
+En este caso concreto, `pow()` **con 3 argumentos** no intentará llamar a `__rpow__()` (muy complejo implementar la operación reflejada).
 
-En el caso específico de que el segundo operando sea de una subclase del tipo del primer operando, la versión reflejada del segundo se llamará prioritariamente sobre la versión normal del primero. Ello se hace para que las subclases puedan *override* las operaciones de sus bases.
+En el caso específico de que el segundo operando sea de una subclase del tipo del primer operando, la versión reflejada del segundo se llamará prioritariamente sobre la versión normal del primero. Ello se hace para que las subclases puedan redefinir las operaciones de sus bases.
 
 Si los operandos son de la misma clase y la operación normal no está definida, no se llamará a la reflejada, en caso de existir, ya que se asume que la operación no está definida.
 
-*Augmented assignments*:
+Asignaciones aumentadas (*augmented assignments*):
 
 `__iadd__(self, otro)`, `__isub__(self, otro)`, `__imul__(self, otro)`, `__imatmul__(self, otro)`, `__itruediv__(self, otro)`, `__ifloordiv__(self, otro)`, `__imod__(self, otro)`, `__ipow__(self, otro, [modulo])`, `__ilshift__(self, otro)`, `__irshift__(self, otro)`, `__iand__(self, otro)`, `__ixor__(self, otro)` y `__ior__(self, otro)`.
 
-Estos métodos corresponden respectivamente a `+=`, `-=`, `*=`, `@=`, `/=`, `//=`, `%=`, `**=`, `<<=`, `>>=`, `&=`, `^=` y `|=`. Deberían modificar ***self*** directamente y luego devolver el resultado (que por lo general será ***self***, aunque no tiene por qué). Al encontrar uno de estos operadores, si no está definido el método correspondiente, *Python* lo intentará con la forma normal. Si tampoco, intentará con el reflejado.
+Estos métodos corresponden respectivamente a `+=`, `-=`, `*=`, `@=`, `/=`, `//=`, `%=`, `**=`, `<<=`, `>>=`, `&=`, `^=` y `|=`. Deberían modificar ***self*** directamente y luego retornar el resultado (que por lo general será ***self***, aunque no tiene por qué). Al encontrar uno de estos operadores, si no está definido el método correspondiente, *Python* lo intentará con el operador correspondiente a la asignación aumentada. Si tampoco, intentará con el reflejado.
 
 `__neg__(self)`, `__pos__(self)`, `__abs__(self)` y `__invert__(self)` responden respectivamente a los operadores unarios `-`, `+`, `abs()` y `~`.
 
 `__complex__(self)`, `__int__(self)`, `__float__(self)` y `__round__(self [,n])` responden respectivamente a las *built-in functions* `complex()`, `int()`, `float()` y `round()`. Deben retornar un valor del tipo adecuado.
 
-`__round__(self [,digits])`, `__trunc__(self)`, `__floor__(self)` y `__ceil__(self)` responden a la *bult-in function* `round()`, y a las funciones del módulo ***math*** `trunc()`, `floor()` y `ceil()`. Todas ellas deberían retornar un número entero, a excepción de `round()` en caso de especificar un número de dígitos decimales superior a cero. Si `__int__()` no está definida, `int()` *falls back to* `__trunc__()`.
+`__round__(self [,digits])`, `__trunc__(self)`, `__floor__(self)` y `__ceil__(self)` responden a la *bult-in function* `round()`, y a las funciones del módulo ***math*** `trunc()`, `floor()` y `ceil()`. Todas ellas deberían retornar un número entero, a excepción de `round()` en caso de especificar un número de dígitos decimales superior a cero. Si `__int__()` no está definida, `int()` usará el método `__trunc__()`.
 
 Truncar es eliminar la parte decimal, con lo que equivale a *floor* en positivos, y a *ceil* en negativos.
 
 #### 3.3.9 With Statement Context Managers
 
-Usados con la sentencia `with`, algunos objetos realizan algunas acciones al entrar en esa sentencia, y otras al salir. Normalmente se usa para inicializar recursos y luego liberarlos, guardar y restaurar un estado global, etc. Son dos métodos que se invocan al ejecutarse la sentencia `with`, pero también pueden ser llamados directamente. Por ejemplo, para files:
+(Gestores de contexto con sentencia `with`.)
+
+Usados con la sentencia `with`, algunos objetos realizan algunas acciones al entrar en esa sentencia, y otras al salir. Normalmente se usa para inicializar recursos y luego liberarlos, guardar y restaurar un estado global, etc. Son dos métodos que se invocan al ejecutarse la sentencia `with`, pero también pueden ser llamados directamente. Por ejemplo, para objetos de tipo archivo:
 
 ```python
 with open('/tmp/workfile', 'r') as f:
@@ -663,33 +750,127 @@ with open('/tmp/workfile', 'r') as f:
 
 Cuando termina la sentencia `with`, cierra el archivo automáticamente, con lo que no hay que hacer `f.close()`.
 
-`__enter__(self)`
+```python
+__enter__(self)
+```
 
-Lo que ejecutará la sentencia `with`, si la usamos con nuestra clase. Lo que retorne este método lo asignará `with` a la variable después de `as`.
+Lo que ejecutará la sentencia `with` al principio, si la usamos con nuestra clase. Lo que retorne este método será asignado a la variable después de `as`.
 
-`__exit__(self, exc_type, exc_val, traceback)`
+```python
+__exit__(self, exc_type, exc_val, traceback)
+```
 
-Lo que se ejecutará al terminar el código del `with`. Los parámetros extra reciben la causa de salida de `with`. Si no se produjo excepción, `__exit__()` será llamada con tres ***None***. Si se produjo excepción durante la ejecución del bloque `with`, se llamará con tres valores correspondientes a la excepción, su valor y el objeto de tipo *traceback* (que tiene la información de dónde se produjo el error). Si deseamos que no se propague la excepción después de la cláusula `with`, `__exit__()` debería devolver un valor verdadero (p.e. ***True***), de lo contrario la excepción se recogerá tras `__exit__()`.
+Es lo que se ejecutará al terminar el código del bloque `with`. Los parámetros extra reciben la causa de salida de `with`. Si no se produjo excepción, `__exit__()` será llamada con tres ***None***. Si se produjo excepción durante la ejecución del bloque `with`, se llamará con tres valores correspondientes a la excepción, su valor y el objeto de tipo *traceback* asociado (que tiene la información de dónde se produjo el error). Si deseamos que no se propague la excepción después de la cláusula `with`, `__exit__()` debería retornar un valor verdadero (p.e. ***True***), de lo contrario la excepción se recogerá tras `__exit__()`.
 
-#### 3.3.10 Special method lookup
+### 3.3.10 Customizing positional arguments in class pattern matching
 
-Los métodos especiales que hemos estado describiendo deben definirse en el diccionario de la clase, no de la instancia, ya que de lo contrario no se encontrarán al hacer el *lookup*.
+(Personalizar argumentos posicionales en coincidencia de patrones de clase.)
+
+En las cláusulas de coincidencia de patrones (`case`), por defecto, no se pueden utilizar argumentos posicionales en una clase utilizada como patrón. Por ejemplo, `case MiClase(x, y)` no está permitido por defecto. Para poder usar este tipo de patrón, la clase necesita definir un atributo con nombre ***\_\_match\_args\_\_***.
+
+Este patrón tendrá como valor una tupla de *strings*, que definirán, las claves que se añadirán a los argumentos posicionales, de tal modo que estos se convertirán en *keyword arguments*.
+
+Por ejemplo, si ***MiClase.\_\_match\_args\_\_*** tiene por valor ***('izquierda', 'centro', 'derecha')***, entonces `case MiClase(x, y)` equivale a `case MiClase(izquierda=x, centro=y)`. Si no hay suficientes valores en ***MiClase.\_\_match\_args\_\_*** para todos los argumentos, se levantará ***TypeError***.
+
+#### 3.3.11 Special method lookup
+
+(Búsqueda de los métodos especiales.)
+
+Los métodos especiales que hemos estado describiendo deben definirse en la clase, no en el diccionario de la instancia, ya que de lo contrario no se encontrarán al hacer el *lookup*.
 
 ### 3.4 Coroutines
 
-Para tareas asíncronas. Muy relacionado con el módulo ***asyncio***. No es *threading* ni *multiprocessing*: es *multitasking* en un mismo hilo, aprovechando las esperas de las tareas durante, sobre todo, operaciones *I/O*.
+(Corrutinas.)
 
-**No vamos a cubrir lo relacionado con tareas asíncronas en este resumen.**
+Este mecanismo se utiliza para la creación de código asíncrono. En esta sección veremos un breve resumen del documento ***PEP 492***.
+
+En primer lugar, vamos a definir una función **corrutina** como una función en la que en algún momento de su ejecución se detiene momentáneamente en espera de que se produzca un evento. Esta parada momentánea la denominaremos una **espera**. La función que contiene esta esperas, la corrutina, se define como:
+
+```python
+async def miFuncion(parametros):
+    # sentencias
+```
+
+Estas funciones pueden contener la sentencia `await`, que es la sentencia que ejecuta la espera. Una función que no se declara como `async` no puede contener sentencias `await`. Por otro lado, del mismo modo que una invocación a un generador retorna un objeto generador, una invocación a una corrutina **retorna un objeto corrutina**.
+
+```python
+async def lectura_datos(bd):
+    # ...
+    datos = await bd.fetch('SELECT * FROM coches')
+    # ...
+```
+
+En este caso, se realiza una lectura asíncrona a una base de datos mediante la sentencia `await`. La ejecución se suspende temporalmente hasta que se reciben los datos. La expresión `await` retorna los datos recibidos.
+
+La sentencia `await` acepta como único argumento un **objeto esperable** (***awaitable***). Un *awaitable* es un objeto que implementa el método `__await__()`, el cual debe retornar un iterador.
+
+En cuanto al **objeto corrutina** que retorna una llamada a una función corrutina, es un objeto *awaitable*.
+
+### *Context managers* asíncronos
+
+Un gestor de contexto asíncrono es un gestor de contexto que puede suspender su ejecución en sus métodos de entrada y salida. En este caso, estos tendrán los métodos `__aenter__()` y `__aexit__()`, equivalentes a los métodos `__enter__()` y `__exit__()` de los *context managers*, con la diferencia que estos nuevos métodos son corrutinas, y por lo tanto definidos mediante `def async`.
+
+Para ejecutar el gestor de contexto, se utilizará `async with` en lugar de `with`. Hay que señalar que `async with` no acepta un *context manager* regular:
+
+```python
+async with obj as v:
+    # bloque de código
+```
+
+Los *context managers* asíncronos solo pueden ejecutarse dentro de una *corrutina*.
+
+### Iteradores asíncronos
+
+Un iterable asíncrono es capaz de ejecutar código asíncrono dentro de su método *iter* (iteración), y un iterador asíncrono puede llamar código asíncrono en su método *next* (siguiente).
+
+Así, el iterable debe implementar un método `__aiter__()`, el cual debe retornar un iterador asíncrono. Por lo tanto el método no tiene por que ser asíncrono, pero el iterador retornado sí debe serlo. Que el iterador retornado sea asíncrono significa que contendrá un método (`async`) `__anext__()`. Dicho método `__anext__()` debe retornar un *awaitable*, y para señalar el fin de la iteración deberá levantar una excepción del tipo ***StopAsyncIteration***.
+
+Esto sería un ejemplo de iterable cuyo método `__aiter__()` se retorna a sí mismo (como es habitual):
+
+```python
+class AsyncIterable:
+    def __aiter__(self):
+        return self
+
+    async def __anext__(self):
+        data = await self.fetch_data()
+        if data:
+            return data
+        else:
+            raise StopAsyncIteration
+
+    async def fetch_data(self):
+        # ...
+```
+
+Como puede verse, el método `__aiter__()` retorna una instancia de sí mismo. Esta instancia es un iterador, pues define el método asíncrono `__anext__()`. Dicho método realiza una serie de acciones, básicamente obtener datos de una fuente específica a la que se accede de forma asíncrona a través del método concreto ***fetch_data()***, que es una corrutina. A cada iteración se retornará un dato. Cuando ***fetch_data()*** no retorne dato alguno (o un valor falso), el iterador levantará ***StopAsyncIteration***.
+
+Para ejecutar este iterable asíncrono, utilizaremos `async for` en lugar del habitual `for`. Hay que señalar que `async for` no acepta un iterable regular.
+
+```python
+async for v in iter:
+    # bloque de código
+```
+
+La sentencia `async for` admite (al igual que `for`) una sentencia `else` opcional. Por otro lado solo puede usarse `async for` dentro de una función asíncrona.
 
 ## 4. EXECUTION MODEL
 
+(Modelo de ejecución.)
+
 ### 4.2 Naming and binding
 
+(Nombres y vínculos.)
+
 #### 4.2.1 Binding of names
+
+(Vinculación de nombres.)
 
 Los nombres están vinculados (*bound*) a objetos. Si un nombre se vincula dentro de un bloque de código (módulo, función, clase, etc.), es una variable local de ese bloque, a no ser que se declare como `nonlocal` o `global`. Si se vincula a nivel de módulo, es una variable global.
 
 #### 4.2.2 Resolution of names
+
+(Resolución de nombres.)
 
 El ámbito (*scope*) define la visibilidad de un objeto dentro de un bloque. Para resolver nombres se usa el *nearest enclosing scope*.
 
@@ -697,40 +878,59 @@ Si un nombre referenciado no se encuentra, se levanta ***NameError***. Si está 
 
 ## 6. EXPRESSIONS
 
+(Expresiones.)
+
 ### 6.1 Arithmetic conversions
 
-El comportamiento normal de los operadores aritméticos con los tipos *built-in* es convertir a un tipo común los operandos cuando estos son de tipo distinto: si uno de los dos es `complex`, el otro es convertido a `complex`. Si no, si uno es de punto flotante, el otro se convierte a punto flotante. Si no, es que son los dos enteros.
+(Conversiones aritmética.)
+
+El comportamiento normal de los operadores aritméticos con los tipos numéricos *built-in* es convertir los operandos implícitamente, antes de realizar la operación, y en caso de ser distintos, a un tipo común: si uno de los dos es `complex`, el otro es convertido a `complex`. Si no, si uno es de punto flotante, el otro se convierte a punto flotante. En caso contrario, es que son los dos enteros.
 
 Puede haber reglas adicionales para algunos operadores.
 
 ### 6.2 Atoms
 
-Los elementos más básicos de una expresión. Identificadores y literales.
+(Átomos.)
+
+Los átomos son los elementos más básicos de una expresión: se trata de los identificadores y literales.
 
 #### 6.2.3 Parenthesized forms
 
-Para agrupar expresiones. Retorna lo que retorna la expresión que contiene. Si contiene comas, retorna una tupla; si no, el valor de la expresión que engloba. Así, los paréntesis no definen una tupla, sino las comas, a excepción de un par de paréntesis vacíos, que retornan una tupla vacía.
+(Formas entre paréntesis.)
+
+Los paréntesis se pueden utilizar para agrupar expresiones. Retorna el valor al que se evalúa su contenido. Si contiene comas, retorna una tupla; si no, el valor de la expresión que engloba. Así, no son los paréntesis los que definen una tupla, sino las comas (a excepción de un par de paréntesis vacíos, que retornan una tupla vacía).
+
+Son necesarios cuando deseamos controlar la precedencia de los operadores en una expresión compleja.
 
 #### 6.2.4 Displays for lists, sets and dictionaries
 
-En las *comprehensions*, la expresión inicial es evaluada en el *enclosing scope* (bloque de código que define la *comprehension*), y es pasada como argumento al *scope* anidado que forma la *comprehension*. El resto de expresiones (en los `if` y los `for`) pertenecen a ese
-*scope* anidado.
+(*Displays* para listas, conjuntos y diccionarios.)
+
+Los *displays* son las construcciones sintácticas que permiten construir listas, conjuntos o diccionarios. Existen dos formas: simplemente especificando los elementos, separados por comas, o mediante las *comprehensions*. Siempre entre corchetes (para listas) o llaves (para conjuntos y diccionarios).
+
+En el caso concreto de una *comprehension*, la expresión inicial es evaluada en el *enclosing scope* (bloque de código que define la *comprehension*), y es pasada como argumento al *scope* anidado que forma la *comprehension*. El resto de expresiones (en los `if` y los `for`) pertenecen a ese *scope* anidado.
 
 #### 6.2.5 List displays
 
-`[lista de elementos]` o `[comprehension]`.
+(*Displays* de lista.)
+
+Para crear una lista, se utiliza, entre corchetes, una lista de valores separados por comas, o una comprehension.
 
 #### 6.2.6 Set displays
 
-`{lista de elementos}` o `{comprehension}`.
+(*Displays* de conjunto.)
+
+Para crear un conjunto, se utiliza, entre llaves, una lista de valores separados por comas, o una comprehension.
 
 #### 6.2.7 Dictionary displays
 
-`{lista de elementos key:value}` o `{dict comprehension}`.
+(*Displays* de diccionario.)
 
-Si uno de los elementos es del tipo ***\*\*m*** (*dictionary unpacking*), y ***m*** es un *mapping*, entonces se insertan también los elementos de ***m*** en el diccionario .
+Para crear un diccionario, se utiliza, entre llaves, una lista de pares ***clave:valor*** separados por comas, o una comprehension.
 
 En el caso de una *comprehension*, la expresión inicial debe estar formada por un par de expresiones separadas por dos puntos (***:***).
+
+Si uno de los elementos es del tipo ***\*\*m*** (*dictionary unpacking*), y ***m*** es un *mapping*, entonces se insertan también los elementos de ***m*** en el diccionario .
 
 Al añadir elementos a un diccionario, la clave se evalúa antes que el valor.
 
@@ -738,19 +938,46 @@ Las claves deben ser de un tipo *hashable*.
 
 #### 6.2.8 Generator expressions
 
-`(comprehension)`
+(Expresiones generador.)
 
-No está permitido usar *yield* en el *nested scope*.
+Este tipo de expresiones retornan un **generador**. El formato básico consiste simplemente en una *comprehension* entre paréntesis.
+
+No está permitido el uso de *yield* explícitamente en las expresiones que definen los elementos del generador.
+
+Si el generador contiene cláusulas `async for` o expresiones `await`, la expresión generador retornará un nuevo objeto generador asíncrono (concretamente un iterador asíncrono).
 
 #### 6.2.9 Yield expressions
 
-Un generador devuelve valores mediante `yield`, o `yield from <expr>`, donde ***expr*** actúa como un subiterador del que va tomando valores para realizar los `yield`.
+(Expresiones `yield`.)
+
+Un generador retorna valores mediante `yield`, o `yield from <expr>`, donde ***expr*** actúa como un subiterador del que va tomando valores para realizar los `yield`.
 
 El método `__next__()` de los iteradores y generadores es llamado implícitamente por una cláusula `for`, o directamente con la *built-in function* `next()`.
 
+## 6.3 Primaries
+
+(Primarias.)
+
+Las sentencias primarias son la base sintáctica admitida por el lenguaje. A parte de los átomos, vistos ya, existen otros tipos de expresión primaria:
+
+```python
+instancia.atributo  # referencia a atributos
+objeto[3]           # indexación
+lista[4:8]          # slice
+foo('hola', 3)      # llamada
+```
+
 ### 6.10 Comparisons
 
-En *Python*, a parte de asignaciones múltiples (`a = b = 3`), se pueden hacer comparaciones encadenadas (`a < b < c == d`). Se encadenan con `and`, y no se evalúan las expresiones dos veces, a parte de que también cortocircuitan.
+(Comparaciones.)
+
+En *Python* es posible realizar asignaciones múltiples, del tipo `a = b = 3`, las cuales se van evaluando (y asignando) de derecha a izquierda.
+
+Además se pueden hacer comparaciones encadenadas, del tipo `a < b < c == d`, que se encadenan con `and`. El ejemplo equivaldría a `a < b and b < c and c == d`. Las expresiones no se evalúan dos veces, con lo que tanto ***b*** como ***c*** se evaluarían únicamente la primera vez. Además, se utiliza el mecanismo de cortocircuito, con lo que si una de las subexpresiones evalúa a falso, no se evaluarán más subexpresiones, retornando la expresión final el valor falso.
+
+#### 6.10.1 Value comparisons
+
+(Comparaciones de valor.)
 
 Los operadores de comparación comparan valores, no tipos ni identidades, por lo que se pueden aplicar entre operandos de tipos distintos.
 
@@ -758,9 +985,9 @@ Sin embargo, los operadores `==` y `!=` se basan, por defecto, en la identidad (
 
 Los tipos numéricos pueden compararse entre sí. Aunque los complejos no tienen comparación de orden (`>`, `<`, `<=`, `>=`).
 
-El valor ***NaN*** es diferente a todo, incluso a sí mismo. Los *singletons* ***None*** y ***NotImplemented*** deberían ser comparados solo mediante `is` e `is not`.
+El valor ***NaN*** (*not a number*, es decir, no numérico) se evalúa como diferente comparándose con cualquier cosa, incluso consigo mismo. Los *singletons* ***None*** y ***NotImplemented*** deberían ser comparados solo mediante `is` o `is not`.
 
-Las secuencias *bytes* (`bytes`, `bytearray`) y *string* (`str`) se pueden comparar con secuencias de su tipo, usándose el valor numérico de sus elementos (*bytes* o *Unicode code points*). No puede compararse una secuencia de uno de estos tipos con otra del otro tipo.
+Las secuencias *bytes* (`bytes`, `bytearray`) y *string* (`str`) se pueden comparar con secuencias de su tipo, usándose el valor numérico de sus elementos (*bytes* o puntos de codificación *Unicode*). No puede compararse una secuencia de uno de estos tipos con otra del otro tipo.
 
 Las *secuencias* (`tuple`, `list`, `range`) pueden compararse con objetos de su mismo tipo, aunque los *ranges* no tienen comparación de orden. Las secuencias se comparan comparando elemento por elemento. Si dos secuencias son iguales hasta el final de la más corta, la más corta es la menor.
 
@@ -768,27 +995,56 @@ Los *mappings* (`dict`) solo se comparan iguales si tienen los mismos pares ***c
 
 Los *sets* (`set`, `frozenset`) se pueden comparar con su mismo tipo. Las comparaciones de orden se interpretan mediante la relación subconjunto-superconjunto.
 
+Las clases que implementan mecanismos de comparación personalizados deberían cumplir, si es posible, algunas reglas de consistencia:
+
+- Objetos idénticos deben ser iguales, es decir, si `x is y`, entonces `x == y`.
+- Comparaciones simétricas:
+    - `x == y` implica `y == x`.
+    - `x != y` implica `y != x`.
+    - `x >= y` implica `y <= x`.
+    - `x > y` implica `y < x`.
+- Comparación transitiva:
+    - Si `x > y` y `y > z`, entonces `x > z`.
+    - Si `x >= y` y `y > z`, entonces `x > z`.
+    - Si `x > y` y `y >= z`, entonces `x > z`.
+    - Si `x >= y` y `y >= z`, entonces `x >= z`.
+    - Si `x < y` y `y < z`, entonces `x < z`.
+    - Etc.
+- La comparación inversa equivale a la negación booleana:
+    - `x == y` implica `not x != y`.
+    - `x >= y` implica `not x > y`.
+    - `x > y` implica `not x >= y`.
+- El valor *hash* debe ser consistente con la igualdad, es decir, dos objetos que se evalúan iguales deben retornar el mismo *hash*, o bien no ser *hashables*.
+
 #### 6.10.2 Membership test operations
 
-Para comprobaciones del tipo `<obj> in <seq>`. Los *strings*, *bytes*, secuencias, *mappings* y *sets built-in* implementan esta comprobación (en diccionarios se comprueba si existe tal clave).
+(Operaciones de comprobación de pertenencia.)
+
+Para comprobaciones del tipo `in` y `not in`. Los *strings*, *bytes*, secuencias, *mappings* y *sets built-in* implementan esta comprobación (en diccionarios se comprueba si existe tal clave).
 
 #### 6.10.3 Identity comparisons
 
-`x is y` es verdadero solo si ***x*** e ***y*** son el mismo objeto; `x is not y` es verdadero en caso contrario.
+(Comparaciones de identidad.)
+
+`x is y` es verdadero solo si ***x*** e ***y*** son referencias al mismo objeto; `x is not y` es verdadero en caso contrario.
 
 ### 6.13 Conditional expressions
 
-También llamado *ternary operator*. Es del tipo:
+(Expresiones condicionales.)
+
+La expresión condicional, también llamada operador ternario (*ternary operator*) es del tipo:
 
 ```python
-<expr1> if <cond> else <expr2>
+expr1 if cond else expr2
 ```
 
-Retorna ***expr1*** si ***cond*** es verdadero, o ***expr2*** en caso contrario.
+Retorna ***expr1*** si ***cond*** es verdadero, o ***expr2*** en caso contrario. En este caso se evalúa primero ***cond***; si es verdadero se evalúa ***expr1***, de lo contrario ***expr2***.
 
 ### 6.16 Evaluation order
 
-*Python* evalúa las expresiones de izquierda a derecha. En el ejemplo, el número indica el orden:
+(Orden de evaluación.)
+
+*Python* evalúa las expresiones de izquierda a derecha. En el ejemplo, el número del sufijo indica el orden:
 
 ```python
 expr1, expr2, expr3, expr4
@@ -800,6 +1056,8 @@ expr3, expr4 = expr1, expr2
 ```
 
 ### 6.17 Operator precedence
+
+(Precedencia de operadores.)
 
 Prioridad de los operadores en *Python*, de menor a mayor:
 
@@ -825,130 +1083,173 @@ Prioridad de los operadores en *Python*, de menor a mayor:
 En cuanto al operador de exponente, su prioridad es distinta en operadores unarios de uno y otro lado:
 
 ```python
->>> n = -1 ** 2
+>>> n = -1 ** 2    # -(1 ** 2)
 >>> n
 -1
->>> n = 2 ** -1
+>>> n = 2 ** -1    # 2 ** (-1)
 >>> n
 0.5
 ```
 
 ## 7. SIMPLE STATEMENTS
 
+(Sentencias simples.)
+
+### 7.1 Expression statements
+
+(Sentencias expresión.)
+
+Una expresión es cualquier sentencia que se evalúe a (retorne) un valor.
+
+### 7.2 Assignment statements
+
+(Sentencias de asignación.)
+
+Las sentencias de asignación se utilizan para enlazar un nombre a un objeto.
+
 ### 7.3 The assert statement
+
+(La sentencia `assert`.)
 
 La sentencia:
 
 ```python
-assert <expr>
+assert expr
 ```
 
-equivale a:
+Equivale a:
 
 ```python
 if __debug__:
-    if not <expr>: raise AssertionError
+    if not expr:
+        raise AssertionError
 ```
 
 En cuanto a la versión extendida:
 
 ```python
-assert <expr1>, <expr2>
+assert expr1, expr2
 ```
 
-equivale a:
+Equivale a:
 
 ```python
 if __debug__:
-    if not <expr1>: raise AssertionError(<expr2>)
+    if not expr1:
+        raise AssertionError(expr2)
 ```
 
-***\_\_debug\_\_*** es ***True*** en circunstancias normales. Será ***False*** cuando indiquemos que la compilación se haga con optimización (*command line option* ***-O***).
+***\_\_debug\_\_*** es ***True*** en circunstancias normales. Será ***False*** cuando indiquemos que la compilación se haga con optimización (opción ***-O*** en línea de comandos).
 
 ### 7.4 The pass statement
 
-Operación nula.
+(La sentencia `pass`)
+
+Operación nula. Utilizada en bloques vacíos (clases, bucles, funciones, etc.), normalmente para indicar una futura implementación.
 
 ### 7.5 The del statement
 
+(La sentencia `del`.)
+
 ```python
-del <lista de objetos>
+del lista
 ```
 
-Elimina el nombre (o nombres) especificados en la lista, de la tabla de nombres local o global, dependiendo de si están declarados como `global`, `nonlocal` o nada. Si el nombre está *unbound*, se levanta ***NameError***. Los elimina recursivamente, de izquierda a derecha.
+Elimina de la tabla de nombres local o global el nombre (o nombres) especificados en ***lista***. La tabla elegida dependerá de cómo esté declarado el nombre en cuestión (`global`, `nonlocal` o nada). Si el nombre no existe, se levantará la excepción ***NameError***.
+
+El argumento ***lista*** es un nombre, o una lista de nombres separados por comas, que son eliminados recursivamente, de izquierda a derecha.
 
 ### 7.6 The return statement
 
+(La sentencia `return`.)
+
 ```python
-return <lista de expresiones>
+return lista
 ```
 
-Retorna una expresión o lista de expresiones, o ***None*** si no se especifica. Si una función no termina en `return` también retorna ***None***.
+Retorna la expresión o lista de expresiones separadas por comas ***lista***. Si esta no se especifica, se asume ***None***. Si una función no termina su ejecución en una sentencia `return`, retornará ***None***.
 
-Si `return` abandona una cláusula `try` que contiene `finally`, antes de retornar se ejecuta el código de `finally`.
+Si `return` abandona una cláusula `try` que contiene `finally`, antes de retornar se ejecuta el código de bloque `finally`.
 
-En un iterador, indica que este ha terminado las iteraciones y levanta ***StopIteration***. Si devuelve valor, este quedará en ***StopIteration.value***.
+En un iterador, `return` indica que este ha terminado las iteraciones y levanta la excepción ***StopIteration***. Si retorna valor, este quedará en ***StopIteration.value***.
 
 ### 7.7 The yield statement
 
-En un generador:
+(La sentencia `yield`.)
+
+La sentencia `yield` se utiliza en generadores, como se ha visto ya:
 
 ```python
-yield <expr>
+yield expr
 ```
+
 o:
 
 ```python
-yield from <expr>
+yield from expr
 ```
 
-donde la expresión es un sub-iterador, de donde el generador irá extrayendo los sucesivos valores para irlos *yielding*.
+En el último caso, la expresión ***expr*** es a su vez un iterador, de donde el generador irá extrayendo los sucesivos valores para irlos retornando al modo de `yield`.
 
 ### 7.8 The raise statement
+
+(La sentencia `raise`.)
+
+La sentencia `raise` se utiliza para levantar excepciones.
 
 ```python
 raise
 ```
 
-*re-raises* la última excepción que estaba activa en el *scope* actual. Si no había ninguna, se levanta ***RuntimeError***.
+Sin argumento vuelve a levantar la última excepción que estaba activa en el *scope* actual. Si no había ninguna, se levanta ***RuntimeError***.
 
 ```python
-raise <excep>
+raise excep
 ```
 
-levanta la excepción ***excep***, que debe ser una subclase o una instancia de ***BaseException***. Si es una clase, se construirá internamente, cuando sea necesario, la instancia a partir de esa clase, sin argumentos.
-
-Al levantarse una excepción se genera un objeto *traceback* (sucesión de llamadas hasta el punto del código donde se produce la excepción), que se añade a la instancia de la excepción levantada, en su atributo ***\_\_traceback\_\_***. Este atributo es *writable*, a través del método `with_traceback()`:
+Levanta la excepción ***excep***, que debe ser una subclase o una instancia de ***BaseException***. Si es una clase, se construirá internamente la instancia cuando sea necesario, a partir de esa clase. Para indicar argumentos al constructor:
 
 ```python
-raise <excep>('Texto de error').with_traceback(<obj_traceback>)
+raise MiExcepcion(argumentos)
 ```
 
-En este caso, hemos levantado una excepción del tipo ***excep***, pasándole el texto del error al constructor, y aportando nuestro propio objeto *traceback*. Lo podemos hacer así porque el método `with_traceback()` retorna el objeto (instancia) excepción.
+Al levantarse una excepción se genera un objeto *traceback* (sucesión de llamadas hasta el punto del código donde se produce dicha excepción), que se añade a la instancia de la excepción levantada, en su atributo ***\_\_traceback\_\_***. Este atributo es modificable, a través del método `with_traceback()`:
 
 ```python
-raise <excep1> from <excep2>
+raise MiExcep('Texto de error').with_traceback(objeto_traceback)
 ```
 
-En este caso, estamos indicando que levantamos la excepción de tipo ***excep1***, que se ha producido a causa de otra excepción ***excep2***. Si la excepción (***excep1***, que es la que debemos tratar) queda sin tratar, se imprimirá en el mensaje de error las dos excepciones, y que una de ellas es causa de la otra. Al levantarse así, internamente se adjuntará ***excep2*** (que también puede ser instancia o clase) en el atributo ***\_\_cause\_\_*** de la excepción levantada (***excep1***).
+En este caso, hemos levantado una excepción del tipo ***MiExcep***, pasándole un texto del error al constructor, y aportando nuestro propio objeto *traceback*. Lo podemos hacer así porque el método `with_traceback()` retorna el propio objeto (instancia) excepción.
+
+```python
+raise excep1 from excep2
+```
+
+En este caso, estamos indicando que levantamos la excepción ***excep1***, que se ha producido a causa de otra excepción ***excep2***. Si la excepción (***excep1***, que es la que debemos tratar) queda sin tratar, se imprimirá en el mensaje de error una referencia a las dos excepciones, y que una de ellas es causa de la otra. Al levantarse así, internamente se adjuntará ***excep2*** (que también puede ser instancia o clase) en el atributo ***\_\_cause\_\_*** de la excepción levantada (***excep1***).
 
 De forma similar, si durante el tratamiento de una excepción se produce otra, que no queda tratada, en el mensaje de error se informará de este hecho. Internamente se hace añadiendo a la nueva excepción una referencia a la que estábamos tratando, en el atributo ***\_\_context\_\_***.
 
 ### 7.9 The break statement
 
-Sale del *nearest enclosing* `for` o `while`, saltándose el posible `else` que pueda tener el bucle.
+(La sentencia `break`.)
 
-Si la sentencia implica salir de una cláusula `try` que tiene una sección `finally`, el código de esta sección se ejecutará antes de salir del bucle.
+Sale del bucle `for` o `while` más exterior posible (desde el *scope* de la sentencia `break`), saltándose el posible `else` que pueda tener el bucle.
+
+Si la sentencia implica salir de una cláusula `try` que tiene una sección `finally`, el código de dicha sección se ejecutará antes de salir del bucle.
 
 ### 7.10 The continue statement
 
-Produce una nueva iteración del *nearest enclosing* `for` o `while`.
+(La sentencia `continue`.)
+
+Produce una nueva iteración del bucle `for` o `while` más exterior posible (desde el *scope* de la sentencia `break`).
 
 Si la sentencia implica salir de una cláusula `try` que tiene una sección `finally`, el código de esta sección se ejecutará antes de iniciar la nueva iteración.
 
 ### 7.11 The import statement
 
-Para importar módulos.
+(La sentencia `import`.)
+
+Mecanismo para importar módulos.
 
 ```python
 import A as C, B
@@ -963,32 +1264,44 @@ import B
 
 ### 7.12 The global statement
 
-Para *bind* un nombre al *scope* global.
+(La sentencia `global`.)
+
+Permite declarar uno o más nombres (separados por comas) para que sean vinculados a la tabla de nombres global, dentro de un bloque de código.
+
+Los nombres indicados no deben utilizarse en el bloque de código antes de la sentencia `global`.
 
 ### 7.13 The nonlocal statement
 
-Para *bind* un nombre al *scope* exterior más cercano en el que aparece.
+(La sentencia `nonlocal`.)
+
+Dentro de un bloque de código, `nonlocal` permite declarar uno o más nombres (separados por comas) para que sean vinculados a la tabla de nombres del *scope* envolvente más cercano posible en el que ya existan.
+
+Si no se declara una variable como `nonlocal`, los accesos de escritura a esa variable se harán en la tabla local. Si solo se accede a una variable (en un *scope* exterior) para lectura, sin que se modifique en ningún momento en el *scope* local, no es necesario declararla como no local.
 
 ## 8. COMPOUND STATEMENTS
 
-Las sentencias simples se pueden agrupar en la misma línea separándolas por punto y coma (***;***), y opcionalmente terminando la línea en punto y coma.
+(Sentencias compuestas.)
 
-Una sentencia compuesta está formada por una o varias cláusulas. Una cláusula está formada por un encabezado y una *suite* (una sentencia o conjunto de sentencias simples o compuestas).
+Varias sentencias simples se pueden agrupar en la misma línea separándolas por punto y coma (***;***), y opcionalmente terminando esa línea en punto y coma.
+
+Una sentencia compuesta está formada por una o varias cláusulas. Una cláusula está formada por un **encabezado** y una *suite*, o **bloque** de código formado por una sentencia o conjunto de sentencias simples o compuestas.
 
 El encabezado de una cláusula termina en dos puntos (***:***).
 
 Una *suite* es una o más sentencias agrupadas en una de estas dos formas:
 
-- En la misma línea del encabezado. Si hay más de una, habrá que separarlas por punto y coma (***;***). Como siempre, opcionalmente se puede terminar la línea en punto y coma.
-- Debajo del encabezado, una debajo de otra con una indentación superior al encabezado (podemos también agrupar varias sentencias simples en una o más de las líneas indentadas).
+- En la misma línea del encabezado, tras los dos puntos. Si hay más de una sentencia, habrá que separarlas por punto y coma (***;***). Como siempre, opcionalmente se puede terminar la línea en punto y coma.
+- Debajo del encabezado, una debajo de otra con una indentación superior al encabezado (podemos también agrupar varias sentencias simples líneas individuales del bloque).
 
-Las sentencias compuestas no pueden incluirse en una línea con sentencias separadas por punto y coma.
+No pueden incluirse varias sentencias compuestas en una sola línea.
 
-Sentencias compuestas: `if`, `while`, `for`, `try`, `with`, `def`, `class`.
+Sentencias compuestas: `if`, `while`, `for`, `try`, `with`, `match`, `def` y `class`.
 
-### 8.6 Function definitions
+### 8.7 Function definitions
 
-Aquí hablaremos, sobre todo, de function *decorators*. Un *decorator* es una función que acepta una función como argumento, y que retorna a su vez una función. Es decir, ajusta o manipula la función que le pasamos. La sintaxis de *decorators* es:
+Ya hemos visto cómo se definen las funciones. Podríamos añadir que las funciones son anidables en *Python*, es decir, una función puede definirse dentro de otra, dentro de una clase, de un bloque de código, etc.
+
+Pero vamos a centrarnos, sobre todo, en los **decoradores** de función (***function decorators***). Un *decorator* es una función que acepta a su vez una función como argumento, y que retorna también una función. Es decir, ajusta o modifica la función que le pasamos como argumento. La sintaxis de los *decorators* es:
 
 ```python
 @deco
@@ -1004,17 +1317,19 @@ def fun:
 fun = deco(fun)
 ```
 
-¿Cómo se construye un *decorator*? En primer lugar, sabemos que es una función (***deco***) que acepta una función como entrada (***fun***), y retorna otra función (que llamaremos ***wrapper***), que es una modificación de la de entrada. Así, ***deco*** acepta ***fun***, la introduce dentro de ***wrapper*** y devuelve ***wrapper***. La llamaremos ***wrapper***, porque envuelve ***fun***.
+¿Cómo se construye un *decorator*? En primer lugar, sabemos que es una función (***deco***) que acepta una función como entrada (***fun***), y retorna otra función (que llamaremos *wrapper* o envolvente), que es una modificación de la de entrada. Así, ***deco*** acepta ***fun***, la introduce dentro del *wrapper* y retorna ese *wrapper*, es decir, la función original modificada. La llamaremos envolvente porque en realidad envuelve ***fun***.
 
-Vamos a hacer un *decorator* que duplica las acciones de una función:
+Vamos a hacer un *decorator* que duplica las acciones de una función, es decir, que la ejecuta dos veces:
 
 ```python
+# Definición del decorator:
 def deco_duplica(f):
-    def wrapper_duplica():
+    def wrapper():
         f()
         f()
-    return wrapper_duplica
+    return wrapper
 
+# Definición de una función cualquiera usando el decorator:
 @deco_duplica
 def fun():
     print('¡Buenos días!')
@@ -1029,14 +1344,14 @@ Resultado:
 ¡Buenos días!
 ```
 
-¿Y si queremos decorar una función ***fun*** que acepta argumentos? Para que no nos dé error y el *decorator* acepte todo tipo de listas de parámetros, haremos:
+¿Y si queremos decorar una función ***fun*** que acepta argumentos? Para que no se produzca error y el *decorator* acepte todo tipo de listas argumentos, haremos:
 
 ```python
 def deco_duplica(f):
-    def wrapper_duplica(*args, **kwargs):
+    def wrapper(*args, **kwargs):
         f(*args, **kwargs)
         f(*args, **kwargs)
-    return wrapper_duplica
+    return wrapper
 
 @deco_duplica
 def fun(nombre):
@@ -1052,7 +1367,7 @@ Resultado:
 ¡Buenos días, Pepe!
 ```
 
-Esto es así, porque si nos fijamos, ***deco_duplica*** retorna el objeto función ***wrapper_duplica***, y este objeto función se asigna a ***fun***. Es decir, ***fun*** pasa a ser la función ***wrapper_duplica***. Por lo tanto, al hacer la llamada `fun('Pepe')` estamos, de hecho, invocando al objeto función `wrapper_duplica('Pepe')`.
+Esto es así, porque si nos fijamos, ***deco_duplica*** retorna el objeto función ***wrapper***, y este objeto función se asigna a ***fun***. Es decir, ***fun*** pasa a ser la función ***wrapper***. Por lo tanto, al hacer la llamada `fun('Pepe')` estamos, de hecho, invocando al objeto función `wrapper('Pepe')`.
 
 ¿Qué pasa al encadenar *decorators*?
 
@@ -1069,10 +1384,10 @@ A parte de aceptar argumentos en la función que va a ser decorada, en ocasiones
 ```python
 def deco_duplica_n(n):
     def deco_duplica(f):
-        def wrapper_duplica(*args, **kwargs):
+        def wrapper(*args, **kwargs):
             for i in range(n):
                 f(*args, **kwargs)
-        return wrapper_duplica
+        return wrapper
     return deco_duplica
 
 @deco_duplica_n(4)
@@ -1095,10 +1410,10 @@ Vamos a estudiarlo: `deco_duplica_n(4)`, de hecho, nos está retornando esta fun
 
 ```python
 def deco_duplica(f):
-    def wrapper_duplica(*args, **kwargs):
+    def wrapper(*args, **kwargs):
         for i in range(4):
             f(*args, **kwargs)
-    return wrapper_duplica
+    return wrapper
 ```
 
 Que, de hecho, un simple *decorator* que, en este caso, cuatriplica la acción. Esta función retornada es la que se usa como decorador de la función a decorar, es decir:
@@ -1107,7 +1422,7 @@ Que, de hecho, un simple *decorator* que, en este caso, cuatriplica la acción. 
 fun = deco_duplica_n(4)(fun)
 ```
 
-Y dado que ***deco_duplica_n(4)()*** retorna una función ***deco_duplica*** que cuatriplica la acción (utiliza un ***n*** con valor ***4***), esto equivale a:
+Y dado que `deco_duplica_n(4)()` retorna una función ***deco_duplica*** que cuatriplica la acción (utiliza un ***n*** con valor ***4***), esto equivale a:
 
 ```python
 fun = deco_duplica(fun)  # en su versión con n=4
@@ -1135,23 +1450,23 @@ return f(*args,**kwargs)
 
 En caso contrario, se puede modificar ese valor de retorno a voluntad.
 
-Un *decorator* puede ser cualquier tipo de expresión válida, siempre y cuando tal expresión retorne una función de tipo *decorator*. Por ejemplo, si tenemos una lista ***lst***, en los que sus elementos tienen un atributo (de tipo función) ***decfoo***, se puede hacer:
+Un *decorator* puede ser cualquier tipo de expresión válida, siempre y cuando tal expresión retorne una función de tipo *decorator*. Por ejemplo, si tenemos una lista ***lst***, en los que sus elementos tienen un atributo (de tipo función adecuado) ***decfoo***, se puede hacer:
 
 ```python
 @lst[0].decfoo
 def fooA():
-    ...
+    # ...
 
 @lst[1].decfoo
 def fooB():
-    ...
+    # ...
 ```
 
-### 8.7 Class definitions
+### 8.8 Class definitions
 
-Comentar simplemente que también se pueden definir *decorators* para los métodos de una clase.
+También se pueden definir *decorators* para los métodos de una clase, que funcionarán del mismo modo.
 
-Pero además se pueden utilizar *decorators* de clases, que se utilizan en la clase entera. En este caso, la diferencia estriba en que el *decorator* acepta como argumento una clase, que retorna decorada. Por lo demás, el mecanismo es análogo a los *decorators* de funciones.
+Pero además se pueden utilizar *decorators* de clases, que se utilizan en la clase entera. En este caso, la diferencia estriba en que el *decorator* acepta como argumento una clase, que retorna modificada (decorada). Por lo demás, el mecanismo es análogo a los *decorators* de funciones.
 
 ```python
 @deco
