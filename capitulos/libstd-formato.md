@@ -85,7 +85,7 @@ El *flag* ***sign*** (solo números) puede ser:
 
 Si se incluye el carácter almohadilla (***#***), los enteros usarán la forma alternativa, es decir, las salidas binarias, octales y hexadecimales tendrán un prefijo ***0b***, ***0o*** y ***0x*** respectivamente, mientras que para *floats* aparecerá siempre el punto decimal. En ***g*** y ***G*** no se eliminan los *trailing zeros*.
 
-El *flag* ***minwidth*** es el que define la anchura mínima, de tal modo que si es necesario se rellenará la salida (según el *flag* ***align***). Si este *flag* va precedido de ***0***, realizará el relleno con ceros, equivalente a definir ***align*** con ***=*** y ***fill*** con ***0***. Los flags ***align***/***fill*** tienen prioridad sobre este ***0***.
+El *flag* ***minwidth*** es el que define la anchura mínima, de tal modo que si es necesario se rellenará la salida (según el *flag* ***align***).
 
 El *flag* ***grouping*** tiene relación con los caracteres de agrupación de miles. Si este es coma (***,***) se usará la coma para separar los miles. Si es guión bajo (***\_***) se utilizará este carácter para separar miles en salidas `float` y en salidas de entero tipo ***d***.
 

@@ -4,37 +4,71 @@ El presente documento es un resumen de una parte específica de la biblioteca es
 
 ## 2. BUILT-IN FUNCTIONS
 
+(Funciones incorporadas.)
+
+Se indica a continuación un resumen de las funciones incorporadas disponibles en *Python*.
+
 Para los nombres de los argumentos, ***n*** será un número, ***i*** un entero, ***it*** un iterable, ***ob*** un objeto, ***met*** un método, ***map*** un *mapping* (diccionario), ***fun*** una función, ***c*** un carácter (*string* de tamaño 1). Si hay más de uno del mismo tipo, usaremos sufijos numéricos (***n1***, ***n2***,...).
 
-`abs(n)`
+```python
+abs(n)
+```
 
 Valor absoluto de un entero o punto flotante. En un complejo, devuelve la magnitud. Para cualquier otro tipo, retorna el valor del método `x.__abs__()`, si está definido.
 
-`all(it)`
+```python
+aiter(async_iterable)
+```
+
+Retorna un iterador asíncrono para un iterable asíncrono. Equivale a llamar `x.__aiter__()`.
+
+```python
+all(it)
+```
 
 Retorna ***True*** si todos los elementos de ***it*** se evalúan a ***True***, o si el iterable está vacío.
 
-`any(it)`
+```python
+any(it)
+```
 
 Retorna ***True*** si algún elemento de ***it*** se evalúa a ***True***. Si el iterable está vacío, retorna ***False***.
 
-`ascii(ob)`
+```python
+ascii(ob)
+```
 
 Retorna una representación imprimible del objeto ***ob***. Como `repr()`, pero utilizando *escapes* para los caracteres no-ASCII. Usa escapes del tipo ***\\x***, ***\\u*** y ***\\U***.
 
-`bin(n)`
+```python
+awaitable anext(async_iterator[, default ])
+```
+
+Al ser esperado (mediante `await`), retorna el siguiente elemento del iterador asíncrono ***async_iterator***. Si se especifica ***default*** es lo que retornará si el iterador está agotado. Si no se especifica, se levantará una excepción ***StopAsyncIteration*** al agotarse el iterador.
+
+Es la variante asíncrona de `next()`.
+
+```python
+bin(n)
+```
 
 Retorna un *string* con el número ***n*** en binario, precedido por ***0b***. Si ***n*** no es `int`, debe implementar `__index__()`, que devuelva un entero.
 
-`class bool([ob])`
+```python
+class bool([ob])
+```
 
 Retorna el *truth value* del objeto (***True*** o ***False***). Si no se pasa argumento, devuelve ***False***.
 
-`breakpoint(*args, **kwargs)`
+```python
+breakpoint(*args, **kwargs)
+```
 
 Representa un *breakpoint* y pasa el control al *debugger*, pasándole los parámetros en ***args*** y ***kwargs***.
 
-`class bytearray([source [,encoding [,errors]]])`
+```python
+class bytearray([source [,encoding [,errors]]])
+```
 
 Crea un objeto de tipo *bytearray* (secuencia mutable de *bytes*).
 
@@ -46,20 +80,27 @@ Si es un iterable, debe contener enteros de 0 a 255.
 
 Sin argumentos, crea un *bytearray* de longitud 0.
 
-`class bytes([source [,encoding [,errors]]])`
+```python
+class bytes([source [,encoding [,errors]]])
+```
 
 Como `bytearray()`, pero para crear un objeto *bytes* (inmutable). En este caso los objetos *bytes* también se pueden crear con literales.
 
-`callable(ob)`
+```python
+callable(ob)
+```
 
 Retorna ***True*** si el objeto es llamable, o ***False*** de lo contrario. Las clases son llamables, y las instancias lo son si tienen método `__call__()`.
 
-`chr(i)`
+```python
+chr(i)
+```
 
 Devuelve un *string* de longitud 1 con el carácter cuyo *code point Unicode* es ***i***. El argumento puede tener valor desde ***0*** hasta ***0x10FFFF***.
 
-`classmethod(met)`\
-`@classmethod`
+```python
+@classmethod
+```
 
 Supongamos un objeto ***x*** de clase ***MiClase***, con un método ***met(self)***. Un método normal tiene acceso a los atributos de la instancia a través de ***self***. A parte, puede, si lo desea, cambiar atributos de la clase mediante cosas como `type(self).atrib`, o con el nombre explícito de la clase ***MiClase.atrib***, etc. Para llamar al método, lo haremos mediante `x.met()`, no podemos hacer una llamada sin referirnos a una instancia concreta: `MiClase.met()` daría error (aunque podríamos hacer `MiClase.met(x)`, que de hecho equivale a `x.met()`).
 
@@ -69,7 +110,8 @@ Pero quizá nos podría interesar un método relacionado con la clase que no est
 class MiClase:
     def metclas(cls):
         # código del método
-    metclas = classmethod(metclas)    # conversión a class method
+    metclas = classmethod(metclas)    # conversión
+                                      # a class method
 ```
 
 Como eso es un poco feo sintácticamente, la función `classmethod()` permite la sintaxis de *decorator*, mucho más agradable a la vista:
@@ -87,11 +129,15 @@ Así, este método no tiene ningún acceso a ninguna instancia de la clase, pero
 
 Este tipo de métodos se pueden llamar a través de una instancia (`x.metclas()`) o a través de la misma clase (`MiClase.metclas()`), no hay diferencia alguna, el acceso a la instancia es siempre inexistente.
 
-`compile()`
+```python
+compile()
+```
 
 Compila un *string* con código, y retorna un objeto ejecutable. No es de mucho interés por el momento.
 
-`class complex([real [,imag]])`
+```python
+class complex([real [,imag]])
+```
 
 Retorna un objeto complejo, inicializado a los valores real e imaginario especificados. También le podemos pasar un *string* u objeto (1 solo argumento) para su conversión a complejo. Si es *string*, debe ser del tipo ***'3+5j'***, sin espacios.
 
@@ -99,33 +145,45 @@ Si se omiten los argumentos, el constructor creará el ***0j***. Si se omite la 
 
 Al convertir un objeto ***x*** a complejo, se utilizará `x.__complex__()`. Si no está definido, `x.__float__()` y si tampoco, `x.__index__()`.
 
-`delattr(ob, name)`
+```python
+delattr(ob, name)
+```
 
 Elimina el atributo con nombre ***name*** (*string*) del objeto ***ob*** (si el objeto lo permite). `delattr(x, 'atrib')` equivale a `del x.atrib`.
 
-`class dict(**kwargs)`\
-`class dict(map [,**kwargs])`\
-`class dict(it [,**kwargs])`
+```python
+class dict(**kwargs)
+class dict(map [,**kwargs])
+class dict(it [,**kwargs])
+```
 
 Constructor de un diccionario. Si se pasa sin argumentos, crea un diccionario vacío. Si le pasamos un iterable, este debe contener elementos que a su vez contengan 2 elementos cada uno: el primero para la clave (debe ser inmutable) y el segundo para el valor.
 
 Los elementos creados a partir de *keyword arguments* se crean con la clave igual a un *string* con el nombre del argumento.
 
-`dir([ob])`
+```python
+dir([ob])
+```
 
 Sin argumentos devuelve la lista de nombres del *scope* actual. Con un objeto como parámetro, retorna la lista de sus atributos.
 
 Si el objeto implementa `__dir__()`, se usará lo que retorne esta. De lo contrario se intentará construir esa lista a partir del atributo `__dict__`, lo cual puede no ser muy preciso si el objeto implementa `__getattr__()`.
 
-`divmod(n1,n2)`
+```python
+divmod(n1,n2)
+```
 
 Devuelve una tupla con el cociente y el resto de la división de los dos números (no complejos).
 
-`enumerate(it, start=0)`
+```python
+enumerate(it, start=0)
+```
 
 Retorna un iterable de tipo *enumerate*, cuyos elementos son tuplas de dos elementos: el primero, el número de orden (empezando por el valor de ***start***), y el segundo, el valor de cada uno de los elementos del iterable ***it***.
 
-`eval(expression [, globals [, locals ]])`
+```python
+eval(expression [, globals [, locals ]])
+```
 
 Evalúa un *string* con una *expresión*, o un objeto de código (compilado con `compile()`). Se le puede dar un diccionario con las variables globales que tendrá esa expresión. También se le puede dar un diccionario de variables locales. Si se omiten, se usará el diccionario de globales y locales del *scope* desde el que se llama a `eval()`. En ningún caso tendrá esta función acceso a las variables de los *nesting scopes* que no sean globales (las *non-local*).
 
@@ -135,17 +193,23 @@ Si en ***globals*** no se hace referencia a los *builtins*, se añadirá una ent
 
 Retorna el resultado de la expresión.
 
-`exec(code [, globals [, locals ]])`
+```python
+exec(code [, globals [, locals ]])
+```
 
 Similar a `eval()`, pero en este caso para ejecutar una serie de instrucciones especificadas en un *string*, o en un objeto de código (compilado con `compile()`).
 
 Retorna ***None***.
 
-`filter(fun, it)`
+```python
+filter(fun, it)
+```
 
 Retorna un iterable con los elementos de ***it*** tales que ***fun(it)*** es ***True***. Si ***fun*** es ***None***, se asume la función identidad, es decir, el iterador resultante estará formado por los elementos de ***it*** que evalúen a ***True***.
 
-`class float([ob])`
+```python
+class float([ob])
+```
 
 Construye (y retorna) un número en punto flotante a partir del objeto que se le pasa, que normalmente será un número. También puede ser un *string* con una representación correcta de un número en punto flotante.
 
@@ -155,7 +219,9 @@ Si el objeto no define `__float__()`, *falls back to* `__index__()`.
 
 Si no se le da argumento, retorna 0.0.
 
-`format(value [,format_spec])`
+```python
+format(value [,format_spec])
+```
 
 Retorna una representación en *string* del valor indicado, formateado según la *format string* ***format_spec***. Normalmente debería seguir la especificación de formato estándar (véase el apartado de especificación de formato), aunque el objeto puede definir su propia especificación. `format(a, form)` se traduce a `type(a).__format__(form)`, *bypassing* el método de la instancia, si lo hubiere.
 
@@ -163,43 +229,63 @@ Si no se indica el *string* de formato, se asumirá un *string* vacío, que tien
 
 Si en la búsqueda del método se llega hasta ***object*** y el *string* de formato no es un *string* vacío, se levanta excepción ***TypeError***.
 
-`class frozenset([it])`
+```python
+class frozenset([it])
+```
 
 Construye y devuelve un *frozenset*. Si se le pasa un iterable, lo hará con sus elementos. Si no, será un conjunto vacío. Inmutable.
 
-`getattr(ob, name [,default])`
+```python
+getattr(ob, name [,default])
+```
 
 Retorna el atributo con nombre ***name*** (*string*) del objeto ***ob***. `getattr(x,'atri')` equivale a `x.atri`. Si no existe tal atributo, se levanta ***AttributeError***, a no ser que le indiquemos ***default***, en cuyo caso simplemente retornará ese valor. Contraparte de `setattr()`.
 
-`globals()`
+```python
+globals()
+```
 
 Retorna el diccionario global de símbolos. Corresponde al módulo actual. En una función o método, el módulo donde está definida/o, no el módulo que llama.
 
-`hasattr(ob, name)`
+```python
+hasattr(ob, name)
+```
 
 Retorna ***True*** si el objeto ***ob*** tiene un atributo llamado como el *string* ***name***. Simplemente comprueba si hay excepción llamando a `getattr(ob, name)`.
 
-`hash(ob)`
+```python
+hash(ob)
+```
 
 Retorna el *hash* del objeto. Si este tiene un método personalizado `__hash__()`, la función `hash()` trunca el valor recibido al número de bits de la arquitectura.
 
-`help([ob])`
+```python
+help([ob])
+```
 
 Para uso interactivo. Invoca el sistema de ayuda.
 
-`hex(i)`
+```python
+hex(i)
+```
 
 Retorna una representación hexadecimal (*string*) en minúsculas, precedida por ***0x***, del entero indicado. Si no es un `int`, debe implementar `__index__()`.
 
-`id(ob)`
+```python
+id(ob)
+```
 
 Retorna la identidad única del objeto (en la implementación estándar es la dirección de memoria, pero podría ser cualquier otro número único).
 
-`input([prompt])`
+```python
+input([prompt])
+```
 
 Si especificamos un *prompt*, lo imprime en la salida estándar. La función lee un valor de la entrada estándar, y lo retorna como *string*, sin el *newline* final. Si se lee *EOF* (cuando la entrada proviene de un archivo, por ejemplo), se levanta ***EOFException***.
 
-`class int([x [,base=10]])`
+```python
+class int([x [,base=10]])
+```
 
 Construye y retorna un entero (`int`) a partir del objeto ***x***, que normalmente será un número o *string*. Si no se especifica, retornará 0.
 
@@ -213,7 +299,9 @@ Si en ***base*** damos un objeto no `int`, debe definir obligatoriamente `__inde
 
 El número del *string* puede contener guiones bajos para agrupar dígitos.
 
-`isinstance(ob, class)`
+```python
+isinstance(ob, class)
+```
 
 Retorna ***True*** si el objeto ***ob*** es una instancia de ***class***, o de una subclase de ***class***. Si ***class*** es una tupla de tipos (puede contener otras tuplas de tipos dentro), retorna ***True*** si ***ob*** es instancia de alguno de los tipos de la tupla (buscando recursivamente).
 
@@ -221,7 +309,9 @@ En caso contrario, retorna ***False***.
 
 Si ***class*** no es un tipo o tupla de tipos, se levanta ***TypeError***.
 
-`issubclass(class1, class2)`
+```python
+issubclass(class1, class2)
+```
 
 Retorna ***True*** si la clase ***class1*** es una subclase de ***class2***. Una clase se considera subclase de sí misma. Si ***class2*** es una tupla de tipos (puede contener otras tuplas de tipos dentro), retorna ***True*** si ***class1*** es subclase de alguno de los tipos de la tupla (buscando recursivamente).
 
@@ -229,25 +319,35 @@ En caso contrario, retorna ***False***.
 
 Si ***class1*** o ***class2*** no son tipos (o tupla de tipos en caso de ***class2***), se levanta ***TypeError***.
 
-`iter(ob [,sentinel])`
+```python
+iter(ob [,sentinel])
+```
 
 Si no especificamos ***sentinel***, la función retorna un iterador a partir de ***ob***, el cual debe definir `__iter__()`, o en su defecto, `__getitem__()` con argumentos enteros empezando desde el 0. Si no es así, la función levanta ***TypeError***.
 
 Sin embargo, si proporcionamos ***sentinel***, ***ob*** debe ser *callable*. El iterador creado llamará a ***ob*** sin argumentos cada vez que se invoque su `__next__()`. Se terminará la iteración (***StopIteration***) cuando el valor retornado sea igual a ***sentinel***.
 
-`len(ob)`
+```python
+len(ob)
+```
 
 Retorna el número de elementos del objeto.
 
-`class list([it])`
+```python
+class list([it])
+```
 
 Construye y retorna una lista (mutable), a partir de un iterable. En caso de no dar argumentos, crea una lista vacía.
 
-`locals()`
+```python
+locals()
+```
 
 Retorna el diccionario de nombres local.
 
-`map(fun, it1 [,it2,...])`
+```python
+map(fun, it1 [,it2,...])
+```
 
 Retorna un iterador que aplica la función ***fun*** a cada elemento del iterable ***it***, y *yields* cada resultado (valor de retorno de ***fun***).
 
@@ -255,8 +355,10 @@ Esto suponiendo que la función tome 1 solo argumento. Si toma 2, habrá que pas
 
 Para 3 argumentos a ***fun*** se necesitan 3 iterables, y así sucesivamente.
 
-`max(it, * [,key] [,default])`\
-`max(arg1, arg2 [,arg3,...], * [,key])`
+```python
+max(it, * [,key] [,default])
+max(arg1, arg2 [,arg3,...], * [,key])
+```
 
 Retorna el valor máximo entre una serie de números.
 
@@ -266,28 +368,41 @@ En la segunda versión, de dos o más argumentos posicionales, se retornará el 
 
 En ambas versiones podemos especificar el *keyword argument* ***key***, al que le pasaremos una función de un solo argumento, que servirá como función de ordenación de los valores. Si ***key*** es ***None***, se evaluarán los objetos por su valor numérico simplemente.
 
-`class memoryview(ob)`
+```python
+class memoryview(ob)
+```
 
 Crea un objeto memory view a partir del objeto pasado.
 
-`min(it, * [,key] [,default])`\
-`min(arg1, arg2 [,arg3,...], * [,key])`
+```python
+min(it, * [,key] [,default])
+min(arg1, arg2 [,arg3,...], * [,key])
+```
 
 Igual que `max()`, pero para el menor de los valores.
 
-`next(it [,default])`
+```python
+next(it [,default])
+```
 
 Retorna el siguiente valor del iterador ***it***. Si se ha agotado este, se levantará ***StopIteration***, a no ser que indiquemos ***default***, en cuyo caso, simplemente retornará ese valor.
 
-`class object()`
+```python
+class object()
+```
 
 Construye y retorna un objeto de tipo object, que es la clase base de todos los objetos de *Python*. No acepta argumentos. Estos objetos no tienen ***\_\_dict\_\_***, con lo que no se le pueden añadir atributos.
 
-`oct(n)`
+```python
+oct(n)
+```
 
 Retorna un *string* con una representación octal del número ***n***, precedida por ***0o***. El argumento debe ser entero, de lo contario debe implementar `__index__()`.
 
-`open(file, mode='r', buffering=-1, encoding=None, errors=None, newline=None, closefd=True, opener=None)`
+```python
+open(file, mode='r', buffering=-1, encoding=None,
+     errors=None, newline=None, closefd=True, opener=None)
+```
 
 Abre el archivo y devuelve un objeto archivo. Si no puede abrirlo, se levanta ***OSError***.
 
@@ -308,13 +423,13 @@ En cuanto a ***buffering***, si le pasamos 0 desactiva el *buffering* (no permit
 
 ***encoding*** es el códec utilizado para la codificación del texto, y solo funciona en archivos de texto. El valor por defecto depende de la plataforma. En cuanto a la codificación de texto, podemos indicarle a Python cómo proceder con los errores encontrados a la hora de codificar (argumento ***errors***):
 
-- ***'strict'*** levanta ***ValueError*** si hay un error (por defecto).
-- ***'ignore'*** ignora errores (pérdida de datos).
-- ***'replace'*** remplaza el error con '?'.
-- ***'surrogateescape'*** representa los *bytes* incorrectos como una secuencia que indica un *code point* Unicode, desde ***U+DC80*** a ***U+DCFF***. Es útil cuando tratamos un archivo del que no conocemos el *encoding*.
-- ***'xmlcharrefreplace'*** representa los caracteres no soportados mediante una referencia XML del tipo ***&#nnn;***.
-- ***'backslashreplace'*** remplaza los datos incorrectos con secuencias de escape tipo ***\\xhh***.
-- ***'namereplace'*** remplaza con secuencias de escape del tipo ***\\N{...}***.
+- ***strict*** levanta ***ValueError*** si hay un error (por defecto).
+- ***ignore*** ignora errores (pérdida de datos).
+- ***replace*** remplaza el error con '?'.
+- ***surrogateescape*** representa los *bytes* incorrectos como una secuencia que indica un *code point* Unicode, desde ***U+DC80*** a ***U+DCFF***. Es útil cuando tratamos un archivo del que no conocemos el *encoding*.
+- ***xmlcharrefreplace*** representa los caracteres no soportados mediante una referencia XML del tipo ***&#nnn;***.
+- ***backslashreplace*** remplaza los datos incorrectos con secuencias de escape tipo ***\\xhh***.
+- ***namereplace*** remplaza con secuencias de escape del tipo ***\\N{...}***.
 
 ***newline*** controla el funcionamiento de los caracteres *newline* (solo archivos de texto):
 
@@ -324,17 +439,24 @@ En cuanto a ***buffering***, si le pasamos 0 desactiva el *buffering* (no permit
 
 ***opener*** es un *callable* que podemos especificar para que se encargue de abrir el archivo. Obviamos los detalles.
 
-`ord(c)`
+```python
+ord(c)
+```
 
 Inversa de `chr()`. Dado un carácter, devuelve el *code point Unicode*.
 
-`pow(base, exp [, mod])`
+```python
+pow(base, exp [, mod])
+```
 
 Retorna ***base*** elevado a ***exp***. Si también indicamos ***mod*** le aplica además el módulo indicado (más eficiente que `pow(base, exp) % mod`). Con dos argumentos equivale a `base ** exp`.
 
 Argumentos deben ser numéricos. Si son enteros, el resultado es entero, a no ser que ***exp*** sea negativo, en cuyo caso será de punto flotante. Si ***base*** y ***exp*** son enteros, ***mod*** también debe serlo (y distinto de 0).
 
-`print(*objects, sep=' ', end='\n', file=sys.stdout, flush=False)`
+```python
+print(*objects, sep=' ', end='\n',
+      file=sys.stdout, flush=False)
+```
 
 Muestra en el *stream* de texto definido en ***file*** (por defecto la salida estándar) los objetos indicados, separados por lo que indica ***sep*** (por defecto, un espacio). Al final añade lo indicado en ***end*** (por defecto, *newline*). Si ***sep*** o ***end*** son ***None***, usarán el valor por defecto.
 
@@ -344,7 +466,9 @@ Si ***file*** es ***None***, tomará el valor por defecto. No puede ser un archi
 
 Si el *stream* es *buffered*, se realiza un *flush* si ***flush*** es ***True***.
 
-`class property(fget=None, fset=None, fdel=None, doc=None)`
+```python
+class property(fget=None, fset=None, fdel=None, doc=None)
+```
 
 Crea un objeto propiedad. Una propiedad representa un atributo, y puede contener todas las funciones necesarias para *get*, *set* y *delete*, así como su *docstring*. Al inicializar la propiedad se le dan estos elementos como argumentos, respectivamente en ***fget***, ***fset***, ***fdel*** y ***doc***.
 
@@ -403,22 +527,30 @@ class C:
 
 En este caso, tras crearse la propiedad de solo lectura (***x***), se realiza la llamada `x = x.setter(x)`, es decir, al miembro ***x*** se le asigna lo que retorne `x.setter()`, al que se le pasa la función que estamos definiendo; lo que hace `setter()` es añadir a la propiedad ***x*** el método `fset()` que será igual a esta nueva definición que le pasamos, con lo cual la propiedad deja de ser de solo lectura. Luego añadimos `fdel()` a la propiedad, llamando a `x.deleter()`. Si lo hacemos así, se les debe dar a las funciones el mismo nombre que la propiedad.
 
-`class range(stop)`\
-`class range(start,stop[,step])`
+```python
+class range(stop)
+class range(start,stop[,step])
+```
 
 Construye y retorna un objeto *range* (secuencia inmutable).
 
-`repr(ob)`
+```python
+repr(ob)
+```
 
 Retorna un *string* con una representación imprimible del objeto. La idea es que ese *string* sea una expresión válida que, por ejemplo, pasada a `eval()` produzca un objeto del mismo valor. En su defecto, el tipo del objeto entre llaves (***\<>***) junto con otra información del mismo, que puede incluir su nombre y dirección de memoria.
 
 Un objeto puede controlar lo que devolverá esta función sobre él definiendo `__repr__()`.
 
-`reversed(secuencia)`
+```python
+reversed(secuencia)
+```
 
 Retorna un iterador que va entregando los valores de ***secuencia*** en sentido inverso. La secuencia debe implementar `__reversed__()`, o en su defecto soportar el protocolo de secuencia (método `__len__()` y `__getitem__()` con argumento entero iniciando en 0).
 
-`round(n[,ndigits])`
+```python
+round(n[,ndigits])
+```
 
 Retorna un redondeo de ***n*** a ***ndigits*** dígitos decimales. Si no damos ***ndigits*** (o es ***None***), redondeará al entero más cercano y el tipo retornado será entero. En caso contrario, el tipo será el mismo que el de ***n***.
 
@@ -453,27 +585,36 @@ Algunos números en punto flotante pueden producir resultados extraños. Por eje
 
 Esto se debe a que la mayoría de fracciones decimales no pueden representarse *exactamente* como *float*, por sus limitaciones.
 
-`class set([it])`
+```python
+class set([it])
+```
 
 Construye y retorna un *set*. Si se le da un iterable, lo hará con los elementos de este.
 
-`setattr(ob, name, value)`
+```python
+setattr(ob, name, value)
+```
 
 Contraparte de `getattr()`. Da el valor ***value*** al atributo del objeto ***ob*** cuyo nombre está especificado por el *string* ***name*** (si el objeto lo permite). `setattr(x, 'atrib', val)` equivale a `x.atrib=val`.
 
-`class slice(stop)`\
-`class slice(start,stop[,step])`
+```python
+class slice(stop)
+class slice(start,stop[,step])
+```
 
 Crea y retorna un objeto *slice*, que especifica un conjunto de índices. Su sintaxis es como la de `range()`, pero un objeto *slice* no es iterable.
 
-`sorted(it, *, key=None, reverse=False)`
+```python
+sorted(it, *, key=None, reverse=False)
+```
 
 Retorna una lista con los elementos del iterable ***it*** ordenados según la función especificada en ***key*** (que debe tomar un argumento y retornar un valor). Si no se especifica función, se ordenará en función del valor de cada elemento. En caso de que ***reverse*** sea ***True***, el orden será inverso.
 
 La función garantiza que la posición relativa de dos elementos que se comparan igual no será cambiada respecto al orden original.
 
-`staticmethod(met)`\
-`@staticmethod`
+```python
+@staticmethod
+```
 
 Análogo a `classmethod()`, aunque en esta ocasión se crea un método estático. También acepta sintaxis de *decorator*:
 
@@ -486,16 +627,22 @@ class MiClase:
 
 En este caso, *Python* no le pasa ningún argumento, solamente los que le definamos nosotros. Esta función no tiene absolutamente nada que ver con la clase ni con ninguna instancia de la misma. Es simplemente una manera de encapsularla en un *namespace* de una clase o instancia en su *scope* correspondiente. Se puede llamar, al igual que un método clase, a través de una instancia (`x.metstat()`) o de la clase (`MiClase.metstat()`), sin que haya ninguna diferencia hacerlo de una forma o de otra.
 
-`class str(object='')`\
-`class str(object=b'', encoding='utf-8', errors='strict')`
+```python
+class str(object='')
+class str(object=b'', encoding='utf-8', errors='strict')
+```
 
 Construye y retorna un *string*.
 
-`sum(it, /, start=0)`
+```python
+sum(it, /, start=0)
+```
 
 Suma el valor ***start*** más el valor de los elementos del iterable ***it***, y retorna esa suma.
 
-`super([type [,object-or-type]])`
+```python
+super([type [,object-or-type]])
+```
 
 Retorna un objeto de tipo *super*, que es un objeto *proxy* a través del cual podemos acceder a métodos (y atributos de datos). Este objeto contiene información sobre una instancia concreta (a la que está *bound*), y una clase que forma parte de la jerarquía de esa instancia. Lo interesante es que esa clase no tiene por qué ser la clase inmediata de la instancia, sino que puede estar más arriba en la jerarquía (tan arriba como queramos).
 
@@ -513,12 +660,16 @@ Sin embargo, en el caso de herencia múltiple, `super()` sin argumentos nos envi
 
 Si el segundo argumento es una subclase del primero en lugar de una instancia, la llamada a un método o atributo se hará a través de clase, no a través de instancia, por lo que será una llamada a función, no a método. Lo mismo sucede si indicamos el primer argumento pero no el segundo. La llamada sin argumentos solo puede hacerse desde dentro de una clase. En cambio, con argumentos, se puede utilizar desde cualquier lado. Este tipo de llamada puede ser útil para invocar un *static method*, pudiendo elegir la versión que queramos del método, dentro de la jerarquía.
 
-`class tuple([it])`
+```python
+class tuple([it])
+```
 
 Construye y retorna una tupla. Si no se le especifica parámetro, resulta una tupla vacía. Si se especifica un iterador, se toman los datos del mismo para construir la tupla.
 
-`class type(ob)`\
-`class type(name, bases, dict)`
+```python
+class type(ob)
+class type(name, bases, dict)
+```
 
 Pasándole un objeto, retorna el tipo del mismo, que es en sí un objeto tipo, y suele ser el devuelto por `ob.__class__`.
 
@@ -539,25 +690,34 @@ Equivale a:
 >>> X = type('X', (object,), dict(a=1))
 ```
 
-`vars([ob])`
+```python
+vars([ob])
+```
 
 Retorna el atributo ***\_\_dict\_\_*** del objeto ***ob***. Sin argumento es como `locals()`.
 
-`zip(*it)`
+```python
+zip(*it, strict=False)
+```
 
 Crea un iterador. Cada n-ésimo elemento de dicho iterador es una tupla compuesta por el n-ésimo elemento del cada uno de los iterables que se le han dado como argumento, en el orden en que se especifican.
 
-El iterador termina cuando el iterable más corto se ha usado por completo.
+El iterador termina cuando el iterable más corto se ha usado por completo. Sin embargo, si esperamos que ambos iterables tengan el mismo número de elementos, podemos indicar ***strict*** como ***True***, en cuyo caso se producirá un error cuando los iterables tengan un número distinto de elementos.
 
 Con un solo argumento retorna un iterador con tuplas de 1 elemento cada una.
 
 Sin argumentos retorna un iterador vacío.
 
-`__import__(name, globals=None, locals=None, fromlist=(), level=0)`
+```python
+__import__(name, globals=None, locals=None,
+           fromlist=(), level=0)
+```
 
 Es la función que utiliza `import`. No es aconsejable cambiarla.
 
 ## 3. BUILT-IN CONSTANTS
+
+(Constantes incorporadas.)
 
 ***True*** y ***False*** (`bool`).
 
@@ -571,10 +731,14 @@ Es la función que utiliza `import`. No es aconsejable cambiarla.
 
 ### 3.1 Constants added by the site module
 
+(Constantes añadidas por el módulo ***site***.)
+
 Este módulo es útil en el modo interactivo del intérprete, y no se debería usar en programas.
 
-`quit(code=None)`\
-`exit(code=None)`
+```python
+quit(code=None)
+exit(code=None)
+```
 
 Al imprimir estos objetos muestran ***'Use quit() or Ctrl-D (i.e. EOF) to exit'***. Al llamarlos levantan ***SystemExit*** con el código especificado.
 
@@ -589,69 +753,74 @@ Al ser impreso muestra 'Type license() to see the full license text' y al ser ll
 
 ### 5. BUILT-IN EXCEPTIONS
 
+(Excepciones incorporadas.)
+
+Véase a continuación una jerarquía de los tipos de excepción incorporados en *Python*:
+
 ```
 BaseException
-SystemExit
-KeyboardInterrupt
-GeneratorExit
-Exception
-StopIteration
-StopAsyncIteration
-ArithmeticError
-    FloatingPointError
-    OverflowError
-    ZeroDivisionError
-AssertionError
-AttributeError
-BufferError
-EOFError
-ImportError
-    ModuleNotFoundError
-LookupError
-    IndexError
-    KeyError
-MemoryError
-NameError
-    UnboundLocalError
-OSError
-    BlockingIOError
-    ChildProcessError
-    ConnectionError
-        BrokenPipeError
-        ConnectionAbortedError
-        ConnectionRefusedError
-        ConnectionResetError
-    FileExistsError
-    FileNotFoundError
-    InterruptedError
-    IsADirectoryError
-    NotADirectoryError
-    PermissionError
-    ProcessLookupError
-    TimeoutError
-ReferenceError
-RuntimeError
-    NotImplementedError
-    RecursionError
-SyntaxError
-    IndentationError
-        TabError
-SystemError
-TypeError
-ValueError
-    UnicodeError
-        UnicodeDecodeError
-        UnicodeEncodeError
-        UnicodeTranslateError
-Warning
-    DeprecationWarning
-    PendingDeprecationWarning
-    RuntimeWarning
-    SyntaxWarning
-    UserWarning
-    FutureWarning
-    ImportWarning
-    UnicodeWarning
-    BytesWarning
-    ResourceWarning
+    SystemExit
+    KeyboardInterrupt
+    GeneratorExit
+    Exception
+        StopIteration
+        StopAsyncIteration
+        ArithmeticError
+            FloatingPointError
+            OverflowError
+            ZeroDivisionError
+        AssertionError
+        AttributeError
+        BufferError
+        EOFError
+        ImportError
+            ModuleNotFoundError
+        LookupError
+            IndexError
+            KeyError
+        MemoryError
+        NameError
+            UnboundLocalError
+        OSError
+            BlockingIOError
+            ChildProcessError
+            ConnectionError
+                BrokenPipeError
+                ConnectionAbortedError
+                ConnectionRefusedError
+                ConnectionResetError
+            FileExistsError
+            FileNotFoundError
+            InterruptedError
+            IsADirectoryError
+            NotADirectoryError
+            PermissionError
+            ProcessLookupError
+            TimeoutError
+        ReferenceError
+        RuntimeError
+            NotImplementedError
+            RecursionError
+        SyntaxError
+            IndentationError
+                TabError
+        SystemError
+        TypeError
+        ValueError
+            UnicodeError
+                UnicodeDecodeError
+                UnicodeEncodeError
+                UnicodeTranslateError
+        Warning
+            DeprecationWarning
+            PendingDeprecationWarning
+            RuntimeWarning
+            SyntaxWarning
+            UserWarning
+            FutureWarning
+            ImportWarning
+            UnicodeWarning
+            BytesWarning
+            EncodingWarning
+            ResourceWarning
 ```

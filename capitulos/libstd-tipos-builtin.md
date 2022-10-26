@@ -4,15 +4,23 @@ El presente documento es un resumen de una parte específica de la biblioteca es
 
 ## 4. BUILT-IN TYPES
 
+(Tipos incorporados.)
+
 ### 4.1 Truth Value Testing
+
+(Comprobación del valor de verdad.)
 
 Por defecto, un objeto se considera ***True***, a no ser que defina `__bool__()` y esta retorne ***False***, o en su defecto `__len__()` y retorne 0. Por otro lado se consideran ***False*** las constantes ***None*** y ***False***, así como cualquier objeto numérico con valor 0.
 
 ### 4.2 Boolean Operations - and, or, not
 
+(Operaciones booleanas - `and`, `or`, `not`.)
+
 Los operadores `and` y `or` cortocircuitan. El operador `not` tiene menos prioridad que los operadores no booleanos, con lo que `not a == b` equivale a `not (a == b)`, mientras que `a == not b` es un error sintáctico.
 
 ### 4.3 Comparisons
+
+(Comparaciones.)
 
 Las comparaciones `is` e `is not` trabajan con la identidad de los objetos y no pueden ser redefinidas con métodos.
 
@@ -20,19 +28,35 @@ Las comparaciones `is` e `is not` trabajan con la identidad de los objetos y no 
 
 ### 4.4 Numeric Types - int, float, complex
 
+(Tipos numéricos - `int`, `float`, `complex`.)
+
 A parte de estos tipos, `bool` es una subclase de `int`.
 
 #### 4.4.1 Bitwise Operations on Integer Types
+
+(Operaciones bit a bit en tipos enteros.)
 
 Las operaciones *bitwise* solo tienen sentido en enteros. Se realizan como si fuesen números en complemento a 2 con infinitos dígitos.
 
 #### 4.4.2 Additional Methods on Integer Types
 
-`int.bit_length()`
+(Métodos adicionales en tipos enteros.)
+
+```python
+int.bit_count()
+```
+
+Retorna el número de unos de la representación binaria del valor absoluto del entero.
+
+```python
+int.bit_length()
+```
 
 Retorna el número de bits necesarios para representar el valor absoluto del valor actual del entero. Si su valor es 0, retorna 0.
 
-`int.to_bytes(length, byteorder, *, signed=False)`
+```python
+int.to_bytes(length, byteorder, *, signed=False)
+```
 
 Retorna un *array* de *bytes* representando el valor del entero. El objeto *bytes* retornado tiene una longitud total de ***length*** bytes. Si esa longitud no es suficiente para su representación, levanta ***OverflowError***.
 
@@ -40,7 +64,10 @@ Si ***byteorder*** es ***'big'***, será con representación *big endian* (*byte
 
 En cuanto a ***signed***, indica si se va a utilizar complemento a 2 para codificar el entero. Si es que no (por defecto) y el valor es negativo, se levanta ***OverflowError***.
 
-`classmethod int.from_bytes(bytes, byteorder, *, signed=False)`
+```python
+classmethod int.from_bytes(bytes, byteorder, *,
+                           signed=False)
+```
 
 Es la operación inversa a `to_bytes()`.
 
@@ -48,31 +75,45 @@ Es la operación inversa a `to_bytes()`.
 
 ***bytes*** debe ser un objeto *bytes* o un iterable que produzca una serie de *bytes*. ***signed*** indica si se ha utilizado complemento a 2 en la representación.
 
-`int.as_integer_ratio()`
+```python
+int.as_integer_ratio()
+```
 
 Retorna una tupla con un ratio igual al valor del entero. Esa tupla lo forman dos enteros: el primero es igual al entero original, y el segundo es 1.
 
 #### 4.4.3 Additional Methods on Float
 
-`float.as_integer_ratio()`
+(Métodos adicionales en flotante.)
+
+```python
+float.as_integer_ratio()
+```
 
 Retorna una tupla con un ratio de enteros que iguala el valor del `float`. El denominador es siempre positivo.
 
 Si el `float` es un infinito, levanta ***OverflowError***. Si es un ***NaN***, ***ValueError***.
 
-`float.is_integer()`
+```python
+float.is_integer()
+```
 
 Retorna ***True*** si el valor es entero (parte decimal a 0), o ***False*** si no.
 
-`float.hex()`
+```python
+float.hex()
+```
 
 Retorna una representación hexadecimal del `float`, en un *string*, que empezará por ***0x***, e incluirá un sufijo ***p*** con el exponente (decimal, con base 2).
 
-`classmethod float.fromhex(s)`
+```python
+classmethod float.fromhex(s)
+```
 
 A partir del *string*, que representa un `float`, devuelve ese `float`. El formato del *string* debe ser (puede ir entre espacio en blanco):
 
-`[signo] ['0x'] número ['p' exponente]`
+```python
+[signo] ['0x'] número ['p' exponente]
+```
 
 El número es hexadecimal y puede incluir punto decimal o no. Si lo incluye, se puede omitir la parte entera o la fraccionaria, pero no las dos.
 
@@ -82,37 +123,55 @@ El uso de mayúsculas o minúsculas es indiferente.
 
 Un ejemplo: ***3.a82p5*** se calcula así:
 
-`(3 + 10 / 16 + 8 / (16 ** 2) + 2 / (16 ** 3)) * (2 ** 5)`
+```python
+(3 + 10 / 16 + 8 / (16 ** 2) + 2 / (16 ** 3)) * (2 ** 5)
+```
 
 #### 4.4.4 Hashing of numeric types
+
+(*Hash* de tipos numéricos.)
 
 Dos números ***x*** e ***y*** deben tener el mismo *hash* (`hash(x) == hash(y)`), siempre que `x == y`. *Python* aplica una función que otorga un *hash* único a cada número racional.
 
 ### 4.5 Iterator Types
 
+(Tipos iterador.)
+
 Python facilita la iteración de *containers* (secuencias, *sets*, diccionarios, etc.), es decir, son elementos iterables.
 
-`container.__iter__()`
+```python
+container.__iter__()
+```
 
 Retorna un objeto iterador basado en el contenedor. Es el método utilizado por `for` para crear el iterador.
 
-`iterator.__iter__()`
+```python
+iterator.__iter__()
+```
 
 Normalmente retorna una referencia a sí mismo. Esto permite que `for` se pueda aplicar no solo en contenedores, sino también en iteradores.
 
-`iterator.__next__()`
+```python
+iterator.__next__()
+```
 
 Retorna el valor de la siguiente iteración o levanta ***StopIteration*** si ya ha terminado.
 
 #### 4.5.1 Generator Types
 
+(Tipos generador.)
+
 Forma de definir un objeto generador, que implementa automáticamente el protocolo de iterador.
 
 ### 4.6 Sequence Types - list, tuple, range
 
+(Tipos secuencia: lista, tupla, rango.)
+
 Además de las indicadas, los *strings* y *bytes* (y *bytearray*) también son secuencias.
 
 #### 4.6.1 Common Sequence Operations
+
+(Operaciones comunes en secuencias.)
 
 Dadas las secuencia ***s*** y ***t***, un posible elemento ***x***, y los enteros ***n***, ***i***, ***j*** y ***k***, las siguientes operaciones son comunes a todas las secuencias; `x in s` o `x not in s` (pertenencia), `s + t` (concatenación), `s * n` o `n * s` (repetición), `s[i]` (indexación), `s[i:j]` y `s[i:j:k]` (*slicing*), `len(s)` (longitud), `min(s)` y `max(s)` (mínimo/máximo), `s.index(x [,i [,j]])` (índice de la primera ocurrencia de ***x***, opcionalmente restringiendo rango de elementos de ***i*** a ***j***), `s.count(x)` (ocurrencias de ***x*** en ***s***).
 
@@ -142,9 +201,13 @@ Los *ranges* no aceptan concatenación o repetición.
 
 #### 4.6.2 Immutable Sequence Types
 
+(Tipos de secuencia inmutable.)
+
 Las únicas operaciones que son específicas de las secuencias inmutables son las relacionadas con el *hashing*.
 
 #### 4.6.3 Mutable Sequence Types
+
+(Tipos de secuencia mutable.)
 
 Dada las secuencia mutable ***s***, el iterable ***t***, un posible elemento ***x***, y los enteros ***n***, ***i***, ***j*** y ***k***, las siguientes operaciones son comunes a todas las secuencias mutables:
 
@@ -165,13 +228,17 @@ Dada las secuencia mutable ***s***, el iterable ***t***, un posible elemento ***
 
 #### 4.6.4 Lists
 
+(Listas.)
+
 Se puede construir una lista (secuencia mutable) mediante corchetes (con o sin elementos), *list comprehensions*, o mediante el constructor `list([iterable])`.
 
 La lista creada mediante el constructor contendrá referencias a los elementos del iterable. Por ejemplo, si este es en sí una lista, retorna una *shallow copy* de la misma.
 
 Las listas tienen un método adicional:
 
-`list.sort(*, key=None, reverse=False)`
+```python
+list.sort(*, key=None, reverse=False)
+```
 
 Este método ordena la lista in situ (no retorna nada). Por defecto solo compara el valor de los elementos tal cual, a no ser que le indiquemos en el parámetro ***key*** una función que, tomando un argumento, retorne el valor que se usará en la ordenación (solo se evaluará dicha función una vez por cada elemento a ordenar).
 
@@ -183,11 +250,15 @@ Si la función levanta una excepción, la lista puede quedar a medio ordenar.
 
 #### 4.6.5 Tuples
 
+(Tuplas.)
+
 Secuencias inmutables. Se puede crear mediante un par de paréntesis sin contenido (tupla vacía); un elemento seguido de coma (*singleton*), entre paréntesis o no; varios elementos separados por comas, entre paréntesis o no; o mediante el constructor `tuple([iterable])`.
 
 La tupla se creará con referencias a los elementos del iterable.
 
 #### 4.6.6 Ranges
+
+(Rangos.)
 
 Secuencia inmutable de números. Puede contener números negativos. Ocupa poca memoria, ya que no guarda todos los números de la secuencia, sino únicamente sus parámetros (***start***, ***stop*** y ***step***).
 
@@ -217,8 +288,10 @@ Los rangos se pueden comparar, y resultan iguales si generan la misma secuencia 
 
 Secuencia inmutable de caracteres. Se puede construir a través de literales o mediante el constructor `str()`.
 
-`class str(object='')`\
-`class str(object=b'',encoding='utf-8',errors='strict')`
+```python
+class str(object='')
+class str(object=b'',encoding='utf-8',errors='strict')
+```
 
 Si no se le da argumento, construye un *string* vacío. Si le damos un objeto cualquiera como argumento, creará un *string* en base a ese objeto: en primer lugar, será lo que retorne el método `__str__()` del objeto. Si no tiene, se usará `__repr__()`.
 
@@ -232,117 +305,173 @@ Si indicamos ***encoding***, podemos indicar también ***errors***.
 
 Veremos aquí los métodos adicionales de los *strings*. Estos tienen dos técnicas de formateo: el del método `str.format()`, y el basado en `printf()` de *C* (*old-style*). El primero es aconsejable.
 
-`str.capitalize()`
+```python
+str.capitalize()
+```
 
 Retorna una copia del *string*, con el primer carácter en mayúsculas y el resto en minúsculas.
 
-`str.casefold()`
+```python
+str.casefold()
+```
 
 Como `str.lower()`, pero extendido a otras conversiones en algunos caracteres *Unicode*.
 
-`str.center(width [,fillchar])`
+```python
+str.center(width [,fillchar])
+```
 
 Retorna un *string* de longitud ***width*** con el *string* original centrado en él. Se rellena con el carácter ***fillchar*** (por defecto, espacio). Si el *string* original tiene longitud de ***width*** o más caracteres, se retorna una copia del original.
 
-`str.count(sub [,start [,end]])`
+```python
+str.count(sub [,start [,end]])
+```
 
 Retorna el número de veces (no solapadas) que el *substring* ***sub*** aparece en el *string* original. Podemos limitar la búsqueda si especificamos ***start*** y ***end*** (que se interpretan como en un *slice*).
 
-`str.encode(encoding='utf-8', errors='strict')`
+```python
+str.encode(encoding='utf-8', errors='strict')
+```
 
 Retorna la codificación del *string* en un objeto *bytes*. ***encoding*** y ***errors*** tienen el significado habitual.
 
-`str.endswith(suffix [,start [,end]])`
+```python
+str.endswith(suffix [,start [,end]])
+```
 
 Retorna ***True*** si el *string* termina en el *string* ***suffix***, o, en caso de que este argumento sea una tupla de *strings*, si termina en alguno de estos *strings*.
 
 Los argumentos opcionales (interpretados como en un slice) ***start*** y ***end*** sirven para limitar la búsqueda.
 
-`str.expandtabs(tabsize=8)`
+```python
+str.expandtabs(tabsize=8)
+```
 
 Retorna una copia del *string* con los tabuladores sustituidos por espacios. El número de espacios por el que será sustituido cada tabulador vendrá dado por ***tabsize*** y por la columna actual (se expande hasta el siguiente *tab stop*).
 
-`str.find(sub [,start [,end]])`
+```python
+str.find(sub [,start [,end]])
+```
 
 Retorna el índice más bajo donde el *substring* ***sub*** se encuentra dentro del *string* actual, el cual se puede opcionalmente acotar al *slice* ***[start:end]***. Si no se encuentra, retorna -1. Si solo queremos saber si el *substring* aparece, sin importarnos la posición, es mejor usar el operador `in`.
 
-`str.format(*args,**kwargs)`
+```python
+str.format(*args,**kwargs)
+```
 
 Formatea un *string*, dando valor a los campos delimitados por llaves ***{}***. Se verá en detalle en el apartado de especificación de formato.
 
-`str.format_map(mapping)`
+```python
+str.format_map(mapping)
+```
 
 Similar a utilizar `str.format(**mapping)`.
 
-`str.index(sub [,start [,end]])`
+```python
+str.index(sub [,start [,end]])
+```
 
 Como `str.find()`, pero si no lo encuentra, levanta ***ValueError***.
 
-`str.isalnum()`
+```python
+str.isalnum()
+```
 
 Retorna ***True*** si todos los caracteres del *string* son alfanuméricos, y el *string* no está vacío. ***False*** en caso contrario.
 
-`str.isalpha()`
+```python
+str.isalpha()
+```
 
 Retorna ***True*** si todos los caracteres del *string* son alfabéticos, y el *string* no está vacío. ***False*** en caso contrario. Estos caracteres son los que están definidos como *Letter* en la tabla *Unicode*.
 
-`str.isascii()`
+```python
+str.isascii()
+```
 
 Retorna ***True*** si todos los caracteres del *string* son *ASCII*, o el *string* está vacío. ***False*** en caso contrario. Los caracteres *ASCII* son los *codepoints* ***U+0000*** a ***U+007F***.
 
-`str.isdecimal()`
+```python
+str.isdecimal()
+```
 
 Retorna ***True*** si todos los caracteres del *string* son números (***0*** a ***9***), y el *string* no está vacío. ***False*** en caso contrario.
 
-`str.isdigit()`
+```python
+str.isdigit()
+```
 
 Como `str.isdecimal()`, pero extensivo a otros caracteres *Unicode*.
 
-`str.isidentifier()`
+```python
+str.isidentifier()
+```
 
 Retorna ***True*** si el *string* forma un nombre válido de identificador. Si no, ***False***.
 
-`str.islower()`
+```python
+str.islower()
+```
 
 Retorna ***True*** si todos los caracteres del *string* que tienen una versión minúscula son efectivamente minúsculas, y el *string* contiene por lo menos un carácter con versión minúscula. Si no, ***False***.
 
-`str.isnumeric()`
+```python
+str.isnumeric()
+```
 
 Como `str.isdecimal()`, pero extensivo a otros caracteres *Unicode*.
 
-`str.isprintable()`
+```python
+str.isprintable()
+```
 
 Retorna ***True*** si todos los caracteres del *string* son imprimibles, o el *string* está vacío. ***False*** en caso contrario. Los caracteres no imprimibles son aquellos que hay que indicar *escaped*.
 
-`str.isspace()`
+```python
+str.isspace()
+```
 
 Retorna ***True*** si todos los caracteres del *string* son los distintos tipos de espacio en blanco, y el *string* no está vacío. Si no, ***False***.
 
-`str.istitle()`
+```python
+str.istitle()
+```
 
 Retorna ***True*** si el *string* está *title-cased* (todas las palabras empiezan en mayúscula y el resto es minúscula), y el *string* no está vacío. Si no, ***False***.
 
-`str.isupper()`
+```python
+str.isupper()
+```
 
 Retorna ***True*** si todos los caracteres del *string* que tienen una versión mayúscula son efectivamente mayúsculas, y el *string* contiene por lo menos un carácter con versión mayúscula. Si no, ***False***.
 
-`str.join(iterable)`
+```python
+str.join(iterable)
+```
 
 Retorna un *string* que es la concatenación de todos los *strings* del iterable, y como separador, el contenido del *string* llamante. El iterable solo puede contener *strings*.
 
-`str.ljust(width [,fillchar])`
+```python
+str.ljust(width [,fillchar])
+```
 
 Como `str.center()` pero a la izquierda.
 
-`str.lower()`
+```python
+str.lower()
+```
 
 Retorna una copia del *string* con todos los caracteres que tienen versión minúscula convertidos en minúscula.
 
-`str.lstrip([chars])`
+```python
+str.lstrip([chars])
+```
 
 Como `str.strip()` pero solo en el principio del *string*.
 
-`static str.maketrans(x [,y [,z]])`
+```python
+static str.maketrans(x [,y [,z]])
+```
 
 Retorna una tabla (diccionario) que se podrá utilizar en `str.translate()`.
 
@@ -352,47 +481,69 @@ Si hay dos argumentos, deben ser dos *strings* de la misma longitud, y en la tab
 
 En todos los casos, en el diccionario resultante todas las claves serán ordinales *Unicode*.
 
-`str.partition(sep)`
+```python
+str.partition(sep)
+```
 
 Busca la primera ocurrencia del *substring* indicado en ***sep*** dentro del *string* y retorna una tupla con 3 *strings*: el fragmento anterior a ***sep***, ***sep*** en sí y el fragmento posterior. Si no encuentra ***sep***, el primer *string* de la tupla será una copia del original, y los otros dos serán *strings* vacíos.
 
-`str.removeprefix(prefix, /)`
+```python
+str.removeprefix(prefix, /)
+```
 
 Si el *string* empieza por ***prefix***, retorna un *string* sin este prefijo. De lo contrario, retorna el *string* original.
 
-`str.removesuffix(suffix, /)`
+```python
+str.removesuffix(suffix, /)
+```
 
 Si el *string* acaba con ***suffix***, retorna un *string* sin este sufijo. De lo contrario, retorna el *string* original.
 
-`str.replace(old, new [,count])`
+```python
+str.replace(old, new [,count])
+```
 
 Retorna una copia del *string*, en la que cada ocurrencia del *substring* ***old*** es remplazada por ***new***. Si se especifica ***count***, será el número máximo de remplazos (en orden de lectura).
 
-`str.rfind(sub [,start [,end]])`
+```python
+str.rfind(sub [,start [,end]])
+```
 
 Como `str.find()` pero empezando a buscar por la derecha (índice más alto).
 
-`str.rindex(sub [,start [,end]])`
+```python
+str.rindex(sub [,start [,end]])
+```
 
 Como `str.rfind()` pero levanta ***ValueError*** si no encuentra el ***sub***.
 
-`str.rjust(width [,fillchar])`
+```python
+str.rjust(width [,fillchar])
+```
 
 Como `str.ljust()` pero justificando a la derecha.
 
-`str.rpartition(sep)`
+```python
+str.rpartition(sep)
+```
 
 Como `str.partition()`, pero empezando a buscar por la derecha.
 
-`str.rsplit(sep=None,maxsplit=-1)`
+```python
+str.rsplit(sep=None,maxsplit=-1)
+```
 
 Como `str.split()`, pero empezando los *splits* por la derecha (si no se especifica ***maxsplit*** no hay diferencia).
 
-`str.rstrip([chars])`
+```python
+str.rstrip([chars])
+```
 
 Como `str.strip()` pero solo en el final del *string*.
 
-`str.split(sep=None, maxsplit=-1)`
+```python
+str.split(sep=None, maxsplit=-1)
+```
 
 Retorna una lista con fragmentos del *string* original. Los fragmentos se hacen en base al *substring* separador ***sep***, que puede tener cualquier longitud, y no aparece en la lista retornada. Si se indica ***maxsplit***, ese será el número máximo de fragmentaciones, es decir, se retornará un máximo de ***maxsplit + 1*** *strings*.
 
@@ -402,37 +553,53 @@ Si no se especifica el separador, cualquier sucesión de espacio blanco es consi
 
 Si el *string* original está vacío y especificamos separador, el resultado será una lista con un *string* vacío. En cambio, si no especificamos separador, será una lista vacía. Si el *string* solo contiene espacios y no indicamos separador, también obtendremos una lista vacía.
 
-`str.splitlines([keepends])`
+```python
+str.splitlines([keepends])
+```
 
 Retorna una lista con las líneas del *string*. Los caracteres ***newline*** no se incluyen, a no ser que ***keepends*** sea ***True***.
 
-`str.startswith(prefix [,start [,end]])`
+```python
+str.startswith(prefix [,start [,end]])
+```
 
 Igual que `str.endswith()` pero en el principio del *string*.
 
-`str.strip([chars])`
+```python
+str.strip([chars])
+```
 
 Retorna un *string* que elimina del principio y final del *string* original todos los caracteres incluidos en el *string* ***chars***, que por defecto son los caracteres *whitespace*.
 
-`str.swapcase()`
+```python
+str.swapcase()
+```
 
 Retorna un *string* en el que las minúsculas pasan a ser mayúsculas y viceversa.
 
-`str.title()`
+```python
+str.title()
+```
 
 Retorna una versión *title cased* del *string* (cada palabra empieza en mayúscula y el resto son minúsculas).
 
-`str.translate(table)`
+```python
+str.translate(table)
+```
 
 Retorna un *string* con sus caracteres mapeados según la tabla ***table*** (se puede utilizar `str.maketrans()` para construirla).
 
 El objeto tabla mapeará según se ha explicado en `str.maketrans()`. El método `__getitem__()` de la tabla levantará ***LookupError*** para que un carácter sea mapeado a sí mismo.
 
-`str.upper()`
+```python
+str.upper()
+```
 
 Como `str.lower()` pero para mayúsculas.
 
-`str.zfill(width)`
+```python
+str.zfill(width)
+```
 
 Retorna un *string* relleno de ceros por la izquierda hasta completar la anchura ***width***. Si el *string* original representa un número válido y tiene signo al principio, el signo se mantendrá también al principio. Si ***width*** es igual o inferior al tamaño del *string* original, se devuelve una copia de este.
 
@@ -442,7 +609,9 @@ Aunque esta modalidad es considerada *old style* y se prefiere usar `str.format(
 
 Este tipo de formato se realiza mediante el operador módulo:
 
-`formato % valores`
+```python
+formato % valores
+```
 
 donde ***formato*** es el *string* a rellenar y ***valores*** es una tupla con todos los valores necesarios para rellenarlo.  Si solo es necesario un valor puede no ser una tupla (bastará un simple valor).
 
@@ -514,11 +683,15 @@ Si le pasamos un *string*, es obligatorio indicar ***encoding*** para que codifi
 
 ¿Qué es el *buffer protocol*? Es un modo de acceder rápidamente y sin *overhead* a los datos binarios, directamente en memoria. Este acceso se realiza a bajo nivel (a nivel de *C*). Es el protocolo utilizado por los objetos *memoryview*: acceden a estas direcciones de memoria sin hacer copias ni crear y devolver objetos que contengan esos datos.
 
-`classmethod bytes.fromhex(string)`
+```python
+classmethod bytes.fromhex(string)
+```
 
 Este método retorna un *bytes* a partir de un *string* que contiene una ristra de valores hexadecimales. Los espacios son ignorados. Debe contener un número par de dígitos, ya que cada dos dígitos hexadecimales generará un *byte*.
 
-`bytes.hex([sep [,bytes_per_sep]])`
+```python
+bytes.hex([sep [,bytes_per_sep]])
+```
 
 Retorna un *string* con los *bytes* del objeto original codificados en pares de caracteres hexadecimales. Opcionalmente, podemos indicar un carácter separador ***sep*** para hacerlo más legible. En ese caso podemos agrupar varios bytes entre cada separador con el número ***bytes_per_sep***, de tal modo que un número positivo empieza a agrupar por la derecha, y negativo por la izquierda.
 
@@ -528,15 +701,21 @@ Al contrario de lo que ocurría con los *strings*, si ***b*** es un objeto *byte
 
 Contraparte mutable de *bytes*. Usa los mismos literales que *bytes*, pero soporta los métodos para secuencias mutables. Por lo demás, funciona del mismo modo que *bytes*.
 
-`class bytearray([source [,encoding [,errors]]])`
+```python
+class bytearray([source [,encoding [,errors]]])
+```
 
 Igual que *bytes*, solo que retorna un *bytearray*.
 
-`classmethod bytearray.fromhex(string)`
+```python
+classmethod bytearray.fromhex(string)
+```
 
 Igual que *bytes*, solo que retorna un *bytearray*.
 
-`bytearray.hex([sep [,bytes_per_sep]])`
+```python
+bytearray.hex([sep [,bytes_per_sep]])
+```
 
 Igual que *bytes*.
 
@@ -548,91 +727,123 @@ Los métodos de ambos tipos aceptan argumentos del otro tipo, es decir, se puede
 
 Los siguientes métodos están disponibles tanto para *bytes* como para *bytearray*. Cuando se dice que retornan *BLOs* o toman *BLOs* como argumento, se entiende que estamos hablando del tipo del objeto o clase llamante.
 
-`bytes.count(sub [,start [,end]])`\
-`bytearray.count(sub [,start [,end]])`
+```python
+bytes.count(sub [,start [,end]])
+bytearray.count(sub [,start [,end]])
+```
 
 Retorna el número de veces (no solapadas) que la *subsecuencia* ***sub*** aparece en la secuencia original. Podemos limitar la búsqueda si especificamos ***start*** y ***end*** (que se interpretan como en un *slice*).
 
 ***sub*** puede ser un *BLO* o un entero (entre 0 y 255).
 
-`bytes.decode(encoding='utf-8', errors='strict')`\
-`bytearray.decode(encoding='utf-8', errors='strict')`
+```python
+bytes.decode(encoding='utf-8', errors='strict')
+bytearray.decode(encoding='utf-8', errors='strict')
+```
 
 Retorna un *string* con la descodificación del *BLO* actual. ***encoding*** y ***errors*** tienen el significado habitual.
 
-`bytes.endswith(suffix [,start [,end]])`\
-`bytearray.endswith(suffix [,start [,end]])`
+```python
+bytes.endswith(suffix [,start [,end]])
+bytearray.endswith(suffix [,start [,end]])
+```
 
 Retorna ***True*** si el *BLO* termina en ***suffix***, o, en caso de que este argumento sea una tupla de *BLOs*, si termina en alguno de estos *BLOs*.
 
 Los argumentos opcionales (interpretados como en un slice) ***start*** y ***end*** sirven para limitar la búsqueda.
 
-`bytes.find(sub [,start [,end]])`\
-`bytearray.find(sub [,start [,end]])`
+```python
+bytes.find(sub [,start [,end]])
+bytearray.find(sub [,start [,end]])
+```
 
 Retorna el índice más bajo donde la subsecuencia ***sub*** se encuentra dentro del *BLO* actual, el cual se puede opcionalmente acotar al *slice* ***[start:end]***. Si no se encuentra, retorna -1. Si solo queremos saber si la subsecuencia aparece, sin importarnos la posición, es mejor usar el operador `in`.
 
 La subsecuencia puede ser también un entero (entre 0 y 255).
 
-`bytes.index(sub [,start [,end]])`\
-`bytearray.index(sub [,start [,end]])`
+```python
+bytes.index(sub [,start [,end]])
+bytearray.index(sub [,start [,end]])
+```
 
 Como `bytes.find()` (o `bytearray.find()`), pero si no lo encuentra, levanta ***ValueError***.
 
-`bytes.join(iterable)`\
-`bytearray.join(iterable)`
+```python
+bytes.join(iterable)
+bytearray.join(iterable)
+```
 
 Retorna un *bytes* o *bytearray* (dependiendo del tipo del objeto llamante) que es la concatenación de todos los *BLOs* del iterable, y como separador, el contenido del *BLO* llamante. El iterable solo puede contener *BLOs*.
 
-`static bytes.maketrans(from, to)`\
-`static bytearray.maketrans(from, to)`
+```python
+static bytes.maketrans(from, to)
+static bytearray.maketrans(from, to)
+```
 
 Retorna una tabla (diccionario) que se podrá utilizar en `bytes.translate()` (o `bytearray.translate()`).
 
 Los argumentos son dos *BLO* de la misma longitud, y la tabla se generará de tal modo que cada *byte* de ***from*** se mapeará al correspondiente *byte* en ***to***.
 
-`bytes.partition(sep)`\
-`bytearray.partition(sep)`
+```python
+bytes.partition(sep)
+bytearray.partition(sep)
+```
 
 Busca la primera ocurrencia del *BLO* indicado en ***sep*** dentro del *BLO* actual y retorna una tupla con 3 *BLOs*: el fragmento anterior a ***sep***, ***sep*** en sí y el fragmento posterior. Si no encuentra ***sep***, el primer *BLO* de la tupla será una copia del original, y los otros dos serán *BLOs* vacíos.
 
-`bytes.removeprefix(prefix, /)`\
-`bytearray.removeprefix(prefix, /)`
+```python
+bytes.removeprefix(prefix, /)
+bytearray.removeprefix(prefix, /)
+```
 
 Si el *BLO* empieza por ***prefix***, retorna un *BLO* sin este prefijo. De lo contrario, retorna el *BLO* original.
 
-`bytes.removesuffix(suffix, /)`\
-`bytearray.removesuffix(suffix, /)`
+```python
+bytes.removesuffix(suffix, /)
+bytearray.removesuffix(suffix, /)
+```
 
 Si el *BLO* acaba con ***suffix***, retorna un *BLO* sin este sufijo. De lo contrario, retorna el *BLO* original.
 
-`bytes.replace(old, new [,count])`\
-`bytearray.replace(old, new [,count])`
+```python
+bytes.replace(old, new [,count])
+bytearray.replace(old, new [,count])
+```
 
 Retorna una copia del *BLO*, en la que cada ocurrencia de la subsecuencia ***old*** es remplazada por ***new***. Si se especifica ***count***, será el número máximo de remplazos (en orden de lectura).
 
-`bytes.rfind(sub [,start [,end]])`\
-`bytearray.rfind(sub [,start [,end]])`
+```python
+bytes.rfind(sub [,start [,end]])
+bytearray.rfind(sub [,start [,end]])
+```
 
 Como `bytes.find()` o `bytearray.find()` pero empezando a buscar por la derecha (índice más alto).
 
-`bytes.rindex(sub [,start [,end]])`\
-`bytearray.rindex(sub [,start [,end]])`
+```python
+bytes.rindex(sub [,start [,end]])
+bytearray.rindex(sub [,start [,end]])
+```
 
 Como `bytes.index()` o `bytearray.index()` pero empezando a buscar por la derecha (índice más alto).
 
-`bytes.rpartition(sep)`\
-`bytearray.rpartition(sep)`
+```python
+bytes.rpartition(sep)
+bytearray.rpartition(sep)
+```
 
 Como `bytes.partition()` o `bytearray.partition()`, pero empezando a buscar por la derecha.
 
-`bytes.startswith(prefix [,start [,end]])`\
-`bytearray.startswith(prefix [,start [,end]])`
+```python
+bytes.startswith(prefix [,start [,end]])
+bytearray.startswith(prefix [,start [,end]])
+```
 
 Igual que `bytes.endswith()` o `bytearray.endswith()` pero en el principio del *BLO*.
 
-`bytes.translate(table,/,delete=b'')`\
-`bytearray.translate(table,/,delete=b'')`
+```python
+bytes.translate(table,/,delete=b'')
+bytearray.translate(table,/,delete=b'')
+```
 
 Retorna un *BLO* con sus caracteres mapeados según la tabla ***table*** (se puede utilizar `bytes.maketrans()` o `bytearray.maketrans()` para construirla).
 
@@ -642,38 +853,52 @@ La secuencia ***delete*** nos indica qué bytes serán eliminados en la secuenci
 
 Los métodos que veremos a continuación están pensados para *BLOs* que contengan caracteres *ASCII*, aunque se pueden utilizar para cualquier contenido:
 
-`bytes.center(width [,fillbyte])`\
-`bytearray.center(width [,fillbyte])`
+```python
+bytes.center(width [,fillbyte])
+bytearray.center(width [,fillbyte])
+```
 
 Retorna un *BLO* de longitud ***width*** con el *BLO* original centrado en él. Se rellena con el *byte* ***fillbyte*** (por defecto, espacio *ASCII*). Si el *BLO* original tiene longitud de ***width*** o más *bytes*, se retorna una copia del original.
 
-`bytes.ljust(width [,fillbyte])`\
-`bytearray.ljust(width [,fillbyte])`
+```python
+bytes.ljust(width [,fillbyte])
+bytearray.ljust(width [,fillbyte])
+```
 
 Como `bytes.center()` o `bytearray.center()` pero a la izquierda.
 
-`bytes.lstrip([chars])`\
-`bytearray.lstrip([chars])`
+```python
+bytes.lstrip([chars])
+bytearray.lstrip([chars])
+```
 
 Como `bytes.strip()` o `bytearray.strip()` pero solo en el principio del *BLO*.
 
-`bytes.rjust(width [,fillbyte])`\
-`bytearray.rjust(width [,fillbyte])`
+```python
+bytes.rjust(width [,fillbyte])
+bytearray.rjust(width [,fillbyte])
+```
 
 Como `bytes.center()` o `bytearray.center()` pero a la derecha.
 
-`bytes.rsplit(sep=None,maxsplit=-1)`\
-`bytearray.rsplit(sep=None,maxsplit=-1)`
+```python
+bytes.rsplit(sep=None,maxsplit=-1)
+bytearray.rsplit(sep=None,maxsplit=-1)
+```
 
 Como `bytes.split()` o `bytearray.split()`, pero empezando los *splits* por la derecha (si no se especifica ***maxsplit*** no hay diferencia).
 
-`bytes.rstrip([chars])`\
-`bytearray.rstrip([chars])`
+```python
+bytes.rstrip([chars])
+bytearray.rstrip([chars])
+```
 
 Como `bytes.strip()` o `bytearray.strip()`, pero solo en el final del *string*.
 
-`bytes.split(sep=None,maxsplit=-1)`\
-`bytearray.split(sep=None,maxsplit=-1)`
+```python
+bytes.split(sep=None,maxsplit=-1)
+bytearray.split(sep=None,maxsplit=-1)
+```
 
 Retorna una lista con fragmentos del *BLO* original. Los fragmentos se hacen en base a la subsecuencia separador ***sep***, que puede tener cualquier longitud, y no aparece en la lista retornada. Si se indica ***maxsplit***, ese será el número máximo de fragmentaciones, es decir, se retornará un máximo de ***maxsplit + 1*** *BLOs*.
 
@@ -683,8 +908,10 @@ Si no se especifica el separador, cualquier sucesión de espacio blanco es consi
 
 Si el *BLO* original está vacío y especificamos separador, el resultado será una lista con un *BLO* vacío. En cambio, si no especificamos separador, será una lista vacía. Si el *BLO* solo contiene espacios y no indicamos separador, también obtendremos una lista vacía.
 
-`bytes.strip([chars])`\
-`bytearray.strip([chars])`
+```python
+bytes.strip([chars])
+bytearray.strip([chars])
+```
 
 Retorna un *BLO* que elimina del principio y final del *BLO* original todos los caracteres incluidos en el *BLO* ***chars***, que por defecto son los caracteres *whitespace*.
 
@@ -692,83 +919,115 @@ Retorna un *BLO* que elimina del principio y final del *BLO* original todos los 
 
 Los siguientes métodos no deberían ser usados en *BLOs* con bytes con valor superior a 127.
 
-`bytes.capitalize()`\
-`bytearray.capitalize()`
+```python
+bytes.capitalize()
+bytearray.capitalize()
+```
 
 Retorna una copia del *BLO*, con el primer carácter en mayúsculas, y el resto en minúsculas.
 
-`bytes.expandtabs(tabsize=8)`\
-`bytearray.expandtabs(tabsize=8)`
+```python
+bytes.expandtabs(tabsize=8)
+bytearray.expandtabs(tabsize=8)
+```
 
 Retorna una copia del *BLO* con los tabuladores sustituidos por espacios. El número de espacios por el que será sustituido cada tabulador vendrá dado por ***tabsize*** y por la columna actual (se expande hasta el siguiente *tab stop*).
 
-`bytes.isalnum()`\
-`bytearray.isalnum()`
+```python
+bytes.isalnum()
+bytearray.isalnum()
+```
 
 Retorna ***True*** si todos los caracteres del *BLO* son alfanuméricos, y el *BLO* no está vacío. ***False*** en caso contrario.
 
-`bytes.isalpha()`\
-`bytearray.isalpha()`
+```python
+bytes.isalpha()
+bytearray.isalpha()
+```
 
 Retorna ***True*** si todos los caracteres del *BLO* son alfabéticos, y el *BLO* no está vacío. ***False*** en caso contrario.
 
-`bytes.isascii()`\
-`bytearray.isascii()`
+```python
+bytes.isascii()
+bytearray.isascii()
+```
 
 Retorna ***True*** si todos los caracteres del *BLO* son *ASCII* (0 a 127), o el *BLO* está vacío. ***False*** en caso contrario.
 
-`bytes.isdigit()`\
-`bytearray.isdigit()`
+```python
+bytes.isdigit()
+bytearray.isdigit()
+```
 
 Retorna ***True*** si todos los caracteres del *BLO* son números (***0*** a ***9***), y el *BLO* no está vacío. ***False*** en caso contrario.
 
-`bytes.islower()`\
-`bytearray.islower()`
+```python
+bytes.islower()
+bytearray.islower()
+```
 
 Retorna ***True*** si algún carácter en la secuencia está en minúscula, y no existe ningún carácter en mayúscula. Si no, ***False***.
 
-`bytes.isspace()`\
-`bytearray.isspace()`
+```python
+bytes.isspace()
+bytearray.isspace()
+```
 
 Retorna ***True*** si todos los caracteres del *BLO* son los distintos tipos de espacio en blanco, y el *BLO* no está vacío. Si no, ***False***.
 
-`bytes.istitle()`\
-`bytearray.istitle()`
+```python
+bytes.istitle()
+bytearray.istitle()
+```
 
 Retorna ***True*** si el *BLO* está *title-cased* (todas las palabras empiezan en mayúscula y el resto es minúscula), y el *BLO* no está vacío. Si no, ***False***.
 
-`bytes.isupper()`\
-`bytearray.isupper()`
+```python
+bytes.isupper()
+bytearray.isupper()
+```
 
 Retorna ***True*** si algún carácter en la secuencia está en mayúscula, y no existe ningún carácter en minúscula. Si no, ***False***.
 
-`bytes.lower()`\
-`bytearray.lower()`
+```python
+bytes.lower()
+bytearray.lower()
+```
 
 Retorna una copia del *BLO* con todos los caracteres convertidos a minúscula.
 
-`bytes.splitlines(keepends=False)`\
-`bytearray.splitlines(keepends=False)`
+```python
+bytes.splitlines(keepends=False)
+bytearray.splitlines(keepends=False)
+```
 
 Retorna una lista con las líneas del *string*. Los caracteres ***newline*** no se incluyen, a no ser que ***keepends*** sea ***True***.
 
-`bytes.swapcase()`\
-`bytearray.swapcase()`
+```python
+bytes.swapcase()
+bytearray.swapcase()
+```
 
 Retorna un *BLO* en el que las minúsculas pasan a ser mayúsculas y viceversa. Si ***b*** es un objeto *bytes*, `b.swapcase().swapcase()` es siempre igual al objeto original (no sucede así con los *strings* y sus complicados *casings Unicode*).
 
-`bytes.title()`\
-`bytearray.title()`
+```python
+bytes.title()
+bytearray.title()
+```
 
 Retorna una versión *title cased* del *BLO* (cada palabra empieza en mayúscula y el resto son minúsculas).
 
-`bytes.upper()`\
-`bytearray.upper()`
+```python
+bytes.upper()
+bytearray.upper()
+```
 
 Como `bytes.lower()` o `bytearray.lower()` pero para mayúsculas.
 
-`bytes.zfill(width)`\
-`bytearray.zfill(width)`
+```python
+bytes.zfill(width)
+bytearray.zfill(width)
+```
 
 Retorna un *BLO* relleno de ceros (***b'0'***) por la izquierda hasta completar la anchura ***width***. Si el *BLO* original representa un número válido y tiene signo al principio, el signo se mantendrá también al principio. Si ***width*** es igual o inferior al tamaño del *BLO* original, se devuelve una copia de este.
 
@@ -780,7 +1039,9 @@ Existe el tipo de conversión ***%b***, para objetos de tipo *bytes*.
 
 El tipo de conversión ***%a*** realiza la conversión mediante:
 
-`repr(obj).encode('ascii', 'backslashreplace')`
+```python
+repr(obj).encode('ascii', 'backslashreplace')
+```
 
 Los tipos de conversión ***%r*** y ***%s*** no existen.
 
@@ -790,7 +1051,9 @@ Si se define precisión, la salida de ***%b*** y ***%a*** se trunca a los caract
 
 Estos objetos permiten acceder a los datos de objetos que admitan el *buffer protocol* (acceso directo a su contenido sin crear copias intermedias de los mismos). Los objetos *bytes* y *bytearray* aceptan ese protocolo.
 
-`class memoryview(obj)`
+```python
+class memoryview(obj)
+```
 
 Crea el objeto *memoryview* a partir del argumento. Resulta útil para acceder a estructuras de otros módulos, como ***array*** o ***struct***. No entramos en más detalle de momento.
 
@@ -800,52 +1063,74 @@ Colecciones sin orden de objetos *hashables* (inmutables). No admiten indexació
 
 Se pueden construir mediante una lista de elementos entre llaves, o usando el constructor:
 
-`class set([iterable])`\
-`class frozenset([iterable])`
+```python
+class set([iterable])
+class frozenset([iterable])
+```
 
 Construye el nuevo *set* o *frozenset* con los elementos del iterable. Si no se especifica este, construye un conjunto vacío.
 
 Si ***x*** es un objeto inmutable, ***s*** y ***t*** son *sets* y/o *frozensets*, y ***it*** es un iterable que contiene solamente elementos *hasables* (***\*it*** es una serie de iterables ***it1***, ***it2***,… con esas características), las siguientes operaciones, a parte de `x in s`, `x not in s` y `len(s)`, están contempladas:
 
-`s.isdisjoint(it)`
+```python
+s.isdisjoint(it)
+```
 
 Retorna ***True*** si ***s*** y ***it*** son disjuntos, y ***False*** en caso contrario.
 
-`s.issubset(it)`
+```python
+s.issubset(it)
+```
 
 Retorna ***True*** si todos los elementos de ***s*** están también en ***it*** (***s*** es subconjunto de ***it***). Si no, ***False***. Equivale a `s <= it`, pero en este caso ***it*** debe ser un *set* o *frozenset*.
 
-`s < t`
+```python
+s < t
+```
 
 Retorna ***True*** si ***s*** es subconjunto de ***t*** y además ***s*** es distinto de ***t***. En caso contrario, retorna ***False***.
 
-`s.issuperset(it)`
+```python
+s.issuperset(it)
+```
 
 Retorna ***True*** si todos los elementos de ***it*** están también en ***s*** (***s*** es superconjunto de ***it***). Si no, ***False***. Equivale a `s >= it`, pero en este caso ***it*** debe ser un *set* o *frozenset*.
 
-`s > t`
+```python
+s > t
+```
 
 Retorna ***True*** si ***s*** es superconjunto de ***t*** y además ***s*** es distinto de ***t***. En caso contrario, retorna ***False***.
 
-`s.union(*it)`
+```python
+s.union(*it)
+```
 
 Retorna un *set* o *frozenset* (dependiendo del tipo de ***s***) con la unión de ***s*** y todos los iterables de los argumentos. Equivale a `s | it1 | it2 | ...`, pero en este caso los iterables deben ser un *set* o *frozenset*.
 
-`s.intersection(*it)`
+```python
+s.intersection(*it)
+```
 
 Retorna un *set* o *frozenset* (dependiendo del tipo de ***s***) con la intersección entre ***s*** y todos los iterables de los argumentos. Equivale a `s & it1 & it2 & ...`, pero en este caso los iterables deben ser un *set* o *frozenset*.
 
-`s.difference(*it)`
+```python
+s.difference(*it)
+```
 
 Retorna un *set* o *frozenset* (dependiendo del tipo de ***s***) con la diferencia entre ***s*** y todos los iterables de los argumentos, es decir, con los elementos de ***s*** que no pertenezcan a ninguno de dichos iterables. Equivale a `s - it1 - it2 - ...`, pero en este caso los iterables deben ser un *set* o *frozenset*.
 
-`s.symmetric_difference(it)`
+```python
+s.symmetric_difference(it)
+```
 
 Retorna un *set* o *frozenset* (dependiendo del tipo de ***s***) con los elementos que estén en ***s*** o en ***it***, pero no en ambos a la vez. Equivale a `s ^ it`, pero en este caso ***it*** debe ser un *set* o *frozenset*.
 
 Observemos que los métodos suelen aceptar iterables de elementos *hashables*, pero los operadores binarios solo aceptan *sets* o *frozensets*.
 
-`s.copy()`
+```python
+s.copy()
+```
 
 Retorna una *shallow copy* del *set* o *frozenset*.
 
@@ -857,41 +1142,59 @@ Un operador binario que realice una operación con un *set* y un *frozenset* dev
 
 Los siguientes métodos solo son aceptados por *set* (no *frozenset*). En este caso, ***s*** es un *set*:
 
-`s.update(*it)`
+```python
+s.update(*it)
+```
 
 Actualiza el contenido del *set*, añadiendo los elementos de los iterables pasados como argumento. Equivale a `s |= it1 | it2 | ...`
 
-`s.intersection_update(*it)`
+```python
+s.intersection_update(*it)
+```
 
 Actualiza el *set* eliminando de él los elementos que no pertenezcan a todos los iterables. Equivale a `s &= it1 & it2 & ...`
 
-`s.difference_update(*it)`
+```python
+s.difference_update(*it)
+```
 
 Actualiza el *set* eliminando de él los elementos que pertenezcan a alguno de los iterables. Equivale a `s -= it1 - it2 - ...`
 
-`s.symmetric_difference_update(it)`
+```python
+s.symmetric_difference_update(it)
+```
 
 Actualiza el *set* de tal modo que el nuevo contenido serán los elementos que pertenezcan a ***s*** o al iterable, pero no a los dos. Equivale a `s ^= it`.
 
 Sea ahora ***x*** un objeto *hashable*:
 
-`s.add(x)`
+```python
+s.add(x)
+```
 
 Añade el elemento ***x*** al *set*.
 
-`s.remove(x)`
+```python
+s.remove(x)
+```
 
 Elimina ***x*** del *set*. Levanta ***KeyError*** si no lo encuentra.
 
-`s.discard(x)`
+```python
+s.discard(x)
+```
 
 Como `remove()`, pero si no encuentra ***x***, simplemente no hace nada.
 
-`s.pop()`
+```python
+s.pop()
+```
 
 Elimina y retorna un elemento arbitrario del *set*. Si este está vacío, levanta ***KeyError***.
 
-`s.clear()`
+```python
+s.clear()
+```
 
 Elimina todos lo elementos del *set*.
 
@@ -905,9 +1208,11 @@ Un diccionario se puede construir mediante pares ***clave:valor*** separados por
 
 A parte, se puede usar el constructor:
 
-`class dict(**kwargs)`\
-`class dict(map [,**kwargs])`\
-`class dict(it [,**kwargs])`
+```python
+class dict(**kwargs)
+class dict(map [,**kwargs])
+class dict(it [,**kwargs])
+```
 
 Sin argumentos, crea un diccionario vacío. Puede tener un argumento posicional al principio de todo. El resto serán *keyword arguments*.
 
@@ -919,11 +1224,15 @@ Si una clave se da más de una vez, la última tiene preferencia.
 
 Si ***d*** es un diccionario, estas son operaciones válidas:
 
-`list(d)`
+```python
+list(d)
+```
 
 Retorna una lista con las claves del diccionario.
 
-`len(d)`
+```python
+len(d)
+```
 
 Retorna el número de elementos del diccionario.
 
@@ -931,75 +1240,109 @@ Los elementos del diccionario son accesibles a través de los valores de la clav
 
 Si hacemos este acceso a través de una subclase de diccionario que implemente `__missing__()`, este será llamado con ***key*** como argumento, y será este método el que decidirá qué hacer con esa solicitud: puede retornar un valor o levantar una excepción. Logicamente, habrá que definir este método con dos argumentos (***self*** y ***key***).
 
-`d[key] = value`
+```python
+d[key] = value
+```
 
 Asigna el valor ***value*** a la clave ***key***. Si no existe tal clave, crea el elemento.
 
-`del d[key]`
+```python
+del d[key]
+```
 
 Elimina el elemento con clave ***key*** del diccionario. Si no existe levanta ***KeyError***.
 
 Haciendo `key in d` o `key not in d` se comprueba la existencia o no existencia de la clave indicada.
 
-`iter(d)`
+```python
+iter(d)
+```
 
 Crea y retorna un iterador sobre las claves del diccionario (en el orden de inserción). Equivale a `iter(d.keys())`.
 
-`reversed(d)`
+```python
+reversed(d)
+```
 
 Crea y retorna un iterador sobre las claves del diccionario en el orden inverso de inserción. Equivale a `reversed(d.keys())`.
 
 A continuación, métodos de diccionario:
 
-`dict.clear()`
+```python
+dict.clear()
+```
 
 Elimina todos los elementos del diccionario.
 
-`dict.copy()`
+```python
+dict.copy()
+```
 
 Retorna una *shallow copy* del diccionario.
 
-`classmethod dict.fromkeys(iterable [,value])`
+```python
+classmethod dict.fromkeys(iterable [,value])
+```
 
 Crea y retorna un diccionario cuyas claves son las del iterable, y los valores son un valor concreto ***value***, que si no se indica es ***None***.
 
-`dict.get(key [,default])`
+```python
+dict.get(key [,default])
+```
 
 Retorna el valor asociado a la clave ***key***. Si no existe tal clave, retorna el valor ***default***, que si no se especifica es ***None***. No levanta excepción.
 
-`dict.items()`
+```python
+dict.items()
+```
 
 Retorna una nueva vista del diccionario, compuesta por elementos (clave, valor).
 
-`dict.keys()`
+```python
+dict.keys()
+```
 
 Retorna una nueva vista del diccionario, compuesta por las claves del mismo.
 
-`dict.pop(key [,default])`
+```python
+dict.pop(key [,default])
+```
 
 Retorna el valor asociado a la clave ***key*** y elimina el elemento del diccionario. Si la clave no existe, simplemente retorna ***default***. Si no especificamos ***default*** y además no existe la clave, se levanta ***KeyError***.
 
-`dict.popitem()`
+```python
+dict.popitem()
+```
 
 Retorna el último elemento añadido al diccionario como una tupla (clave, valor), y elimina el elemento del diccionario. Si el diccionario está vacío, se levanta ***KeyError***.
 
-`dict.setdefault(key [,default])`
+```python
+dict.setdefault(key [,default])
+```
 
 Devuelve el valor asociado a la clave ***key***. Si no existe, crea un nuevo elemento con esa clave y el valor definido en ***default***, y devuelve ***default***.
 
-`dict.update([other])`
+```python
+dict.update([other])
+```
 
 Actualiza los elementos del diccionario. Los argumentos son los mismos que en el caso del constructor. Para claves existentes, las actualiza; las inexistentes las crea.
 
-`dict.values()`
+```python
+dict.values()
+```
 
 Retorna una nueva vista del diccionario, compuesta por los valores del mismo. La comparación entre dos vistas `values()` retornará siempre ***False*** (incluso comparándose consigo mismo).
 
-`d | other`
+```python
+d | other
+```
 
 Crea (retorna) un nuevo diccionario con los elementos combinados de ambos diccionarios (***d*** y ***other***). En caso de repetición de claves, ***other*** tiene preferencia.
 
-`d |= other`
+```python
+d |= other
+```
 
 Actualiza (*in place*) los elementos del diccionario ***d*** con los de ***other***, que puede ser un *mapping*, o un iterable con pares clave/valor. En caso de repetición de claves, ***other*** tiene preferencia.
 
@@ -1015,20 +1358,28 @@ Todos estos métodos aseguran el mismo orden, que coincide con el orden de inser
 
 Si ***v*** es un objeto vista de un diccionario, estas operaciones son posibles:
 
-`len(v)`
+```python
+len(v)
+```
 
 Retorna el número de objetos de ***v***.
 
-`iter(v)`
+```python
+iter(v)
+```
 
 Retorna un iterador sobre los elementos de la vista, en orden de inserción. No se debe modificar el contenido del diccionario principal mientras se itera en estos objetos, para no obtener resultados inesperados o levantamiento de excepciones (***RuntimeError***).
 
-`reversed(v)`
+```python
+reversed(v)
+```
 
 Igual que `iter()` pero en sentido inverso.
 
-`x in v`\
-`x not in v`
+```python
+x in v
+x not in v
+```
 
 Comprobación de pertenencia o no. En el caso de una vista hecha con `items()`, x debería ser una tupla de 2 elementos.
 
@@ -1036,11 +1387,15 @@ Comprobación de pertenencia o no. En el caso de una vista hecha con `items()`, 
 
 La sentencia `with` permite establecer un contexto de ejecución definido por un objeto del tipo *context manager*. Estos tienen dos métodos: uno se ejecuta antes de entrar a la sentencia `with`, y el otro se ejecuta una vez ha terminado todo el código de dicho `with`.
 
-`contextmanager.__enter__()`
+```python
+contextmanager.__enter__()
+```
 
 Es el método de entrada, que se ejecuta antes del `with`. El objeto retornado por este método queda ligado al identificador detrás de la cláusula `as` del `with`.
 
-`contextmanager.__exit__(exc_type, exc_val, exc_tb)`
+```python
+contextmanager.__exit__(exc_type, exc_val, exc_tb)
+```
 
 Es el código que se ejecutará al finalizar la sentencia `with`. Si se ha levantado una excepción durante la ejecución del cuerpo del `with`, ***exc_type*** contiene el tipo de excepción, ***exc_val*** el valor de la misma, y ***exc_tb*** su *traceback*. En caso contrario, los tres reciben ***None***.
 
@@ -1052,19 +1407,27 @@ Si durante la ejecución de este método se levanta una excepción, anulará la 
 
 Es posible crear alias de tipos genéricos. La forma general es:
 
-`T[X, Y, ...]`
+```python
+T[X, Y, ...]
+```
 
 En este caso representa un contenedor de tipo ***T*** que tiene elementos de tipo ***X***, ***Y***, etc. Se suele usar para anotaciones de tipos.
 
-`t = list[str]`
+```python
+t = list[str]
+```
 
 Aquí ***t*** define un *generic type* (de tipo ***types.GenericAlias***) de una lista con elementos *string*. Ahora se puede construir un elemento usando el constructor de ese tipo genérico:
 
-`lista = t('uno', 'dos', 'tres')`
+```python
+lista = t('uno', 'dos', 'tres')
+```
 
 Al construir el objeto, no se comprueba el tipo, con lo que si hacemos:
 
-`lista = t(1, 2, 3)`
+```python
+lista = t(1, 2, 3)
+```
 
 el código funcionará sin errores (aunque no sería correcto hacerlo). Así que en la práctica no es muy útil. Pero sí para hacer anotaciones:
 
@@ -1134,30 +1497,44 @@ Son los objetos que representan un tipo. El tipo de un objeto es retornado por `
 
 Algunos tipos de objeto tienen una serie de atributos de solo lectura adicionales. Algunos de ellos no son reportados por `dir()`:
 
-`objeto.__dict__`
+```python
+objeto.__dict__
+```
 
 Diccionario que almacena los atributos de un objeto.
 
-`instancia.__class__`
+```python
+instancia.__class__
+```
 
 Clase (tipo) al que pertenece la instancia.
 
-`clase.__bases__`
+```python
+clase.__bases__
+```
 
 Tupla de clases base de un objeto clase.
 
-`definicion.__name__`
+```python
+definicion.__name__
+```
 
 Nombre de una clase, función, método, descriptor o generador.
 
-`definicion.__qualname__`
+```python
+definicion.__qualname__
+```
 
 Nombre cualificado (con la ruta de namespaces, separados por puntos) de una clase, función, método, descriptor o generador.
 
-`clase.__mro__`
+```python
+clase.__mro__
+```
 
 Tupla de clases, según el orden de búsqueda para la resolución de métodos.
 
-`clase.__subclasses__()`
+```python
+clase.__subclasses__()
+```
 
 Cada clase mantiene una lista de *weak references* a sus subclases inmediatas. Este método retorna una lista a las referencias que sigan vivas.
