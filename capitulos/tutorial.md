@@ -126,7 +126,7 @@ Los literales *string* contiguos separados por cualquier cantidad de espacios (i
 
 Si ***st*** es una variable que contiene un *string*, `st[0]` será el primer carácter, `st[1]` el segundo, etc. `st[-1]` será el último, `st[-2]` el penúltimo, etc. También funciona el llamado *slicing:* `st[0:2]` son los caracteres desde el 0 (incluido) al 2 (excluido), `st[2:5]` del 2 al 4, etc. El primero va siempre incluido y el segundo excluido, ya que de ese modo, `st[:i]` + `st[i:]` es el *string* entero. La omisión del primer número se refiere a 0 (principio del *string*), y la omisión del segundo, al número de elementos del *string* (final del *string*).
 
-Tanto un índice como un *slice* devolverán un *string* (si es un índice, un *string* de longitud 1, no existe el tipo carácter).
+Tanto un índice como un *slice* retornarán un *string* (si es un índice, un *string* de longitud 1, no existe el tipo carácter).
 
 Un índice negativo contará desde la derecha: -1 es el último carácter, -2 el penúltimo, etc.
 
@@ -152,7 +152,7 @@ Las listas pueden contener elementos de tipos distintos. Para acceder a los elem
 
 > Un tipo **secuencia** es, por definición, un tipo que se puede indexar o usar *slicing*, y del cual puede extraerse su longitud mediante la función `len()`.
 
-Un las secuencias, un índice devuelve un elemento de la lista, mientras que un *slice* devolverá una lista, aunque sea de un solo elemento, o una *shallow copy* (copia superficial, véase más abajo) de la lista original en el caso de ***lista[:]***.
+Un las secuencias, un índice retorna un elemento de la lista, mientras que un *slice* retornará una lista, aunque sea de un solo elemento, o una *shallow copy* (copia superficial, véase más abajo) de la lista original en el caso de ***lista[:]***.
 
 Las listas son mutables, con lo que se puede cambiar su contenido. Otra cosa sería cambiar el contenido de sus elementos, que solo será posible si el elemento en cuestión es, a su vez, mutable:
 
@@ -184,7 +184,7 @@ Eliminar elementos:
 ['A', 'b', 'f', 'g', 'h']
 ```
 
-La *built-in function* `len()` también se aplica a listas, devolviendo el número de elementos de primer nivel (un solo elemento lista con varios elementos a su vez, contará como uno). Las listas son, pues, anidables.
+La *built-in function* `len()` también se aplica a listas, retornando el número de elementos de primer nivel (un solo elemento lista con varios elementos a su vez, contará como uno). Las listas son, pues, anidables.
 
 ```python
 >>> len(letters)
@@ -346,7 +346,7 @@ False
 False
 ```
 
-A no ser que el elemento sea inmutable, en cuyo caso podría devolver ***True*** (depende del intérprete). Esto se ve fácilmente con este ejemplo:
+A no ser que el elemento sea inmutable, en cuyo caso podría retornar ***True*** (depende del intérprete). Esto se ve fácilmente con este ejemplo:
 
 ```python
 >>> a = 33
@@ -654,7 +654,7 @@ La definición de una función almacena al identificador de la misma en la tabla
 0 1 1 2 3 5 8 13 21 34 55 89
 ```
 
-Todas las funciones retornan un valor. Si no tiene sentencia `return` (o retorna con `return` sin argumento), devuelve el valor vacío ***None*** (valor *built-in*).
+Todas las funciones retornan un valor. Si no tiene sentencia `return` (o retorna con `return` sin argumento), retorna el valor vacío ***None*** (valor *built-in*).
 
 La sintaxis de la sentencia de retorno es `return <valor>`, o simplemente `return`.
 
@@ -942,13 +942,13 @@ Las listas tienen también los siguientes métodos (sea ***a*** una lista):
 - `a.extend(L)` - añade a la lista los elementos del iterable ***L***; equivale a `a[len(a):] = L`.
 - `a.insert(i, x)` - inserta el elemento ***x*** antes del elemento con índice ***i***; si ***i*** es igual a `len(a)`, equivale a `append()`. Si es 0, inserta por el principio.
 - `a.remove(x)` - elimina el primer elemento cuyo valor es ***x***. Levanta excepción ***RaiseError*** si no hay ninguno.
-- `a.pop([i])` - devuelve el elemento con índice ***i*** y lo elimina de la lista; si no especificamos índice ***i*** (opcional), usa el último elemento de la lista.
+- `a.pop([i])` - retorna el elemento con índice ***i*** y lo elimina de la lista; si no especificamos índice ***i*** (opcional), usa el último elemento de la lista.
 - `a.clear()` - elimina todos los elementos de la lista. Equivale a `del a[:]`.
-- `a.index(x [,start [,end]])` - devuelve el índice del primer elemento con valor ***x***. Los parámetros ***start*** y ***end***, en numeración de *slice*, limitan la búsqueda a ciertas posiciones. El resultado es siempre relativo al principio de la lista.
-- `a.count(x)` - devuelve el número de elementos iguales a ***x*** en la lista.
+- `a.index(x [,start [,end]])` - retorna el índice del primer elemento con valor ***x***. Los parámetros ***start*** y ***end***, en numeración de *slice*, limitan la búsqueda a ciertas posiciones. El resultado es siempre relativo al principio de la lista.
+- `a.count(x)` - retorna el número de elementos iguales a ***x*** en la lista.
 - `a.sort(*, key=None, reverse=False)` - ordena los elementos.
 - `a.reverse()` - invierte el orden de los elementos.
-- `a.copy()` - devuelve una *shallow copy* de la lista; equivale a `a[:]`.
+- `a.copy()` - retorna una *shallow copy* de la lista; equivale a `a[:]`.
 
 > Todas las secuencias son iterables, pero no todos los iterables son secuencias.
 
@@ -1002,7 +1002,7 @@ Ejemplo: Aplanar una lista:
 [1, 2, 3, 4, 5, 6, 7, 8, 9]
 ```
 
-Se entendería así: para cada elemento en ***vec***, hacer: para cada número en el elemento, hacer: devolver ***num*** (expresión inicial).
+Se entendería así: para cada elemento en ***vec***, hacer: para cada número en el elemento, hacer: retornar ***num*** (expresión inicial).
 
 #### 5.1.4 Nested List Comprehensions
 

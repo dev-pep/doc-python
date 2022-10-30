@@ -410,7 +410,7 @@ __hash__(self)
 
 Retorna el *hash* del objeto; este valor debe ser un entero. El valor se usa para incluir el objeto en colecciones *hashed*. Estas colecciones no están ordenadas; se accede a sus elementos a través del número *hash* calculado en esta función (que depende del valor del elemento), y no mediante un índice numérico secuencial. Es decir, el número utilizado para acceder al objeto dependerá de su número *hash*, el cual depende a su vez del valor del objeto. Por lo tanto, su número de localización depende de su valor.
 
-En este tipo de colecciones podemos encontrar los diccionarios y *sets*. La función *bultin* `hash()`, por otro lado, trunca el valor devuelto por el método `__hash__()` (típicamente a 8 *bytes* en sistemas de 64 *bits* y 4 *bytes* en sistemas de 32 *bits*), y retorna dicho valor.
+En este tipo de colecciones podemos encontrar los diccionarios y *sets*. La función *bultin* `hash()`, por otro lado, trunca el valor retornado por el método `__hash__()` (típicamente a 8 *bytes* en sistemas de 64 *bits* y 4 *bytes* en sistemas de 32 *bits*), y retorna dicho valor.
 
 Dos objetos que se comparan iguales deben tener el mismo *hash*.
 

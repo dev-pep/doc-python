@@ -10,7 +10,7 @@ El presente documento es un resumen de una parte específica de la biblioteca es
 
 (Comprobación del valor de verdad.)
 
-Por defecto, un objeto se considera ***True***, a no ser que defina `__bool__()` y esta retorne ***False***, o en su defecto `__len__()` y retorne 0. Por otro lado se consideran ***False*** las constantes ***None*** y ***False***, así como cualquier objeto numérico con valor 0.
+Por defecto, un objeto se considera ***True*** (verdadero), a no ser que defina `__bool__()` y este retorne ***False*** (falso), o que en su defecto defina `__len__()` y este retorne 0. Por otro lado se consideran ***False*** las constantes ***None*** y ***False***, así como cualquier objeto numérico con valor 0.
 
 ### 4.2 Boolean Operations - and, or, not
 
@@ -58,20 +58,20 @@ Retorna el número de bits necesarios para representar el valor absoluto del val
 int.to_bytes(length, byteorder, *, signed=False)
 ```
 
-Retorna un *array* de *bytes* representando el valor del entero. El objeto *bytes* retornado tiene una longitud total de ***length*** bytes. Si esa longitud no es suficiente para su representación, levanta ***OverflowError***.
+Retorna un *array* de *bytes* representando el valor del entero. El objeto *bytes* retornado tiene una longitud total de ***length*** bytes. Si esa longitud no es suficiente para su representación, se levanta la excepción ***OverflowError***.
 
-Si ***byteorder*** es ***'big'***, será con representación *big endian* (*bytes* más significativos al principio). Si es ***'little'***, será *little endian*. Para la representación nativa del sistema, usar el valor de ***sys.byteorder***.
+Si ***byteorder*** (*string*) es ***big***, será con representación *big endian* (*bytes* más significativos primero). Si es ***little***, será *little endian*. Para que se use la representación nativa del sistema, se indicará el valor de ***sys.byteorder***.
 
-En cuanto a ***signed***, indica si se va a utilizar complemento a 2 para codificar el entero. Si es que no (por defecto) y el valor es negativo, se levanta ***OverflowError***.
+En cuanto a ***signed***, indica si se va a utilizar complemento a 2 para codificar el entero. Si es que no (por defecto) y el valor es negativo, se levantará ***OverflowError***.
 
 ```python
 classmethod int.from_bytes(bytes, byteorder, *,
                            signed=False)
 ```
 
-Es la operación inversa a `to_bytes()`.
+Es la operación inversa a `to_bytes()`, aunque en este caso se trata de un *class method*. Retorna un entero.
 
-***byteorder*** es, igual que en la mencionada función, ***'big'*** o ***'little'*** (***sys.byteorder*** para orden nativo).
+***byteorder*** tiene el mismo uso que en el caso de `to_bytes()`.
 
 ***bytes*** debe ser un objeto *bytes* o un iterable que produzca una serie de *bytes*. ***signed*** indica si se ha utilizado complemento a 2 en la representación.
 
@@ -83,15 +83,15 @@ Retorna una tupla con un ratio igual al valor del entero. Esa tupla lo forman do
 
 #### 4.4.3 Additional Methods on Float
 
-(Métodos adicionales en flotante.)
+(Métodos adicionales en flotantes.)
 
 ```python
 float.as_integer_ratio()
 ```
 
-Retorna una tupla con un ratio de enteros que iguala el valor del `float`. El denominador es siempre positivo.
+Retorna una tupla con un ratio de enteros que iguala el valor del `float`. El denominador (segundo elemento) es siempre positivo.
 
-Si el `float` es un infinito, levanta ***OverflowError***. Si es un ***NaN***, ***ValueError***.
+Si el `float` es un infinito, levanta ***OverflowError***. Si es ***NaN***, ***ValueError***.
 
 ```python
 float.is_integer()
@@ -103,13 +103,13 @@ Retorna ***True*** si el valor es entero (parte decimal a 0), o ***False*** si n
 float.hex()
 ```
 
-Retorna una representación hexadecimal del `float`, en un *string*, que empezará por ***0x***, e incluirá un sufijo ***p*** con el exponente (decimal, con base 2).
+Retorna una representación hexadecimal del `float`, en un *string*, que empezará por ***0x***, e incluirá un sufijo ***p*** con el exponente (decimal, en base 2).
 
 ```python
 classmethod float.fromhex(s)
 ```
 
-A partir del *string*, que representa un `float`, devuelve ese `float`. El formato del *string* debe ser (puede ir entre espacio en blanco):
+A partir del *string*, que representa un `float`, retorna ese `float`. El formato del *string* debe ser (puede ir entre espacio en blanco):
 
 ```python
 [signo] ['0x'] número ['p' exponente]
@@ -184,7 +184,7 @@ Algunas secuencias pueden utilizar el operador `in` para hallas subsecuencias:
 True
 ```
 
-En la repetición (`n * s`), cualquier entero <1 causa que se devuelva una secuencia vacía. Los elementos duplicados son referencias a los originales:
+En la repetición (`n * s`), cualquier entero <1 causa que se retorne una secuencia vacía. Los elementos duplicados son referencias a los originales:
 
 ```python
 >>> lists = [[]] * 3
@@ -601,7 +601,7 @@ Como `str.lower()` pero para mayúsculas.
 str.zfill(width)
 ```
 
-Retorna un *string* relleno de ceros por la izquierda hasta completar la anchura ***width***. Si el *string* original representa un número válido y tiene signo al principio, el signo se mantendrá también al principio. Si ***width*** es igual o inferior al tamaño del *string* original, se devuelve una copia de este.
+Retorna un *string* relleno de ceros por la izquierda hasta completar la anchura ***width***. Si el *string* original representa un número válido y tiene signo al principio, el signo se mantendrá también al principio. Si ***width*** es igual o inferior al tamaño del *string* original, se retorna una copia de este.
 
 #### 4.7.2 printf-style String Formatting
 
@@ -681,7 +681,7 @@ Si le pasamos un entero, construye un *bytes* relleno de ceros, con la longitud 
 
 Si le pasamos un *string*, es obligatorio indicar ***encoding*** para que codifique los caracteres adecuadamente. En ese caso también podremos indicar ***errors***.
 
-¿Qué es el *buffer protocol*? Es un modo de acceder rápidamente y sin *overhead* a los datos binarios, directamente en memoria. Este acceso se realiza a bajo nivel (a nivel de *C*). Es el protocolo utilizado por los objetos *memoryview*: acceden a estas direcciones de memoria sin hacer copias ni crear y devolver objetos que contengan esos datos.
+¿Qué es el *buffer protocol*? Es un modo de acceder rápidamente y sin *overhead* a los datos binarios, directamente en memoria. Este acceso se realiza a bajo nivel (a nivel de *C*). Es el protocolo utilizado por los objetos *memoryview*: acceden a estas direcciones de memoria sin hacer copias ni crear y retornar objetos que contengan esos datos.
 
 ```python
 classmethod bytes.fromhex(string)
@@ -1029,7 +1029,7 @@ bytes.zfill(width)
 bytearray.zfill(width)
 ```
 
-Retorna un *BLO* relleno de ceros (***b'0'***) por la izquierda hasta completar la anchura ***width***. Si el *BLO* original representa un número válido y tiene signo al principio, el signo se mantendrá también al principio. Si ***width*** es igual o inferior al tamaño del *BLO* original, se devuelve una copia de este.
+Retorna un *BLO* relleno de ceros (***b'0'***) por la izquierda hasta completar la anchura ***width***. Si el *BLO* original representa un número válido y tiene signo al principio, el signo se mantendrá también al principio. Si ***width*** es igual o inferior al tamaño del *BLO* original, se retorna una copia de este.
 
 #### 4.8.4 printf-style Bytes Formatting
 
@@ -1138,7 +1138,7 @@ Dos *sets*/*supersets* se comparan igual si ambos son un subconjunto del otro. U
 
 Si dos conjuntos disjuntos no vacíos se comparan, se evaluarán distintos, y ninguno de ellos será mayor o menor que el otro.
 
-Un operador binario que realice una operación con un *set* y un *frozenset* devolverá un objeto del tipo del primer operando.
+Un operador binario que realice una operación con un *set* y un *frozenset* retornará un objeto del tipo del primer operando.
 
 Los siguientes métodos solo son aceptados por *set* (no *frozenset*). En este caso, ***s*** es un *set*:
 
@@ -1236,7 +1236,7 @@ len(d)
 
 Retorna el número de elementos del diccionario.
 
-Los elementos del diccionario son accesibles a través de los valores de la clave. Así, `d[key]` devolverá el valor asociado a la clave ***key***. Si esta no existe, levanta ***KeyError***.
+Los elementos del diccionario son accesibles a través de los valores de la clave. Así, `d[key]` retornará el valor asociado a la clave ***key***. Si esta no existe, levanta ***KeyError***.
 
 Si hacemos este acceso a través de una subclase de diccionario que implemente `__missing__()`, este será llamado con ***key*** como argumento, y será este método el que decidirá qué hacer con esa solicitud: puede retornar un valor o levantar una excepción. Logicamente, habrá que definir este método con dos argumentos (***self*** y ***key***).
 
@@ -1320,7 +1320,7 @@ Retorna el último elemento añadido al diccionario como una tupla (clave, valor
 dict.setdefault(key [,default])
 ```
 
-Devuelve el valor asociado a la clave ***key***. Si no existe, crea un nuevo elemento con esa clave y el valor definido en ***default***, y devuelve ***default***.
+Retorna el valor asociado a la clave ***key***. Si no existe, crea un nuevo elemento con esa clave y el valor definido en ***default***, y retorna ***default***.
 
 ```python
 dict.update([other])
@@ -1352,7 +1352,7 @@ Los diccionarios preservan el orden de inserción. Actualizar un elemento no alt
 
 #### 4.10.1 Dictionary view objects
 
-Los objetos devueltos por los métodos `keys()`, `items()` y `values()` son *view objects*: proporcionan una vista dinámica del diccionario, es decir, cuando el diccionario cambia, estos objetos reflejan esos cambios.
+Los objetos retornados por los métodos `keys()`, `items()` y `values()` son *view objects*: proporcionan una vista dinámica del diccionario, es decir, cuando el diccionario cambia, estos objetos reflejan esos cambios.
 
 Todos estos métodos aseguran el mismo orden, que coincide con el orden de inserción en el diccionario.
 
@@ -1436,7 +1436,7 @@ def average(values: list[float]) -> float:
     return sum(values) / len(values)
 ```
 
-Esto define una función que toma por parámetro una lista de *floats* y devuelve un `float`.
+Esto define una función que toma por parámetro una lista de *floats* y retorna un `float`.
 
 Un *generic alias type* tiene algunos atributos de solo lectura, como ***\_\_origin\_\_*** (tipo de la clase genérica sin parametrizar), o ***\_\_args\_\_*** (tupla con los tipos pasados al contenedor original). Por ejemplo, si el tipo genérico es `list[int, float]`, ***\_\_origin\_\_*** es el tipo `list` y ***\_\_args\_\_*** una tupla con dos elementos: el tipo `int` y el tipo `float`.
 

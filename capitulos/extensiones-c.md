@@ -134,7 +134,7 @@ Por otro lado, a veces puede interesarnos que algún elemento del módulo sea ac
 
 Ahora ya sabemos que si `PyArg_ParseTuple()` ha fallado, ha levantado la excepción adecuada, y ha retornado ***NULL***. De lo contrario, tenemos en ***command*** un apuntador a un *string*. No deberíamos modificar su contenido (pertenece al objeto *Python* y tiene su mismo tiempo de vida); por eso está declarado como `const char *command`.
 
-Ahora ya podemos invocar a `system()` de ***stdlib.h*** y pasarle ese *string*. Recogemos el valor devuelto por esta función en ***sts***, y retornamos ese entero, previa conversión a un entero de *Python* con `PyLong_FromLong()`, que retorna, como de costumbre, un objeto *Python* (`PyObject*`).
+Ahora ya podemos invocar a `system()` de ***stdlib.h*** y pasarle ese *string*. Recogemos el valor retornado por esta función en ***sts***, y retornamos ese entero, previa conversión a un entero de *Python* con `PyLong_FromLong()`, que retorna, como de costumbre, un objeto *Python* (`PyObject*`).
 
 Si queremos retornar el objeto *Python* ***None***, lo haremos mediante ***Py_None*** (no debemos retornar ***NULL***, ya que eso sería retornar error). Debería hacerse así:
 
