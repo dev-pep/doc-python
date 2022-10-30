@@ -6,7 +6,7 @@ A pesar de ser un lenguaje interpretado, es relativamente rápido en su ejecuci�
 
 *Python* es un lenguaje imperativo, de tipado dinámico y con pleno soporte para objetos.
 
-A continuación se verá un resumen de los aspectos más relevantes del tutorial oficial del lenguaje. Los títulos se han mantenido en inglés, para que cada apartado sea fácilmente localizable en el documento oficial en su idioma original. Se han añadido ampliaciones o aclaraciones donde se ha estimado necesario dar más claridad al texto.
+A continuación se verá un resumen de los aspectos más relevantes del tutorial oficial del lenguaje. Se han añadido ampliaciones o aclaraciones donde se ha estimado necesario dar más claridad al texto.
 
 ## 2. USING THE PYTHON INTERPRETER
 

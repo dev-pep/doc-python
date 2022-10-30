@@ -1,6 +1,6 @@
 # Crear extensiones en *C*
 
-El presente documento es un resumen de algunos capítulos del documento *Extending and Embedding Python*, del que se han resumido solo los aspectos básicos para crear un módulo *Python* en lenguaje compilado *C*. Los títulos se han dejado tal cual, sin traducir del inglés. Se ha ampliado el resumen con información del documento *The Python/C API*. Ambos documentos pertenecen a la documentación oficial de *Python*.
+El presente documento es un resumen de algunos capítulos del documento *Extending and Embedding Python*, del que se han resumido solo los aspectos básicos para crear un módulo *Python* en lenguaje compilado *C*. Se ha ampliado el resumen con información del documento *The Python/C API*. Ambos documentos pertenecen a la documentación oficial de *Python*.
 
 Lo explicado aquí solo sirve para la implementación oficial (*CPython*). Para un proyecto más portable a otras implementaciones, en lugar de crear extensiones se puede utilizar la biblioteca ***ctypes*** o equivalente.
 

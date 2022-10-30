@@ -1,6 +1,6 @@
 # Referencia de Python
 
-El presente documento es un resumen de los aspectos más relevantes de la referencia oficial de *Python* 3.10. Los títulos se han mantenido en inglés, que es el idioma del documento que se ha utilizado como base para este resumen.
+El presente documento es un resumen de los aspectos más relevantes de la referencia oficial de *Python* 3.10.
 
 ## 2. LEXICAL ANALYSIS
 

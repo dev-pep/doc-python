@@ -6,8 +6,6 @@
 
 La **especificación de formato** viene definida como base en el documento **PEP 3101**. Con el tiempo se han añadido otras características. Se ha seguido la estructura del mencionado *PEP* para realizar el presente resumen, pero se ha ampliado la información con la documentación de la biblioteca estándar de *Python* 3.10.
 
-Los títulos se han mantenido en inglés, que es el idioma de la documentación que se ha utilizado como base para este resumen.
-
 Este documento trata sobre *strings Unicode* de *Python*.
 
 ## String Methods

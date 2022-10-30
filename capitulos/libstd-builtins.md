@@ -1,6 +1,6 @@
 # Biblioteca estándar de Python: *builtins*
 
-El presente documento es un resumen de una parte específica de la biblioteca estándar de *Python* 3.10. Los títulos se han mantenido en inglés, que es el idioma del documento que se ha utilizado como base para este resumen.
+El presente documento es un resumen de una parte específica de la biblioteca estándar de *Python* 3.10 dedicada a las funciones, constantes y excepciones incorporadas.
 
 ## 2. BUILT-IN FUNCTIONS
 
