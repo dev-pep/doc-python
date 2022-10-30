@@ -2,80 +2,94 @@
 
 ## Specification
 
-La **especificación de formato** viene definida como base en el **PEP 3101**. Con el tiempo se han añadido otras características. Se ha seguido la estructura del mencionado *PEP* para realizar el presente resumen, pero se ha ampliado la información según la documentación de la biblioteca estándar de *Python* 3.10.
+(Especificación.)
+
+La **especificación de formato** viene definida como base en el documento **PEP 3101**. Con el tiempo se han añadido otras características. Se ha seguido la estructura del mencionado *PEP* para realizar el presente resumen, pero se ha ampliado la información con la documentación de la biblioteca estándar de *Python* 3.10.
 
 Los títulos se han mantenido en inglés, que es el idioma de la documentación que se ha utilizado como base para este resumen.
 
-Este documento trata sobre *strings Unicode* de *Python* 3.
+Este documento trata sobre *strings Unicode* de *Python*.
 
 ## String Methods
 
-Hablaremos del método `str.format()` y de la *built-in function* `format()`. El primero acepta un número arbitrario de argumentos, mientras que la segunda acepta un objeto y un *string format* opcional.
+(Métodos de *string*.)
+
+Hablaremos del método `str.format()` y de la *built-in function* `format()`. El primero acepta un número arbitrario de argumentos, mientras que el segundo acepta un objeto y un *string* de formato opcional.
 
 ## Format Strings
 
-Los argumentos del método `format()` sirven para dar valor a los campos de reemplazo de la *format string*, que es, de hecho, la instancia de ***str*** que llama al método.
+(*Strings* de formato.)
+
+Los argumentos del método `format()` sirven para dar valor a los campos de reemplazo del *string* de formato (*format string*), que es, de hecho, la instancia de ***str*** que llama al método.
 
 ```python
-'My name is {0}'.format('Fred')
+'Me llamo {0}'.format('Pepe')
 ```
 
 produce:
 
 ```
-'My name is Fred'
+'Me llamo Pepe'
 ```
 
 Si queremos especificar los caracteres llave, hay que indicarlos doblados:
 
 ```python
-'Hola, {0}. Esto son llaves: {{ y }}'.format('Fred')
+'Hola, {0}. Esto son llaves: {{ y }}'.format('Pepe')
 ```
 
 produce:
 
 ```
-'Hola, Fred. Esto son llaves: { y }'
+'Hola, Pepe. Esto son llaves: { y }'
 ```
 
-Cuando los campos de reemplazo siguen un orden estricto, del tipo ***'...{0}...{1}...{2}...{3}...'***, se pueden omitir estos, con lo que podríamos indicar un *string* del tipo ***'...{}...{}...{}...{}...'***. Esto no se puede hacer a algunos campos sí y otros no. Se hace a todos (*automatic field numbering*) o a ninguno.
+Cuando los campos de reemplazo siguen un orden estricto, del tipo ***...{0}...{1}...{2}...{3}...***, se puede omitir la numeración, con lo que podríamos indicar un *string* del tipo ***'...{}...{}...{}...{}...'***. En tal caso, la numeración se debe eliminar de **todos** los campos. Se numeran todos o ninguno (numeración automática de campos).
 
 ## Simple and Compound Field Names
 
-Los campos simples se componen de números enteros (base 10), que se refieren al orden de los argumentos posicionales de `format()`. También pueden ser identificadores, y entonces se refieren a sus *keyword arguments*.
+(Nombres de campo simples y compuestos.)
+
+Los campos simples se componen de números enteros (en base 10), que se refieren al orden de los argumentos posicionales de `format()`. También pueden ser identificadores, y entonces se refieren a sus *keyword arguments*.
 
 Los campos compuestos admiten dos operaciones: acceso al atributo (*getattr*) y acceso al elemento (*getitem*). Por ejemplo, ***{0.atrib}*** es un campo compuesto que accede al atributo ***atrib*** del objeto en el primer argumento posicional, mientras que ***{x[3]}*** es un campo compuesto que accede al cuarto elemento del *keyword argument* ***x***. Por ejemplo, para acceder a un elemento de un diccionario:
 
 ```python
-"My name is {0[name]}".format(dict(name='Fred'))
+"Me llamo {0[nombre]}".format(dict(nombre='Pepe'))
 ```
 
-Como circunstancia especial, el acceso al elemento no se puede hacer con la llave entre comillas. ***{0['name']}*** sería incorrecto.
+Como circunstancia especial, el acceso al elemento no se puede hacer con la clave entre comillas. `{0['name']}` sería incorrecto.
 
 ## Format Specifiers
 
-Cada campo puede ir acompañado de especificadores de formato, tras el carácter dos puntos (***:***), del tipo ***{0:8}***. El especificador de formato puede, a su vez contener un campo de reemplazo, como ***{0:{1}}***, en cuyo caso, el segundo parámetro posicional definirá el valor del especificador. No puede haber más niveles de anidamiento en los campos: el campo ***{1}*** del ejemplo no podría contener, pues, ningún campo.
+(Especificadores de formato.)
+
+Cada campo puede ir acompañado de especificadores de formato, tras un carácter dos puntos (***:***), del tipo ***{0:8}***. El especificador de formato puede, a su vez contener un campo de reemplazo, como ***{0:{1}}***, en cuyo caso, el segundo parámetro posicional definirá el valor del especificador. No puede haber más niveles de anidamiento en los campos: el campo ***{1}*** del ejemplo no podría contener, pues, ningún campo.
 
 Por otro lado, observemos que en el ejemplo hay unas dobles llaves de cierre. Esto no se interpreta como *escaped*, ya que solo se interpretan así fuera de los campos de reemplazo.
 
 ## Standard Format Specifiers
 
-Si el objeto no define sus propios especificadores de formato, se usan estos. La forma general es (los corchetes ***[]*** indican elemento opcional):
+(Especificadores estándar de formato.)
+
+Si el objeto no define sus propios especificadores de formato, se usan los aquí indicados. La forma general es (los corchetes ***[]*** indican elemento opcional):
 
 ```
 [[fill] align] [sign] [#] [0] [minwidth] [grouping] [.precision] [type]
 ```
+
+Los espacios se han dejado por claridad, pero no forman parte del especificador.
 
 El *flag* ***align*** puede ser:
 
 - ***\<*** indica alineación a la izquierda (por defecto).
 - ***>*** alinea a la derecha.
 - ***^*** centra el texto.
-- ***=*** alinea a la derecha, pero el signo queda a la izquierda (solo para números).
+- ***=*** alinea a la derecha, pero el signo queda a la izquierda del todo (solo para números).
 
 Estos campos solo tienen sentido cuando se define una anchura.
 
-Cuando se incluye este *flag*, se puede, opcionalmente, indicar una carácter de relleno (***fill***).
+Cuando se incluye este *flag* de alineación, se puede, opcionalmente, indicar una carácter de relleno (***fill***).
 
 El *flag* ***sign*** (solo números) puede ser:
 
@@ -83,13 +97,13 @@ El *flag* ***sign*** (solo números) puede ser:
 - ***-*** indica que solo se debe incluir signo en negativos (por defecto).
 - Un espacio indica que en los positivos se utilizará un espacio en la posición del signo.
 
-Si se incluye el carácter almohadilla (***#***), los enteros usarán la forma alternativa, es decir, las salidas binarias, octales y hexadecimales tendrán un prefijo ***0b***, ***0o*** y ***0x*** respectivamente, mientras que para *floats* aparecerá siempre el punto decimal. En ***g*** y ***G*** no se eliminan los *trailing zeros*.
+Si se incluye el carácter almohadilla (***#***), los enteros usarán la forma alternativa, es decir, las salidas binarias, octales y hexadecimales tendrán un prefijo ***0b***, ***0o*** y ***0x*** respectivamente, mientras que para punto flotante aparecerá siempre el punto decimal. En ***g*** y ***G*** no se eliminan los ceros finales.
 
 El *flag* ***minwidth*** es el que define la anchura mínima, de tal modo que si es necesario se rellenará la salida (según el *flag* ***align***).
 
 El *flag* ***grouping*** tiene relación con los caracteres de agrupación de miles. Si este es coma (***,***) se usará la coma para separar los miles. Si es guión bajo (***\_***) se utilizará este carácter para separar miles en salidas `float` y en salidas de entero tipo ***d***.
 
-***precision*** indica el número de dígitos tras el punto decimal (en conversiones ***f***, ***F***, ***e*** o ***E***), o en total (conversiones tipo ***g*** o ***G***).
+***precision*** indica el número de dígitos tras el punto decimal (en conversiones ***f***, ***F***, ***e*** o ***E***), o totales (conversiones tipo ***g*** o ***G***).
 
 En objetos no numéricos, ***precision*** indica el número de caracteres a utilizar del objeto. No se puede usar en números enteros.
 
@@ -120,23 +134,27 @@ Los objetos pueden definir y/o redefinir su propio formato y seguir sus propias 
 
 ## Explicit Conversion Flag
 
-Se coloca antes de los especificadores de formato, y se aplica antes que estos. Actualmente, existen dos tipos: ***!r*** aplica `repr()`, y ***!s*** aplica `str()`.
+(*Flag* de conversión explícita.)
+
+Dicho *flag* se coloca antes de los dos puntos que separa los especificadores de formato, y se aplica antes que estos. Actualmente, existen dos tipos: ***!r*** aplica `repr()`, y ***!s*** aplica `str()`.
 
 ```python
 >>> "{0!r:20}".format("Hello")
 "'Hello'             "
 ```
 
-En este ejemplo se aplica primero `repr()` al *string* ***'Hello'*** (le coloca las comillas simples alrededor). Luego se aplica el resto de especificadores de formato.
+En este ejemplo se aplica primero `repr()` al *string* ***Hello*** (le coloca las comillas simples alrededor). Luego se aplica el resto de especificadores de formato.
 
 ## Controlling Formatting on a Per-Type Basis
 
-Se puede controlar cómo responderá un objeto al formateo. Cada vez que `format()` se encuentra con un objeto (uno de sus argumentos) y una serie de especificadores (el campo de reemplazo), llama al método `__format__()` del objeto, al que le pasa esa ristra de especificadores. Luego el objeto lo procesa y retorna un *string* con el formato terminado.
+(Control de formato en base al tipo.)
 
-La *built-in function* `format()` hace lo mismo: llama a `__format__()`, y retorna a su vez lo mismo que le ha retornado este método. Acepta un argumento (el objeto a formatear), y opcionalmente una *format string*. Si no se indica la *format string* en el segundo argumento, el comportamiento por defecto es que toma ***None***, lo cual es idéntico a llamar a `str()`.
+Se puede controlar cómo responderá un objeto al formateo. Cada vez que su método `format()` se encuentra con un objeto (cada argumento del método) y su correspondiente serie de especificadores (en el campo de reemplazo), llama al método `__format__()` del objeto, al que le pasa esa ristra de especificadores. Luego el objeto lo procesa y retorna un *string* con el formato calculado.
 
-## Notas personales
+La función *built-in* `format()` hace lo mismo: llama a `__format__()`, y retorna a su vez lo mismo que le ha retornado este método. Acepta un argumento (el objeto a formatear), y opcionalmente una *format string*. Si no se indica la *format string* en el segundo argumento, el comportamiento por defecto es que toma ***None***, lo cual es idéntico a llamar a `str()`.
 
-Cuando hemos utilizado *automatic field numbering* en los campos, seguimos pudiendo indicar especificadores de formato y/o nombres compuestos, como ***{[3]:20}*** o ***{.atrib!r:10.3}***.
+## Aclaraciones adicionales
+
+Al utilizar numeración automática de campos, todavía es posible indicar especificadores de formato y/o nombres compuestos, como ***{[3]:20}*** o ***{.atrib!r:10.3}***.
 
 Todo lo dicho aquí es válido también para formatear los *f-strings*.
