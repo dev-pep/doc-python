@@ -1,39 +1,39 @@
 # 16.16 ctypes - A foreign function library for Python
 
-Este es un resumen del apartado 16.16 de la documentación oficial sobre la biblioteca estándar de *Python* 3.10.
+(***ctypes*** - Una biblioteca de funciones externas para *Python*.)
 
-Esta funcionalidad específica de la biblioteca proporciona tipos de datos compatibles con *C* y permite llamar a funciones en bibliotecas compartidas (***.so*** en sistemas *Unix* y ***.dll*** en *Windows*).
+Esta funcionalidad específica de la biblioteca proporciona tipos de datos compatibles con *C* y permite ejecutar funciones residentes en bibliotecas compiladas compartidas (***.so*** en sistemas *Unix* y ***.dll*** en *Windows*).
 
 ## 16.16.1 ctypes tutorial
 
-> En sistemas donde el tamaño de un `long` coincide con el de un `int`, el tipo `c_int` (definido en este módulo) es un alias del tipo `c_long` (también parte de este módulo).
+> En sistemas donde el tamaño de un ***long*** coincide con el de un ***int***, el tipo ***c_int*** (definido en este módulo) es un alias del tipo ***c_long*** (también parte de este módulo).
 
-Para cargar bibliotecas dinámicas, se utiliza el constructor de la clase `CDLL`.
+Para cargar bibliotecas dinámicas, se utiliza el constructor de la clase ***CDLL***.
 
-Una instancia de esta clase representa una biblioteca dinámica que ha sido cargada. Las funciones de esta biblioteca usan la *standard C calling convention* (llamada ***cdecl***). Es por ello que puede no funcionar en *Windows* (las *DLL* de *Windows* usan otro convenio de llamada). El tipo de retorno de estas funciones es `int`.
+Una instancia de esta clase representa una biblioteca dinámica que ha sido cargada. Las funciones de esta biblioteca usan el convenio de llamada de *C* estándar (llamada ***cdecl***). Es por ello que podría no funcionar en sistemas *Windows* (las bibliotecas *DLL* de *Windows* usan otro convenio de llamada). El tipo de retorno de estas funciones es ***int***.
 
-El único argumento al constructor que nos interesa (y el único obligatorio) es la ruta del archivo a cargar (la biblioteca compartida).
+El único argumento al constructor de ***CDLL*** que nos interesa (y el único obligatorio) es la ruta del archivo a cargar (la biblioteca compartida).
 
 En sistemas *Windows*, no hay que incluir la extensión ***.dll***, ya que se añade automáticamente. Sin embargo, en sistemas *Linux* se debe indicar el nombre completo.
 
-En sistemas *Windows* exclusivamente, existe la clase `WinDLL`, que es como `CDLL` pero usa la *calling convention* de las *DLL* de *Windows* (llamada ***stdcall***). El valor esperado de retorno sigue siendo `int`.
+En sistemas *Windows* exclusivamente, existe la clase ***WinDLL***, que es como ***CDLL*** pero usa la *calling convention* de las *DLL* de *Windows* (llamada ***stdcall***). El valor esperado de retorno sigue siendo ***int***.
 
-También exclusiva de *Windows* es la clase `OleDLL`, que es como `WinDLL`, pero el tipo retornado esperado es un código de tipo `HRESULT` (específico de *Windows*), en cuyo caso, si dicho código señala error, se levantará una excepción ***OSError***.
+También exclusiva de *Windows* es la clase ***OleDLL***, que es como ***WinDLL***, pero el tipo retornado esperado es un código de tipo ***HRESULT*** (específico de *Windows*), en cuyo caso, si dicho código señala error, se levantará una excepción ***OSError***.
 
-Por último, la clase `PyDLL` es como `CDLL`, con la diferencia que durante la ejecución de la función, el *Python GIL* no es liberado, con lo que otros hilos no pueden usar el intérprete. Al retornar la función se comprueba el estado de error de *Python*, y si está activado, se levanta la correspondiente excepción. Por lo tanto solo es útil para funciones del *API C* (estas pueden establecer el estado de error de *Python* mediante las funciones del *API*; véase la documentación de creación de extensiones *C*).
+Por último, la clase ***PyDLL*** es como ***CDLL***, con la diferencia que durante la ejecución de la función, el *Python GIL* (*Python Global Interpreter Lock*) no es liberado, con lo que otros hilos no pueden usar el intérprete. Al retornar la función se comprueba el estado de error de *Python*, y si está activado (porque lo ha hecho la función), se levanta la correspondiente excepción. Por lo tanto solo es útil para funciones externas del *API C* (estas pueden establecer el estado de error de *Python* mediante las funciones del *API*; véase la documentación de creación de extensiones *C*).
 
 En cuanto al nombre del archivo, si no se especifica ruta (solo nombre), se busca en los directorios de bibliotecas del sistema. Si especificamos ruta (relativa al directorio actual, o absoluta) intentará cargar ese archivo específico.
 
-Una vez se ha cargado la biblioteca en la instancia correspondiente (del objeto de tipo `CDLL`, o `WinDLL`, etc.), se puede acceder a las funciones a través del nombre de las mismas usando la sintaxis de acceso a atributos. Supongamos que la librería compilada define las funciones ***foo1()*** y ***foo2()***:
+Una vez se ha cargado la biblioteca en la instancia correspondiente (del objeto de tipo ***CDLL***, o ***WinDLL***, etc.), se puede acceder a las funciones a través del nombre de las mismas usando la sintaxis de acceso a atributos. Supongamos que la librería compilada define las funciones `foo1()` y `foo2()`:
 
 ```python
 from ctypes import *
 libreria = CDLL("./libdemo.so")
-fun = libreria.foo1  # acceso
+fun = libreria.foo1    # referencia a la función
 resul = libreria.foo2()  # llamada
 ```
 
-Al pasar argumentos a las funciones de una librería, solo pueden pasarse tal cual los tipos *Python* nativos ***None***, entero, *bytes* y *strings* (*Unicode*). ***None*** se pasa como ***NULL***, un entero como el tipo `int`, un objeto *bytes* como un apuntador `char*` a un bloque de memoria que contiene sus datos, y un *string* también, pero mediante un `wchar_t*`.
+Al pasar argumentos a las funciones de una librería, solo pueden pasarse tal cual los tipos *Python* nativos ***None***, entero, *bytes* y *strings* (*Unicode*). ***None*** se pasa como ***NULL***, un entero como el tipo ***int***, un objeto *bytes* como un apuntador ***char\**** a un bloque de memoria que contiene sus datos, y un *string* también, pero mediante un ***wchar_t\****.
 
 ### Tipos fundamentales
 
@@ -63,15 +63,15 @@ Al pasar argumentos a las funciones de una librería, solo pueden pasarse tal cu
 | c_wchar_p      | wchar_t *              | string o None       |
 | c_void_p       | void *                 | int o None          |
 
-El constructor de `c_bool` acepta cualquier objeto convertible a booleano. El tipo `Py_ssize_t` está definido en el *API C* de *Python*. Los apuntadores a carácter (*wide* o `char`) recibirán un *string* o `bytes` y apuntarán a un bloque de memoria *null-terminated*.
+El constructor de ***c_bool*** acepta cualquier objeto convertible a booleano. El tipo ***Py_ssize_t*** está definido en el *API C* de *Python*. Los apuntadores a carácter (carácter *wide* o ***char***) recibirán un *string* o *bytes* y apuntarán a un bloque de memoria *null-terminated*.
 
 Si no damos valor al constructor del tipo, se inicializa con ceros.
 
-Existen también los tipos `c_int8`, `c_int16`, `c_int32` y `c_int64`, así como sus correspondientes sin signo `c_uint8`, `c_uint16`, `c_uint32` y `c_uint64` para asegurarnos la cantidad de bits necesaria.
+Existen también los tipos ***c_int8***, ***c_int16***, ***c_int32*** y ***c_int64***, así como sus correspondientes sin signo ***c_uint8***, ***c_uint16***, ***c_uint32*** y ***c_uint64*** para asegurarnos la cantidad de bits necesaria.
 
-Para funciones *C* que utilizan el *API C*, existe el tipo `py_object`, que se convierte en `PyObject*`.
+Para funciones *C* que utilizan el *API C*, existe el tipo ***py_object***, que se convierte en ***PyObject\****.
 
-En *Windows* existe también el tipo `HRESULT`.
+En *Windows* existe también el tipo ***HRESULT***.
 
 Ejemplos de uso de estos tipos:
 
@@ -100,20 +100,21 @@ c_long(42)
 
 Si cambiamos el valor de un apuntador, no se modifica el contenido apuntado, solo la dirección de memoria a la que apunta. El contenido apuntado es inmutable y no debería modificarse desde la función *C*.
 
-Sin embargo, si la función *C* espera un apuntador a una zona de memoria que pueda modificar tranquilamente, *ctypes* dispone de las funciones `create_string_buffer()` y `create_unicode_buffer()`, que retornan un objeto que puede pasarse como `char*` o `wchar_t*` respectivamente (de hecho lo que crean es un *array*). Al constructor se le puede pasar un entero (número de elementos, puestos a 0), un objeto *bytes* o *string* (*buffer* incluirá el terminador nulo), o un *bytes* o *string* seguido de un entero (truncará o rellenará con ceros).
+Sin embargo, si la función *C* espera un apuntador a una zona de memoria que pueda modificar tranquilamente, *ctypes* dispone de las funciones `create_string_buffer()` y `create_unicode_buffer()`, que retornan un objeto que puede pasarse como ***char\**** o ***wchar_t\**** respectivamente (de hecho lo que crean es un *array*). Al constructor se le puede pasar un entero (número de elementos, puestos a 0), un objeto *bytes* o *string* (*buffer* incluirá el terminador nulo), o un *bytes* o *string* seguido de un entero (truncará o rellenará con ceros).
 
 ### Especificar tipo de argumentos y de retorno
 
 Es posible especificar los tipos de los argumentos de una función, mediante una secuencia que los defina. Por un lado, es un modo de asegurarnos de que haremos las llamadas correctamente. Por otro lado, *Python* convertirá adecuadamente los argumentos que pasemos a la función (si es que pueden convertirse).
 
 ```python
-libreria.foo1.argtypes = [c_char_p, c_char_p, c_int, c_double]
+libreria.foo1.argtypes = [c_char_p,
+                          c_char_p, c_int, c_double]
 ```
 
-En cuanto al valor retornado, por defecto esperamos un `int` de vuelta (a excepción de librerías cargadas a través de `OleDLL`). Si queremos cambiar el tipo esperado de retorno, se debe indicar en el atributo ***restype*** del objeto función.
+En cuanto al valor retornado, por defecto esperamos un ***int*** de vuelta (a excepción de librerías cargadas a través de ***OleDLL***). Si queremos cambiar el tipo esperado de retorno, se debe indicar en el atributo ***restype*** del objeto función.
 
 ```python
-libreria.foo1.restype = c_char_p  # esperaremos char* de vuelta
+libreria.foo1.restype = c_char_p  # esperaremos char*
 ```
 
 Para validar el resultado de la llamada, se usa el atributo ***errcheck*** de la función, a la que se le asigna un objeto función o cualquier objeto *callable*. Al regresar la función *C*, esta función de comprobación será llamada con 3 argumentos:
@@ -130,7 +131,7 @@ Si queremos pasar una variable por referencia a la función *C*, podemos usar la
 
 ### Estructura y uniones
 
-*ctypes* proporciona las clases `Structure` y `Union`, que sirven como clases base para construir nuestras propias estructuras y uniones. El funcionamiento de ambos es el mismo (solo cambia el modo de almacenamiento interno), por lo que todo lo dicho para las estructuras se aplica también a las uniones (exceptuando el tema de la alineación, claro).
+*ctypes* proporciona las clases ***Structure*** y ***Union***, que sirven como clases base para construir nuestras propias estructuras y uniones. El funcionamiento de ambos es el mismo (solo cambia el modo de almacenamiento interno), por lo que todo lo dicho para las estructuras se aplica también a las uniones (exceptuando el tema de la alineación, claro).
 
 En la definición de la subclase se debe indicar un miembro ***\_fields\_***, que será una lista de tuplas de 2 elementos: nombre (*string*) y tipo *ctypes*.
 
@@ -163,7 +164,7 @@ La alineación de los campos se hará según el compilador. Se puede empaquetar 
 
 Si queremos definir un *bit field*, lo indicaremos mediante un entero como tercer elemento de la tupla correspondiente al campo. Un objeto de tipo estructura que tiene *bit fields* no se debe pasar por valor a una función *C* (usaremos apuntador).
 
-En cuanto al orden de *bytes*, se utilizará el nativo. Si queremos controlarlo, usaremos las clases base `BigEndianStructure`, `LittleEndianStructure`, `BigEndianUnion`, y `LittleEndianUnion` (estas clases no pueden contener apuntadores).
+En cuanto al orden de *bytes*, se utilizará el nativo. Si queremos controlarlo, usaremos las clases base ***BigEndianStructure***, ***LittleEndianStructure***, ***BigEndianUnion***, y ***LittleEndianUnion*** (estas clases no pueden contener apuntadores).
 
 Para especificar, por ejemplo, un tipo apuntador a estructura ***RECT***: `POINTER(RECT)`
 
@@ -260,19 +261,25 @@ foo.argtypes = [c_char, ESTRUC, POINTER(ARRESTRUC)]
 
 En los tipos de argumento en el atributo ***argtypes*** de la función a llamar, o en las especificaciones de tipo de los campos de estructuras, *ctypes* solo aceptará argumentos del tipo exacto. Hay algunas excepciones:
 
-- Si está definido un tipo apuntador, se acepta un *array*. Si hemos especificado un tipo `POINTER(c_int)` se admitirá un *array* de `c_int`.
+- Si está definido un tipo apuntador, se acepta un *array*. Si hemos especificado un tipo `POINTER(c_int)` se admitirá un *array* de ***c_int***.
 - Se puede dar el valor ***None*** a un apuntador (se convertirá en ***NULL***).
 
 ```python
->>> class Bar(Structure):
-...     _fields_ = [("count", c_int), ("values", POINTER(c_int))]
-...
->>> bar = Bar()
->>> bar.values = (c_int * 3)(1, 2, 3)  # llamada al constructor de un array de 3 enteros
->>> bar.count = 3
->>> for i in range(bar.count):
-... print(bar.values[i])
-...
+class Bar(Structure):
+    _fields_ = [("count", c_int),
+                ("values", POINTER(c_int))]
+
+bar = Bar()
+bar.values = (c_int * 3)(1, 2, 3)  # llamada al constructor
+                                   # de array de 3 enteros
+bar.count = 3
+for i in range(bar.count):
+    print(bar.values[i])
+```
+
+La salida es:
+
+```
 1
 2
 3
@@ -284,7 +291,7 @@ Si queremos convertir tipos incompatibles explícitamente podemos usar la funci�
 bar.values = cast((c_byte * 4)(), POINTER(c_int))
 ```
 
-El ejemplo muestra un *array* de 4 `char`, inicializado a ceros, y convertido a `int*`.
+El ejemplo muestra un *array* de 4 ***char***, inicializado a ceros, y convertido a ***int\****.
 
 En *C* podemos definir tipos incompletos en los campos de una estructura. El caso característico de un apuntador al tipo propio:
 
@@ -301,7 +308,8 @@ Esto no funciona en *ctypes*:
 ```python
 class cell(Structure):
     _fields_ = [("size", c_double),
-                ("next", POINTER(cell))]  # ERROR! Tipo desconocido
+                ("next", POINTER(cell))]  # ERROR:
+                                          # Tipo desconocido
 ```
 
 Para solucionarlo, simplemente definiremos los campos con posterioridad a la estructura:
@@ -310,7 +318,8 @@ Para solucionarlo, simplemente definiremos los campos con posterioridad a la est
 class cell(Structure):
     pass
 
-cell._fields_ = [("size", c_double), ("next", POINTER(cell))]
+cell._fields_ = [("size", c_double),
+                 ("next", POINTER(cell))]
 ```
 
 ### Funciones *callback*
@@ -325,18 +334,22 @@ CMPFUNC = CFUNCTYPE(c_int, POINTER(c_int), POINTER(c_int))
 cmp_func = CMPFUNC(comparaNums)
 ```
 
-En el ejemplo, vemos la definición de una función ***comparaNums*** que toma dos argumentos de tipo `POINTER(c_int)` y retorna un `c_int`. Luego definimos el tipo `CMPFUNC`, que es el tipo que describe ese tipo exacto de función. Finalmente creamos la instancia de *callaback function* (***cmp_func***) que ya podemos utilizar como tipo en funciones *C* que reciban (o retornen) un apuntador a función de este tipo.
+En el ejemplo, vemos la definición de una función ***comparaNums*** que toma dos argumentos de tipo `POINTER(c_int)` y retorna un ***c_int***. Luego definimos el tipo ***CMPFUNC***, que es el tipo que describe ese tipo exacto de función. Finalmente creamos la instancia de *callaback function* (***cmp_func***) que ya podemos utilizar como tipo en funciones *C* que reciban (o retornen) un apuntador a función de este tipo.
 
 Si nos fijamos, hemos hecho:
 
 ```python
-cmp_func = CFUNCTYPE(c_int, POINTER(c_int), POINTER(c_int))(comparaNums)
+cmp_func = CFUNCTYPE(c_int,
+                     POINTER(c_int),
+                     POINTER(c_int))(comparaNums)
 ```
 
 Podríamos hacer:
 
 ```python
-comparaNums = CFUNCTYPE(c_int, POINTER(c_int), POINTER(c_int))(comparaNums)
+comparaNums = CFUNCTYPE(c_int,
+                        POINTER(c_int),
+                        POINTER(c_int))(comparaNums)
 ```
 
 Por lo tanto podríamos usar un *decorator* al definir la función:
@@ -363,4 +376,4 @@ lib = CDLL("./mylib.so")
 valor = c_int.in_dll(lib, "vari")
 ```
 
-En este ejemplo, leeremos el valor de la variable ***vari***, en un `c_int`. Cualquier valor *ctypes* (primitivos, apuntadores, *arrays*, estructuras, etc.) disponen del método `in_dll()`.
+En este ejemplo, leeremos el valor de la variable ***vari***, en un ***c_int***. Cualquier valor *ctypes* (primitivos, apuntadores, *arrays*, estructuras, etc.) disponen del método `in_dll()`.

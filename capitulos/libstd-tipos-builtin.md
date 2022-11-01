@@ -1,6 +1,6 @@
 # Biblioteca estándar de Python: tipos *builtin*
 
-El presente documento es un resumen de una parte específica de la biblioteca estándar dedicada a los tipos incorporados en *Python* 3.10.
+El presente capítulo es un resumen de una parte específica de la biblioteca estándar dedicada a los tipos incorporados en *Python* 3.10.
 
 ## 4. BUILT-IN TYPES
 

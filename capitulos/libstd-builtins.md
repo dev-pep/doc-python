@@ -1,6 +1,6 @@
 # Biblioteca estándar de Python: *builtins*
 
-El presente documento es un resumen de una parte específica de la biblioteca estándar de *Python* 3.10 dedicada a las funciones, constantes y excepciones incorporadas.
+El presente capítulo es un resumen de una parte específica de la biblioteca estándar de *Python* 3.10 dedicada a las funciones, constantes y excepciones incorporadas.
 
 En la presentación de la sintaxis (de funciones, métodos, etc.) se usan corchetes para indicar los elementos opcionales.
 
