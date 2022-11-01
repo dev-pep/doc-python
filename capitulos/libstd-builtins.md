@@ -2,6 +2,8 @@
 
 El presente documento es un resumen de una parte específica de la biblioteca estándar de *Python* 3.10 dedicada a las funciones, constantes y excepciones incorporadas.
 
+En la presentación de la sintaxis (de funciones, métodos, etc.) se usan corchetes para indicar los elementos opcionales.
+
 ## 2. BUILT-IN FUNCTIONS
 
 (Funciones incorporadas.)
@@ -41,7 +43,7 @@ ascii(ob)
 Retorna una representación imprimible del objeto ***ob***. Como `repr()`, pero utilizando *escapes* para los caracteres no *ASCII*. Usa escapes del tipo ***\\x***, ***\\u*** y ***\\U***.
 
 ```python
-awaitable anext(ait[, default ])
+awaitable anext(ait[, default])
 ```
 
 Al ser esperado (mediante `await`), retorna el siguiente elemento del iterador asíncrono ***ait***. Si se especifica ***default*** es lo que retornará si el iterador está agotado. Si no se especifica ***default***, se levantará una excepción ***StopAsyncIteration*** al agotarse el iterador.
