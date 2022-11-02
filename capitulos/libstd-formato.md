@@ -4,7 +4,7 @@
 
 (Especificación.)
 
-La **especificación de formato** viene definida como base en el documento **PEP 3101**. Con el tiempo se han añadido otras características. Se ha seguido la estructura del mencionado *PEP* para realizar el presente resumen, pero se ha ampliado la información con la documentación de la biblioteca estándar de *Python* 3.10.
+La **especificación de formato** viene definida como base en el documento **PEP 3101**. Con el tiempo se han añadido otras características. Se ha seguido la estructura del mencionado *PEP* para realizar el presente resumen, pero se ha ampliado la información con la documentación de la biblioteca estándar de *Python* 3.11.
 
 Este documento trata sobre *strings Unicode* de *Python*.
 

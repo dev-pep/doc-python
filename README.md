@@ -1,8 +1,10 @@
 # Apuntes de Python
 
-La intención del presente texto es dar una explicación exhaustiva de los detalles más relevantes del lenguaje *Python* (versión 3.10). Se trata de un **resumen completo**, extraído de la documentación oficial. Los títulos se han mantenido en inglés, que es el idioma del documento que se ha utilizado como base para este resumen. Se han añadido aclaraciones y ampliaciones relevantes donde se ha estimado necesario. Sin embargo, **el contenido de estos apuntes puede resultar demasiado denso para un principiante sin conocimientos de programación**.
+La intención del presente texto es dar una explicación exhaustiva de los detalles más relevantes del lenguaje *Python* (versión 3.11). Se trata de un **resumen completo**, extraído de la documentación oficial. Los títulos se han mantenido en inglés, que es el idioma del documento que se ha utilizado como base para este resumen. Se han añadido aclaraciones y ampliaciones relevantes donde se ha estimado necesario. Sin embargo, **el contenido de estos apuntes puede resultar demasiado denso para un principiante sin conocimientos de programación**.
 
 Se incluye un resumen del tutorial y la referencia oficiales, así como de componentes básicos de de la biblioteca estándar. Para finalizar, se da una explicación del *API C*, utilizado para crear módulos *Python* en lenguaje *C*.
+
+> Por convenio, en la presentación de funciones y métodos en esta documentación, los argumentos opcionales se indican [entre corchetes].
 
 ## Copias y actualizaciones
 

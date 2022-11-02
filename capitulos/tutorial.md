@@ -22,12 +22,12 @@ Para iniciar una sesión interactiva del intérprete *Python* desde línea de co
 python3
 ```
 
-Es posible que el comando necesario sea, por ejemplo, `python3.10`, dependiendo de las distintas versiones de *Python* que estén instaladas en nuestro sistema.
+Es posible que el comando necesario sea, por ejemplo, `python3.11`, dependiendo de las distintas versiones de *Python* que estén instaladas en nuestro sistema.
 
 Para salir de la sesión, `Ctrl-D` (`Ctrl-W` en entorno *Windows*), o con la orden `quit()`. Si se le pasa como argumento un nombre de archivo, ejecuta ese *script*. También es posible ejecutar un módulo *Python* mediante:
 
 ```
-python3 -m <mod>
+python3 -m mod
 ```
 
 En este caso, el módulo ***mod*** debe estar desarrollado para ser ejecutado como un *script*.
@@ -656,7 +656,7 @@ La definición de una función almacena al identificador de la misma en la tabla
 
 Todas las funciones retornan un valor. Si no tiene sentencia `return` (o retorna con `return` sin argumento), retorna el valor vacío ***None*** (valor *built-in*).
 
-La sintaxis de la sentencia de retorno es `return <valor>`, o simplemente `return`.
+La sintaxis de la sentencia de retorno es `return valor`, o simplemente `return`.
 
 ### 4.8 More on Defining Functions
 
@@ -669,7 +669,7 @@ La sintaxis de la sentencia de retorno es `return <valor>`, o simplemente `retur
 En la definición de la función, puede haber uno o más parámetros con valor por defecto (*default parameter*), pero no puede haber ninguno de estos **antes** de un parámetro sin valor por defecto (*non-default parameter*).
 
 ```python
-def pregunta(prompt, reintentos=4, mensaje='¡Sí or no, por favor!'):
+def pregunta(prompt, reintentos=4, mensaje='¡Sí o no!'):
     # definición de la función
 ```
 
@@ -704,7 +704,8 @@ Inicializamos la variable a una lista vacía cada vez que no le pasamos valor a 
 A la hora de llamar a una función, podemos simplemente pasar los argumentos en orden, o podemos especificar a qué parámetro corresponde uno o más de nuestros argumentos. Supongamos la función:
 
 ```python
-def lorito(voltaje, estado='rígido', acción='bum', tipo='azulado'):
+def lorito(voltaje, estado='rígido',
+           acción='bum', tipo='azulado'):
     # ...
 ```
 
@@ -860,7 +861,8 @@ Consistirá en dos puntos (***:***) después del nombre del parámetro y antes d
 ...     return str(cantidad) + ' ' + producto
 ...
 >>> f(50)
-{'cantidad': <class 'int'>, 'producto': <class 'str'>, 'return': <class 'str'>}
+{'cantidad': <class 'int'>, 'producto': <class 'str'>,
+    'return': <class 'str'>}
 ```
 
 En caso de añadir anotaciones, no es necesario anotar cada parámetro y/o el valor de retorno.
@@ -944,7 +946,7 @@ Las listas tienen también los siguientes métodos (sea ***a*** una lista):
 - `a.remove(x)` - elimina el primer elemento cuyo valor es ***x***. Levanta excepción ***RaiseError*** si no hay ninguno.
 - `a.pop([i])` - retorna el elemento con índice ***i*** y lo elimina de la lista; si no especificamos índice ***i*** (opcional), usa el último elemento de la lista.
 - `a.clear()` - elimina todos los elementos de la lista. Equivale a `del a[:]`.
-- `a.index(x [,start [,end]])` - retorna el índice del primer elemento con valor ***x***. Los parámetros ***start*** y ***end***, en numeración de *slice*, limitan la búsqueda a ciertas posiciones. El resultado es siempre relativo al principio de la lista.
+- `a.index(x[, start[, end]])` - retorna el índice del primer elemento con valor ***x***. Los parámetros ***start*** y ***end***, en numeración de *slice*, limitan la búsqueda a ciertas posiciones. El resultado es siempre relativo al principio de la lista.
 - `a.count(x)` - retorna el número de elementos iguales a ***x*** en la lista.
 - `a.sort(*, key=None, reverse=False)` - ordena los elementos.
 - `a.reverse()` - invierte el orden de los elementos.
@@ -990,8 +992,8 @@ for x in [1, 2, 3]:
 La expresión inicial, que marca la forma general de cada elemento, puede ser a su vez una lista:
 
 ```python
->>> [[x, x ** 2, x ** 3] for x in range(10) if x==(x // 2) * 2]
-[[0, 0, 0], [2, 4, 8], [4, 16, 64], [6, 36, 216], [8, 64, 512]]
+>>> [[x, x**2, x+1] for x in range(10) if x == (x // 2) * 2]
+[[0, 0, 1], [2, 4, 3], [4, 16, 5], [6, 36, 7], [8, 64, 9]]
 ```
 
 Ejemplo: Aplanar una lista:
@@ -1295,7 +1297,7 @@ Ejemplos que se evalúan a verdadero:
 
 (Módulos.)
 
-Un módulo se puede importar en otro módulo o en el módulo principal (módulo de nivel superior o intérprete interactivo), mediante `import <nombre_módulo>`. El módulo importado puede ser un *script Python*.
+Un módulo se puede importar en otro módulo o en el módulo principal (módulo de nivel superior o intérprete interactivo), mediante `import nombre_módulo`. El módulo importado puede ser un *script Python*.
 
 Al importar un módulo no inserta los nombres de las funciones allí definidas en la tabla de nombres actual, sino solo el nombre del módulo. Se puede ver como un objeto módulo en la tabla de nombres actual. A través de ese objeto podemos acceder a las funciones que contiene, de este modo: `modulo.foo()`. Aunque podemos insertar una función en la tabla actual tecleando algo como `fun = modulo.foo`.
 
@@ -1326,13 +1328,13 @@ Esto último importa todas las definiciones del módulo ***fibo*** (menos las em
 Para modificar los nombres en el momento de añadirlos a nuestra tabla, podemos usar:
 
 ```python
-import <módulo> as <minombre>
+import módulo as minombre
 ```
 
 En este caso, el nombre añadido a la tabla será ***minombre***, y contendrá el módulo original. Para modificar el nombre de los **elementos** del módulo al importarlos:
 
 ```python
-from <módulo> import <foo> as <mifun1>, <fee> as <mifun2>
+from módulo import foo as mifun1, fee as mifun2
 ```
 
 Y así tantas como queramos.
@@ -1351,7 +1353,7 @@ importlib.reload(nombremodulo)
 Desde línea de comandos:
 
 ```
-python3 m1.py <argumentos>
+python3 m1.py argumentos
 ```
 
 Cuando un módulo se está ejecutando en el nivel superior, el valor de ***\_\_name\_\_*** es ***'\_\_main\_\_'***. Este es el modo de saber si nuestro módulo está funcionando como un *script* invocado directamente (nivel superior), o está siendo importado para que otro módulo utilice sus funciones.
@@ -1386,7 +1388,7 @@ Al ejecutar un módulo como *script*, no se produce tal "compilación" en el cac
 
 (La función `dir()`.)
 
-Esta función *built-in* muestra los nombres definidos (funciones, variables, módulos,...) en un módulo concreto. Sin parámetros, muestra los nombres de la tabla del módulo actual. Con `dir(<módulo>)` vemos los nombres definidos en el módulo específico (cuyo nombre debe estar en la tabla actual).
+Esta función *built-in* muestra los nombres definidos (funciones, variables, módulos,...) en un módulo concreto. Sin parámetros, muestra los nombres de la tabla del módulo actual. Con `dir(módulo)` vemos los nombres definidos en el módulo específico (cuyo nombre debe estar en la tabla actual).
 
 No muestra los nombres *built-in*. Para ello tendríamos que usar el módulo estándar ***builtins***:
 
@@ -1470,7 +1472,7 @@ Y entonces podemos llamar así:
 foo()
 ```
 
-Al hacer: `from <paquete> import <elemento>`, ***elemento*** puede ser un paquete, un módulo, o cualquier nombre definido en el *package* (como una función, una variable o una clase). *Python* intenta primero averiguar si es un nombre definido en el código del *package* (en ***\_\_init\_\_.py***); si no lo encuentra, asumirá que es un subpaquete (o módulo del mismo); si tampoco lo es, se producirá error. En cambio, al hacer `import item.subitem.subsubitem`, todos los nombres deben ser paquetes, excepto el último que puede ser un paquete o un módulo.
+Al hacer: `from paquete import elemento`, ***elemento*** puede ser un paquete, un módulo, o cualquier nombre definido en el *package* (como una función, una variable o una clase). *Python* intenta primero averiguar si es un nombre definido en el código del *package* (en ***\_\_init\_\_.py***); si no lo encuentra, asumirá que es un subpaquete (o módulo del mismo); si tampoco lo es, se producirá error. En cambio, al hacer `import item.subitem.subsubitem`, todos los nombres deben ser paquetes, excepto el último que puede ser un paquete o un módulo.
 
 #### Aclaraciones adicionales
 
@@ -1491,7 +1493,7 @@ Podemos importar un módulo o paquete sin utilizar la sintaxis de jerarquía de 
 
 ##### Importar con *import*
 
-Importaremos con `import <nombre>`, donde ***nombre*** es una secuencia jerárquica de nombres separados por punto. Dichos nombres solo pueden ser nombres de paquetes (en orden jerárquico), a excepción del último que puede ser el nombre de un paquete o de un módulo.
+Importaremos con `import nombre`, donde ***nombre*** es una secuencia jerárquica de nombres separados por punto. Dichos nombres solo pueden ser nombres de paquetes (en orden jerárquico), a excepción del último que puede ser el nombre de un paquete o de un módulo.
 
 Al importar, se van ejecutando todos los ***\_\_init\_\_.py*** en el orden en que se van encontrando, empezando por el del paquete raíz. Si el último nombre es de un módulo, lo ejecuta, después de los ***\_\_init\_\_.py*** superiores en la jerarquía.
 
@@ -1501,7 +1503,7 @@ Por lo tanto, cualquier referencia a un elemento importado mediante una sentenci
 
 ##### Importar con *from-import*
 
-Otro modo de importar es con `from <nombre> import <elemento>`. Al igual que en el caso anterior, ***nombre*** es la ruta de nombres separados por punto. Todos ellos deben ser nombres de paquetes excepto el último, que puede ser nombre de paquete o de módulo. Si el último es el nombre de un paquete, ***elemento*** puede ser el nombre de un subpaquete, módulo, u objeto (función, clase, variable, etc.). Si el último es un nombre de módulo, ***elemento*** será forzosamente un nombre de objeto definido en el módulo en cuestión.
+Otro modo de importar es con `from nombre import elemento`. Al igual que en el caso anterior, ***nombre*** es la ruta de nombres separados por punto. Todos ellos deben ser nombres de paquetes excepto el último, que puede ser nombre de paquete o de módulo. Si el último es el nombre de un paquete, ***elemento*** puede ser el nombre de un subpaquete, módulo, u objeto (función, clase, variable, etc.). Si el último es un nombre de módulo, ***elemento*** será forzosamente un nombre de objeto definido en el módulo en cuestión.
 
 Igual que en el caso anterior, también se van ejecutando los ***\_\_init\_\_.py*** (y el posible módulo final) en orden, desde el raíz, hasta el último de los nombres de ***nombre***. La única diferencia es que en lugar de añadirse a la tabla de nombres el nombre del paquete raíz, se añade directamente el elemento indicado en ***elemento***, ya sea este un subpaquete (cuyo ***\_\_init\_\_.py*** se ejecuta en último lugar), un módulo (que se ejecuta en último lugar), o un objeto (definido en un paquete o módulo cuyo código se ejecuta en último lugar).
 
@@ -1519,9 +1521,9 @@ Por otro lado, en cuanto a la ejecución de los ***\_\_init\_\_.py*** y módulos
 
 (Importar `*` desde un paquete.)
 
-Si hacemos `from <paquete> import *`, no se importan submódulos ni *subpackages*, sino únicamente los elementos que estén definidos en el código del paquete (en su ***\_\_init\_\_.py***), aunque también se pueden importar otras cosas explícitamente desde allí.
+Si hacemos `from paquete import *`, no se importan submódulos ni *subpackages*, sino únicamente los elementos que estén definidos en el código del paquete (en su ***\_\_init\_\_.py***), aunque también se pueden importar otras cosas explícitamente desde allí.
 
-Sin embargo, podemos definir fácilmente el contenido del *package* mediante la lista de *strings* ***\_\_all\_\_***. Si está definida en ***\_\_init\_\_.py***, se importará lo que la lista especifique, en el orden especificado, en el caso específico de que hagamos un `from <pack> import *`:
+Sin embargo, podemos definir fácilmente el contenido del *package* mediante la lista de *strings* ***\_\_all\_\_***. Si está definida en ***\_\_init\_\_.py***, se importará lo que la lista especifique, en el orden especificado, en el caso específico de que hagamos un `from paquete import *`:
 
 ```python
 __all__ = ['install', 'uninstall', 'formats', 'foo']
@@ -1592,7 +1594,7 @@ Las funciones *built-in* `str()` y `repr()` retornan representaciones en *string
 '0.14285714285714285'
 >>> x = 10 * 3.25
 >>> y = 200 * 200
->>> s = 'El valor de x es ' + repr(x) + ', e y es ' + repr(y) + '.'
+>>> s = 'x: ' + repr(x) + '. y: ' + repr(y) + '.'
 >>> print(s)
 El valor de x es 32.5, e y es 40000.
 >>> hello='hello, world\n'
@@ -1650,7 +1652,7 @@ El valor de pi es 3.142.
 
 (Lectura y escritura de archivos.)
 
-La función `open(nombre [,modo])` retorna un objeto archivo. El modo puede ser ***r*** (*readonly*, solo lectura, valor por defecto), ***'w'*** (*write*, escritura, trunca el archivo al abrirlo), ***a*** (*append*, añadir al final, no trunca el archivo) o ***r+*** (*read*/*write*, lectura y escritura, tampoco trunca el archivo). Si al modo añadimos ***b***, abre en modo binario (no texto). En modo texto, los finales de línea específicos de la plataforma de ejecución **leídos** (***\\n*** de *Unix*, ***\\r\\n*** de *Windows*) se convierten internamente a ***\\n***; esos ***\\n*** se convierten, al *escribir*, en finales de línea específicos de la plataforma.
+La función `open(nombre[, modo])` retorna un objeto archivo. El modo puede ser ***r*** (*readonly*, solo lectura, valor por defecto), ***'w'*** (*write*, escritura, trunca el archivo al abrirlo), ***a*** (*append*, añadir al final, no trunca el archivo) o ***r+*** (*read*/*write*, lectura y escritura, tampoco trunca el archivo). Si al modo añadimos ***b***, abre en modo binario (no texto). En modo texto, los finales de línea específicos de la plataforma de ejecución **leídos** (***\\n*** de *Unix*, ***\\r\\n*** de *Windows*) se convierten internamente a ***\\n***; esos ***\\n*** se convierten, al *escribir*, en finales de línea específicos de la plataforma.
 
 Es buena idea usar `with` para manipular archivos, ya que lo cerrará automáticamente una vez haya terminado el trabajo, incluso si se produce una excepción:
 
@@ -1899,6 +1901,95 @@ with open('myfile.txt') as f:
 
 En este caso podemos asegurar que el archivo ***f*** queda cerrado después de su uso, incluso aunque se haya producido una excepción *unhandled* y el programa se interrumpa.
 
+### 8.9 Raising and Handling Multiple Unrelated Exceptions
+
+(Gestionar y manejar múltiples excepciones no relacionadas.)
+
+Es posible gestionar varias excepciones a la vez. Por ejemplo cuando dos tareas concurrentes fallan al mismo tiempo. O simplemente cuando deseamos ir recogiendo errores sin detener la ejecución.
+
+La excepción ***ExceptionGroup*** tiene la característica de incluir varias instancias de excepciones (no pueden ser clases, sino instancias).
+
+El constructor de esta clase toma, en primer lugar, un *string* con el mensaje de error, y una lista con todas las instancias de excepción que conforman el grupo. Esta lista puede a su vez contener excepciones del tipo ***ExceptionGroup*** anidadas.
+
+Si definimos la función:
+
+```python
+def f():
+    excs = [OSError('error uno'), SystemError('error dos')]
+    raise ExceptionGroup('hubo problemas', excs)
+```
+
+Podemos ejecutarla:
+
+```python
+>>> f()
+  + Exception Group Traceback (most recent call last):
+  |   File "<stdin>", line 1, in <module>
+  |   File "<stdin>", line 3, in f
+  | ExceptionGroup: hubo problemas
+  +-+---------------- 1 ----------------
+    | OSError: error uno
+    +---------------- 2 ----------------
+    | SystemError: error dos
+    +------------------------------------
+```
+
+A la hora de tratar una excepción de este tipo, podemos hacerlo de la forma habitual:
+
+```python
+>>> try:
+...     f()
+... except Exception as e:
+...     print(f'Excepción de tipo {type(e)} capturada')
+...
+Excepción de tipo <class 'ExceptionGroup'> capturada
+>>>
+```
+
+Por otro lado, si queremos tratar las excepciones contenidas en el grupo individualmente, podemos usar `except*`. En este caso, aunque haya coincidencia, el tratamiento de excepciones seguirá propagándose a las demás cláusulas `except` o `except*`.
+
+```python
+>>> try:
+...     f()
+... except* OSError:
+...     print('Error de SO')
+... except* SystemError:
+...     print('Error de sistema')
+...
+Error de SO
+Error de sistema
++ Exception Group Traceback (most recent call last):
+|   File "<stdin>", line 1, in <module>
+|   File "<stdin>", line 3, in f
+| ExceptionGroup: hubo problemas
++-+---------------- 1 ----------------
+  | OSError: error uno
+  +---------------- 2 ----------------
+  | SystemError: error dos
+  +------------------------------------
+```
+
+En este caso, las excepciones del grupo se tratan individualmente, pero al final se interrumpe la ejecución, dado que la excepción ***ExceptionGroup*** queda sin tratar. Para que una excepción quede tratada, debe haber coincidencia con una cláusula `except` (las coincidencias con `except*` no dejan la excepción tratada).
+
+### 8.10 Enriching Exceptions with Notes
+
+(Enriquecer excepciones con notas.)
+
+Es posible aportar más información a una excepción que deseemos dejar sin tratar. Esto se hace mediante el método `add_note()` del objeto excepción:
+
+```python
+>>> try:
+...     a = 10 / 0
+... except ZeroDivisionError as e:
+...     e.add_note('En iteración inicial')
+...     raise
+...
+Traceback (most recent call last):
+  File "<stdin>", line 2, in <module>
+ZeroDivisionError: division by zero
+En iteración inicial
+```
+
 ## 9. CLASSES
 
 (Clases.)
@@ -2070,7 +2161,8 @@ Como hemos visto, **un método es una función asociada a una instancia**.
 >>> MiClase.foo
 <function MiClase.foo at 0x7f91fce727a0>
 >>> x.foo
-<bound method MiClase.foo of <__main__.MiClase object at 0x7f91fce69060>>
+<bound method MiClase.foo of
+    <__main__.MiClase object at 0x7f91fce69060>>
 >>>
 ```
 
@@ -2098,9 +2190,11 @@ Dado que ahora la clase tiene las dos funciones (***foo*** y ***f***), podemos l
 >>> x.foo()
 ¿Esto es un método o una función?
 >>> x.f
-<bound method MiClase.foo of <__main__.MiClase object at 0x7f91fce69060>>
+<bound method MiClase.foo of
+    <__main__.MiClase object at 0x7f91fce69060>>
 >>> x.foo
-<bound method MiClase.foo of <__main__.MiClase object at 0x7f91fce69060>>
+<bound method MiClase.foo of
+    <__main__.MiClase object at 0x7f91fce69060>>
 ```
 
 Veamos qué pasa si añadimos **una función a la instancia**:
@@ -2112,7 +2206,8 @@ Veamos qué pasa si añadimos **una función a la instancia**:
 >>> x.otraf()
 Traceback (most recent call last):
   File "<stdin>", line 1, in <module>
-TypeError: MiClase.foo() missing 1 required positional argument: 'self'
+TypeError: MiClase.foo() missing 1 required
+    positional argument: 'self'
 ```
 
 Como vemos, hemos asignado la función ***MiClase.foo*** (podríamos haberlo hecho con cualquier función que estuviese en el *scope* actual) directamente a un atributo ***otraf*** de la instancia ***x***. Al hacerlo así, ese atributo no pasa a ser un método sino una función, ya que para que quede asociado a la instancia es necesario que la función pertenezca a la clase, no simplemente a la instancia.
@@ -2122,7 +2217,8 @@ Sin embargo, dado que ***x.foo*** sí es un método, podemos hacer:
 ```python
 >>> x.extraf = x.foo
 >>> x.extraf
-<bound method MiClase.foo of <__main__.MiClase object at 0x7f91fce69060>>
+<bound method MiClase.foo of
+    <__main__.MiClase object at 0x7f91fce69060>>
 >>> x.extraf()
 ¿Esto es un método o una función?
 ```
@@ -2136,7 +2232,8 @@ Por complicarlo un poco más, veamos un ejemplo que, aunque no tiene sentido, no
 >>> y
 <__main__.MiClase object at 0x7f91fcf74670>
 >>> y.foo
-<bound method MiClase.foo of <__main__.MiClase object at 0x7f91fcf74670>>
+<bound method MiClase.foo of
+    <__main__.MiClase object at 0x7f91fcf74670>>
 ```
 
 Vemos que ***y.foo*** es un método, asociado a la instancia ***y***.
@@ -2144,7 +2241,8 @@ Vemos que ***y.foo*** es un método, asociado a la instancia ***y***.
 ```python
 >>> x.externaf = y.foo
 >>> x.externaf
-<bound method MiClase.foo of <__main__.MiClase object at 0x7f91fcf74670>>
+<bound method MiClase.foo of
+    <__main__.MiClase object at 0x7f91fcf74670>>
 ```
 
 Ahora ***x.externaf*** es una referencia a un método asociado ¡a la instancia ***y***! Realmente esto no se utiliza, puesto que sería absurdo y una muy mala práctica.
@@ -2206,7 +2304,7 @@ Base.metodo(self, argumentos)
 
 `isinstance(obj, clase)` retorna verdadero si ***obj*** es una instancia de la clase ***clase*** o de una clase derivada de esta.
 
-`issubclass(<clase1>, <clase2>)` retorna verdadero si ***clase1*** es una clase derivada de ***clase2***.
+`issubclass(clase1, clase2)` retorna verdadero si ***clase1*** es una clase derivada de ***clase2***.
 
 #### 9.5.1 Multiple Inheritance
 
@@ -2536,7 +2634,8 @@ False
 ¿Por qué sigue fallando? Porque internamente *Python* sigue convirtiendo primero los literales de punto flotante en ***float***:
 
 ```python
->>> Decimal(float('0.1')) * Decimal(float('3.0')) == Decimal(float('0.3'))
+>>> Decimal(float('0.1')) * Decimal(float('3.0')) == \
+... Decimal(float('0.3'))
 False
 ```
 
@@ -2587,7 +2686,7 @@ Una vez activado el entorno virtual, el *prompt* del sistema cambiará para most
 
 > La práctica habitual es que el directorio que almacena nuestro entorno virtual tenga por nombre ***.venv***, y sea un subdirectorio de la carpeta raíz de nuestro proyecto *Python*.
 
-En el entorno virtual se suelen crear varios *alias* para el intérprete *Python*, de tal modo que `python`, `python3` y `python3.10` suelen ser lo mismo.
+En el entorno virtual se suelen crear varios *alias* para el intérprete *Python*, de tal modo que `python`, `python3` y `python3.11` suelen ser lo mismo.
 
 Suponiendo que deseemos crear un entorno virtual con una **versión antigua** de *Python*, siempre y cuando tal versión antigua esté instalada en nuestro sistema:
 
@@ -2609,7 +2708,7 @@ python -m pip install pandas
 
 Esto instalará el módulo ***pandas*** **y todas sus dependencias** en el entorno virtual (si está activado) o en el sistema (si no hay entorno virtual activado).
 
-Con frecuencia, el entorno virtual suele disponer de los comandos sinónimos `pip`, `pip3` y `pip3.10` que permiten abreviar el trabajo con paquetes:
+Con frecuencia, el entorno virtual suele disponer de los comandos sinónimos `pip`, `pip3` y `pip3.11` que permiten abreviar el trabajo con paquetes:
 
 ```
 pip install pandas
@@ -2666,15 +2765,15 @@ python -m pip install -r requirements.txt
 Los *scripts Python* se pueden hacer directamente ejecutables en entornos *Unix*, añadiendo por ejemplo, como primera línea (línea *shebang*):
 
 ```python
-#!/usr/bin/python3.10
+#!/usr/bin/python3.11
 ```
 
 Si no deseamos especificar la ruta del ejecutable:
 
 ```python
-#!/usr/bin/env python3.10
+#!/usr/bin/env python3.11
 ```
 
-Teniendo en cuenta que el comando de *Python* (en este caso, `python3.10`) debe estar efectivamente incluido en la variable *path* del sistema.
+Teniendo en cuenta que el comando de *Python* (en este caso, `python3.11`) debe estar efectivamente incluido en la variable *path* del sistema.
 
 En todo caso, el archivo *script* deberá tener permisos de ejecución.

@@ -1,6 +1,6 @@
 # Referencia de Python
 
-El presente capítulo es un resumen de los aspectos más relevantes de la referencia oficial de *Python* 3.10.
+El presente capítulo es un resumen de los aspectos más relevantes de la referencia oficial de *Python* 3.11.
 
 ## 2. LEXICAL ANALYSIS
 
@@ -116,7 +116,7 @@ Algunos identificadores solo están reservados dentro de ciertos contextos. Es e
 
 (Clases reservadas de identificadores.)
 
-***\_\**** no se importan con `from <modulo> import *`.
+***\_\**** no se importan con `from modulo import *`.
 
 ***\_*** es un comodín (*wildcard*) dentro de un bloque `match`. Fuera de él, no tiene ningún significado especial.
 
@@ -150,7 +150,7 @@ El prefijo ***f*** o ***F*** es para literales con formato (*formatted string li
 
 El orden de dos prefijos, en caso de coincidir, es indiferente. En el caso de *bytes*, pueden coincidir ***r*** y ***b***. En *strings*, pueden coincidir ***r*** y ***f***.
 
-Secuencias de escape (*escape sequences*): ***\\*** + salto de línea (se ignoran ambos), ***\\\\***, ***\\'***, ***\\"***, ***\\a*** (*bell*), ***\\b*** (*backspace*, retroceso), ***\\f*** (*FF*), ***\\n*** (*LF*), ***\\r*** (*CR*), ***\\t*** (tabulador), ***\\v*** (tabulador vertical), ***\\⁠ooo*** (hasta 3 caracteres octales), ***\\xhh*** (2 caracteres hexadecimales).
+Secuencias de escape (*escape sequences*): ***\\*** + salto de línea (se ignoran ambos), ***\\\\***, ***\\'***, ***\\"***, ***\\a*** (*bell*), ***\\b*** (*backspace*, retroceso), ***\\f*** (*FF*), ***\\n*** (*LF*), ***\\r*** (*CR*), ***\\t*** (tabulador), ***\\v*** (tabulador vertical), ***\\⁠ooo*** (hasta 3 caracteres octales, número inferior a 0o400), ***\\xhh*** (2 caracteres hexadecimales).
 
 En los literales *string*, las secuencias *escape* octal y hexadecimal denotan un carácter *Unicode*; en un literal *bytes*, el valor del *byte*.
 
@@ -333,7 +333,7 @@ Existen ciertos nombres de método que indican cómo se llevan a cabo ciertas op
 Métodos especiales que puede implementar una clase.
 
 ```python
-__new__(clase [,...])
+__new__(clase[, ...])
 ```
 
 Es un método estático (aunque en este caso no hace falta declararlo como tal). Se llama a la hora de crear una nueva instancia de ***clase*** si queremos más control sobre esta creación. Los argumentos adicionales son los que pasamos al constructor de la clase para crear la instancia. Este método retorna normalmente la nueva instancia de tipo ***clase***.
@@ -341,7 +341,7 @@ Es un método estático (aunque en este caso no hace falta declararlo como tal).
 Típicamente, `__new__()` llamará a `__new__()`de la clase base:
 
 ```python
-super().__new__(clase [,...])
+super().__new__(clase[, ...])
 ```
 
 Obsérvese que hay que pasarle la clase como argumento. La clase actual la recibe automáticamente, pero al llamar manualmente al método de la clase padre, se debe especificar el tipo (clase) de la instancia a crear. Este método de la clase padre retornará el objeto creado, y la clase derivada lo recibirá, pudiéndolo modificar, a su vez, antes de retornarlo.
@@ -351,7 +351,7 @@ Obsérvese que hay que pasarle la clase como argumento. La clase actual la recib
 Si `__new__()` no está definido, se crea la instancia de la forma predeterminada y se llama a `__init__()` (si está definido). Siempre habrá un `__new__()`, aunque sea heredado (como mínimo de ***object***).
 
 ```python
-__init__(self [,...])
+__init__(self[, ...])
 ```
 
 Inicializador de instancia. Los argumentos son los que se pasan al invocar a la clase para crear la instancia. Es llamado después de la creación de la instancia (mediante `__new__()`), y antes de retornar la instancia creada al llamador. Si lo definimos y la clase base también, hay que llamar también al de la clase base (`super().__init__()`), puesto que lo sobreescribe (a no ser que no queramos que se ejecute el inicializador de la base). No debe retornar ningún valor (***None***).
@@ -474,7 +474,7 @@ Recordemos que aunque el atributo no esté definido en la clase base, el valor s
 Importante: `__getattr__()` sufre el mismo problema cuando intentamos acceder a un atributo inexistente, con la diferencia de que al no disponer ***object*** de este método, deberemos definir esa función (pasándole una referencia a la instancia y el nombre del atributo deseado) en algún lado (en la clase base de nuestra clase, por ejemplo).
 
 ```python
-`__setattr__(self, nombre, valor)`
+__setattr__(self, nombre, valor)
 ```
 
 Para establecer o cambiar valores. El comportamiento por defecto es cambiar el diccionario de la instancia. En el caso de que se desee asignar un valor a un atributo, para evitar recursión infinita debe hacerse a través del `__setattr__()` de la clase base (u ***object***, o cualquier otro lado).
@@ -604,7 +604,7 @@ Debe retornar ***True*** si el objeto ***clase*** debe ser considerado subclase 
 Para que se pueda llamar a la instancia, como si fuera una función:
 
 ```python
-__call__(self [,argumentos])
+__call__(self[, argumentos])
 ```
 
 Si utilizamos la llamada sobre una instancia ***x***:
@@ -697,7 +697,7 @@ Es posible definir las operaciones matemáticas que se pueden realizar con los o
 
 Métodos:
 
-`__add__(self, otro)`, `__sub__(self, otro)`, `__mul__(self, otro)`, `__matmul__(self, otro)`, `__truediv__(self, otro)`, `__floordiv__(self, otro)`, `__mod__(self, otro)`, `__divmod__(self, otro)`, `__pow__(self, otro [,modulo])`, `__lshift__(self, otro)`, `__rshift__(self, otro)`, `__and__(self, otro)`, `__xor__(self, otro)` y `__or__(self, otro)`.
+`__add__(self, otro)`, `__sub__(self, otro)`, `__mul__(self, otro)`, `__matmul__(self, otro)`, `__truediv__(self, otro)`, `__floordiv__(self, otro)`, `__mod__(self, otro)`, `__divmod__(self, otro)`, `__pow__(self, otro[, modulo])`, `__lshift__(self, otro)`, `__rshift__(self, otro)`, `__and__(self, otro)`, `__xor__(self, otro)` y `__or__(self, otro)`.
 
 Corresponden respectivamente a los operadores:
 
@@ -731,11 +731,9 @@ Estos métodos corresponden respectivamente a `+=`, `-=`, `*=`, `@=`, `/=`, `//=
 
 `__neg__(self)`, `__pos__(self)`, `__abs__(self)` y `__invert__(self)` responden respectivamente a los operadores unarios `-`, `+`, `abs()` y `~`.
 
-`__complex__(self)`, `__int__(self)`, `__float__(self)` y `__round__(self [,n])` responden respectivamente a las *built-in functions* `complex()`, `int()`, `float()` y `round()`. Deben retornar un valor del tipo adecuado.
+`__complex__(self)`, `__int__(self)`, `__float__(self)` y `__round__(self[, n])` responden respectivamente a las *built-in functions* `complex()`, `int()`, `float()` y `round()`. Deben retornar un valor del tipo adecuado.
 
-`__round__(self [,digits])`, `__trunc__(self)`, `__floor__(self)` y `__ceil__(self)` responden a la *bult-in function* `round()`, y a las funciones del módulo ***math*** `trunc()`, `floor()` y `ceil()`. Todas ellas deberían retornar un número entero, a excepción de `round()` en caso de especificar un número de dígitos decimales superior a cero. Si `__int__()` no está definida, `int()` usará el método `__trunc__()`.
-
-Truncar es eliminar la parte decimal, con lo que equivale a *floor* en positivos, y a *ceil* en negativos.
+`__round__(self[, digits])`, `__trunc__(self)`, `__floor__(self)` y `__ceil__(self)` responden respectivamente a la *built-in function* `round()`, y a las funciones del módulo ***math*** `trunc()`, `floor()` y `ceil()`. Todas ellas deberían retornar un número entero, a excepción de `round()` en caso de especificar un número de dígitos decimales superior a cero. Si `__int__()` no está definida, `int()` usará el método `__index__()`.
 
 #### 3.3.9 With Statement Context Managers
 
@@ -950,7 +948,7 @@ Si el generador contiene cláusulas `async for` o expresiones `await`, la expres
 
 (Expresiones `yield`.)
 
-Un generador retorna valores mediante `yield`, o `yield from <expr>`, donde ***expr*** actúa como un subiterador del que va tomando valores para realizar los `yield`.
+Un generador retorna valores mediante `yield`, o `yield from expr`, donde ***expr*** actúa como un subiterador del que va tomando valores para realizar los `yield`.
 
 El método `__next__()` de los iteradores y generadores es llamado implícitamente por una cláusula `for`, o directamente con la *built-in function* `next()`.
 
@@ -1216,7 +1214,7 @@ raise MiExcepcion(argumentos)
 Al levantarse una excepción se genera un objeto *traceback* (sucesión de llamadas hasta el punto del código donde se produce dicha excepción), que se añade a la instancia de la excepción levantada, en su atributo ***\_\_traceback\_\_***. Este atributo es modificable, a través del método `with_traceback()`:
 
 ```python
-raise MiExcep('Texto de error').with_traceback(objeto_traceback)
+raise MiExcep('Texto de error').with_traceback(obj_tbck)
 ```
 
 En este caso, hemos levantado una excepción del tipo ***MiExcep***, pasándole un texto del error al constructor, y aportando nuestro propio objeto *traceback*. Lo podemos hacer así porque el método `with_traceback()` retorna el propio objeto (instancia) excepción.
@@ -1297,7 +1295,7 @@ No pueden incluirse varias sentencias compuestas en una sola línea.
 
 Sentencias compuestas: `if`, `while`, `for`, `try`, `with`, `match`, `def` y `class`.
 
-La mayor parte se ha visto en el tutorial. Veremoa a continuación algunos conceptos adicionales relacionados con las dos últimas.
+La mayor parte se ha visto en el tutorial y no se repetirán aquí. Veremoa a continuación algunos conceptos adicionales relacionados con las dos últimas.
 
 ### 8.7 Function definitions
 

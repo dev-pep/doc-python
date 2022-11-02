@@ -25,15 +25,15 @@ En el archivo fuente en *C* de una extensión (módulo) para *Python* se debe in
 Para que tal archivo de cabecera esté disponible en nuestro sistema, es posible que haya que instalar algún paquete **de desarrollo** de *Python*. En una distribución *Linux* basada en *Debian* podríamos tener que hacer algo así:
 
 ```
-sudo apt install python3.10-dev
+sudo apt install python3.11-dev
 ```
 
-En ese caso, una probable ubicación para ese archivo sería ***/usr/include/python3.10/Python.h***.
+En ese caso, una probable ubicación para ese archivo sería ***/usr/include/python3.11/Python.h***.
 
 Así, podríamos incluirlo directamente como:
 
 ```c
-#include <python3.10/Python.h>
+#include <python3.11/Python.h>
 ```
 
 Lo cual funcionaría, pero presentaría un probable problema de portabilidad. Lo mejor es especificar el subdirectorio preciso en el comando de compilación, y así evitar escribir tal subdirectorio (dependiente de la plataforma) en el código fuente.
@@ -245,7 +245,7 @@ static struct PyModuleDef spammodule = {
 };
 ```
 
-Ahora ya podemos escribir la función de inicialización. Se deberá llamar ***PyInit_\<nombre>***, donde ***nombre*** es el nombre exacto del módulo. En nuestro caso, sería ***PyInit_spam***. La función retorna un valor de tipo ***PyMODINIT_FUNC***, y **es el único elemento global que no se declarará como** `static`.
+Ahora ya podemos escribir la función de inicialización. Se deberá llamar ***PyInit_nombre***, donde ***nombre*** es el nombre exacto del módulo. En nuestro caso, sería ***PyInit_spam***. La función retorna un valor de tipo ***PyMODINIT_FUNC***, y **es el único elemento global que no se declarará como** `static`.
 
 ```c
 PyMODINIT_FUNC PyInit_spam(void)
@@ -467,7 +467,7 @@ Vamos a ver cómo podríamos generar el módulo usando el compilador *GCC* en si
 
 ```
 gcc -DNDEBUG -g -O3 -std=c18 -Wall -fPIC \
-        -I/usr/local/include/python3.10 -c demo.c \
+        -I/usr/local/include/python3.11 -c demo.c \
         -o build/demo.o
 gcc -shared build/demo.o -o build/demo.so
 ```
@@ -480,7 +480,7 @@ La primera orden genera el código objeto en ***demo.o***:
 - `-std=c18` indica el estándar a utilizar (en este caso, *C18*).
 - `-Wall` activa todos los avisos (*warnings*) del compilador.
 - `-fPIC` genera código relocalizable (*position-independent code*), necesario en bibliotecas compartidas.
-- `-I/usr/local/include/python3.10` incluye el directorio ***/usr/local/include/python3.10*** en la lista de directorios donde buscar archivos de cabecera ***.h***.
+- `-I/usr/local/include/python3.11` incluye el directorio ***/usr/local/include/python3.11*** en la lista de directorios donde buscar archivos de cabecera ***.h***.
 - `-c` impide que se cree archivo ejecutable: no se realiza enlazado, se detiene tras la creación del archivo de código objeto.
 - `demo.c` es el archivo fuente.
 - `-o build/demo.o` define el nombre del archivo de salida. En este caso, ***build/demo.o***.

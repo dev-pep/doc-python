@@ -1,6 +1,6 @@
 # Biblioteca estándar de Python: tipos *builtin*
 
-El presente capítulo es un resumen de una parte específica de la biblioteca estándar dedicada a los tipos incorporados en *Python* 3.10.
+El presente capítulo es un resumen de una parte específica de la biblioteca estándar dedicada a los tipos incorporados en *Python* 3.11.
 
 ## 4. BUILT-IN TYPES
 
@@ -55,7 +55,7 @@ int.bit_length()
 Retorna el número de bits necesarios para representar el valor absoluto del valor actual del entero. Si su valor es 0, retorna 0.
 
 ```python
-int.to_bytes(length, byteorder, *, signed=False)
+int.to_bytes(length=1, byteorder='big', *, signed=False)
 ```
 
 Retorna un *array* de *bytes* representando el valor del entero. El objeto *bytes* retornado tiene una longitud total de ***length*** bytes. Si esa longitud no es suficiente para su representación, se levanta la excepción ***OverflowError***.
@@ -65,7 +65,7 @@ Si ***byteorder*** (*string*) es ***big***, será con representación *big endia
 En cuanto a ***signed***, indica si se va a utilizar complemento a 2 para codificar el entero. Si es que no (por defecto) y el valor es negativo, se levantará ***OverflowError***.
 
 ```python
-classmethod int.from_bytes(bytes, byteorder, *,
+classmethod int.from_bytes(bytes, byteorder=’big’, *,
                            signed=False)
 ```
 
@@ -234,7 +234,11 @@ Dada la secuencia mutable ***s***, el iterable ***t***, un posible elemento ***x
 
 (Listas.)
 
-Se puede construir una lista (secuencia mutable) mediante corchetes (con o sin elementos, separados por comas), *list comprehensions*, o mediante el constructor `list([iterable])`.
+Se puede construir una lista (secuencia mutable) mediante corchetes (con o sin elementos, separados por comas), *list comprehensions*, o mediante el constructor:
+
+```python
+list([iterable])
+```
 
 La lista creada mediante el constructor contendrá referencias a los elementos del iterable. Por ejemplo, si este es en sí una lista, retorna una *shallow copy* de la misma.
 
@@ -378,7 +382,7 @@ str.format_map(mapping)
 Similar a utilizar `str.format(**mapping)`, con la diferencia que este método recibe (en lugar de *keyword arguments*) un solo argumento, de tipo *mapping* (normalmente un diccionario). Véase el apartado de especificación de formato.
 
 ```python
-str.index(sub [,start [,end]])
+str.index(sub[, start[, end]])
 ```
 
 Como `str.find()`, pero si no lo encuentra, levanta excepción ***ValueError***.
@@ -528,7 +532,7 @@ str.rindex(sub[, start[, end]])
 Como `str.rfind()` pero levanta ***ValueError*** si no encuentra ***sub***.
 
 ```python
-str.rjust(width [,fillchar])
+str.rjust(width[, fillchar])
 ```
 
 Como `str.ljust()` pero justificando a la derecha.
@@ -828,8 +832,8 @@ bytearray.removesuffix(suffix, /)
 Si el *BLO* acaba con ***suffix***, retorna un *BLO* sin este sufijo. De lo contrario, retorna el *BLO* original.
 
 ```python
-bytes.replace(old, new [,count])
-bytearray.replace(old, new [,count])
+bytes.replace(old, new[, count])
+bytearray.replace(old, new[, count])
 ```
 
 Retorna una copia del *BLO*, en la que cada ocurrencia de la subsecuencia ***old*** es reemplazada por ***new***. Si se especifica ***count***, será el número máximo de reemplazos (en orden de lectura).
@@ -897,8 +901,8 @@ bytearray.lstrip([chars])
 Como `bytes.strip()` o `bytearray.strip()` pero solo en el principio del *BLO*.
 
 ```python
-bytes.rjust(width [,fillbyte])
-bytearray.rjust(width [,fillbyte])
+bytes.rjust(width[, fillbyte])
+bytearray.rjust(width[, fillbyte])
 ```
 
 Como `bytes.center()` o `bytearray.center()` pero alineando la derecha.
@@ -1603,3 +1607,9 @@ clase.__subclasses__()
 ```
 
 Cada clase mantiene una lista de referencias débiles (*weak references*) a sus subclases inmediatas. Este método retorna una lista a las referencias que sigan vivas, en orden de definición.
+
+### 4.15 Integer string conversion length limitation
+
+(Limitación de longitud de conversión *string* a entero.)
+
+Para evitar ataques del tipo *DoS* (*denial of service*) se impone un límite en la longitud de los *strings* que se deseen convertir a entero. Sin contar el signo y los caracteres separadores, el límite por defecto es 4300 dígitos.

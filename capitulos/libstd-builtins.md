@@ -1,8 +1,6 @@
 # Biblioteca estándar de Python: *builtins*
 
-El presente capítulo es un resumen de una parte específica de la biblioteca estándar de *Python* 3.10 dedicada a las funciones, constantes y excepciones incorporadas.
-
-En la presentación de la sintaxis (de funciones, métodos, etc.) se usan corchetes para indicar los elementos opcionales.
+El presente capítulo es un resumen de una parte específica de la biblioteca estándar de *Python* 3.11 dedicada a las funciones, constantes y excepciones incorporadas.
 
 ## 2. BUILT-IN FUNCTIONS
 
@@ -83,7 +81,7 @@ Si es un iterable, debe contener enteros de 0 a 255.
 Sin argumentos, crea un *bytearray* de longitud 0.
 
 ```python
-class bytes([source [,encoding [,errors]]])
+class bytes([source[, encoding[, errors]]])
 ```
 
 Como `bytearray()`, pero para crear un objeto *bytes* (inmutable). En este caso los objetos *bytes* también se pueden crear con literales.
@@ -187,7 +185,7 @@ enumerate(it, start=0)
 Retorna un iterable de tipo *enumerate*, cuyos elementos son tuplas de dos elementos: el primero, el número de orden (empezando por el valor de ***start***), y el segundo, el valor de cada uno de los elementos del iterable ***it***.
 
 ```python
-eval(expression[, globals[, locals]])
+eval(expression, /, globals=None, locals=None)
 ```
 
 Evalúa un *string* con una *expresión*, o un objeto de código (compilado con `compile()`) conteniendo una expresión. Se le puede dar un diccionario (***globals***) con las variables globales que tendrá esa expresión. También se le puede dar un diccionario de variables locales (***locals***). Si se omiten, se usará el diccionario de nombres globales y locales del *scope* desde el que se llama a `eval()`. En ningún caso tendrá esta función acceso a las variables de los *scopes* envolventes que no sean globales (las no locales).
@@ -199,10 +197,14 @@ Si en ***globals*** no se hace referencia a los *builtins*, se añadirá una ent
 La función retorna el resultado de la expresión.
 
 ```python
-exec(code[, globals [, locals]])
+exec(object, globals=None, locals=None, /, *, closure=None)
 ```
 
 Similar a `eval()`, pero en este caso, en lugar de una expresión, el argumento debe contener una serie de instrucciones especificadas en un *string*, o en un objeto de código (compilado con `compile()`).
+
+Por otro lado, ***closure*** es una tupla que contiene las variables libres (*free variables*) del código.
+
+> Una variable libre es aquella que se usa en un bloque pero está definida fuera de este, sin ser una variable global.
 
 Retorna siempre ***None***.
 
@@ -294,7 +296,7 @@ class int([x[, base=10]])
 
 Construye y retorna un entero (`int`) a partir del objeto ***x***, que normalmente será un número o *string*. Si no se especifica, retornará 0.
 
-Si el objeto define `__int__()`, lo usara esta función para construir el entero. Si no está definida, usará `__index__()`; si tampoco, usará `__trunc__()`. Si tampoco, se levanta ***TypeError***.
+Si el objeto define `__int__()`, lo usara esta función para construir el entero. Si no está definida, usará `__index__()`. Si tampoco, se levanta ***TypeError***.
 
 Si especificamos la base, el número a convertir a entero debe ser un *string*, *bytes* o *bytearray*. El valor indicado puede tener signo opcionalmente, y puede estar rodeado de espacio en blanco.
 
