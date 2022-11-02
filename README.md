@@ -2,7 +2,7 @@
 
 La intención del presente texto es dar una explicación exhaustiva de los detalles más relevantes del lenguaje *Python* (versión 3.11). Se trata de un **resumen completo**, extraído de la documentación oficial.
 
-Se incluye un resumen del tutorial y la referencia oficiales, así como de los componentes básicos de de la biblioteca estándar. Para finalizar, se da una explicación del *API C*, utilizado para crear módulos *Python* en lenguaje *C*.
+Se incluye un resumen del tutorial y la referencia oficiales, así como de los componentes básicos de la biblioteca estándar. Para finalizar, se da una explicación del *API C*, utilizado para crear módulos *Python* en lenguaje *C*.
 
 Se han añadido aclaraciones y ampliaciones relevantes donde se ha estimado necesario.
 
@@ -14,7 +14,7 @@ Para obtener una copia impresa, o un *ebook* de estos apuntes (podría no ser la
 
 [Enlace pendiente]
 
-Puede acceder de forma gratuita a la versión más actualizada de esta obra, visitando el siguiente repositorio en *GitHub*:
+Puede accederse de forma gratuita a la versión más actualizada de esta obra, visitando el siguiente repositorio en *GitHub*:
 
 <https://github.com/dev-pep/doc-python>
 
