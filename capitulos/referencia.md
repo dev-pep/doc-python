@@ -493,7 +493,7 @@ __dir__(self)
 
 Retorna una secuencia, normalmente con el diccionario de nombres de la instancia. Es lo que retorna la función *builtin* `dir()`. Esta función convierte la secuencia en lista y la ordena.
 
-#### Customizing module attribute access
+##### Customizing module attribute access
 
 (Personalización del acceso a los atributos de un módulo.)
 
@@ -501,7 +501,7 @@ Se puede definir la función `__getattr__()` dentro de un módulo, que se ejecut
 
 También se puede definir `__dir__()` de un módulo, que sustituye (*overrides*) completamente el comportamiento de `dir()` sobre el módulo. Si implementamos la función, no acepta argumentos, y debe retornar una lista de *strings* con los nombres de la tabla de nombres del módulo.
 
-#### Implementing Descriptors
+##### Implementing Descriptors
 
 (Implementación de descriptores.)
 
@@ -527,7 +527,7 @@ __delete__(self, instancia)
 
 Se invoca cuando eliminamos el atributo (instancia del descriptor) de la instancia de la clase propietaria.
 
-#### Invoking Descriptors
+##### Invoking Descriptors
 
 (Invocar descriptores.)
 
@@ -545,7 +545,7 @@ Si un descriptor define `__set__()` y/o `__delete__()`, es un *data descriptor*,
 
 Los *data descriptors* suelen definir `__get__()` y `__set__()`, mientras que los *non-data descriptors* solo suelen definir `__get__()`. Los *non-data descriptors* pueden ser redefinidos (*overriden*) por la instancia, mientras que los *data descriptors* no.
 
-#### \_\_slots\_\_
+##### \_\_slots\_\_
 
 (Ranuras.)
 
@@ -762,7 +762,7 @@ __exit__(self, exc_type, exc_val, traceback)
 
 Es lo que se ejecutará al terminar el código del bloque `with`. Los parámetros extra reciben la causa de salida de `with`. Si no se produjo excepción, `__exit__()` será llamada con tres ***None***. Si se produjo excepción durante la ejecución del bloque `with`, se llamará con tres valores correspondientes a la excepción, su valor y el objeto de tipo *traceback* asociado (que tiene la información de dónde se produjo el error). Si deseamos que no se propague la excepción después de la cláusula `with`, `__exit__()` debería retornar un valor verdadero (p.e. ***True***), de lo contrario la excepción se recogerá tras `__exit__()`.
 
-### 3.3.10 Customizing positional arguments in class pattern matching
+#### 3.3.10 Customizing positional arguments in class pattern matching
 
 (Personalizar argumentos posicionales en coincidencia de patrones de clase.)
 
