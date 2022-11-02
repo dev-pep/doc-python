@@ -1,6 +1,6 @@
-# Biblioteca estándar de Python: tipos *builtin*
+# Biblioteca estándar: tipos *builtin*
 
-El presente capítulo es un resumen de una parte específica de la biblioteca estándar dedicada a los tipos incorporados en *Python* 3.11.
+El presente capítulo es un resumen de la parte específica de la biblioteca estándar dedicada a los tipos incorporados en *Python* 3.11.
 
 ## 4. BUILT-IN TYPES
 
@@ -1089,7 +1089,7 @@ Crea el objeto *memoryview* a partir del argumento. Resulta útil para acceder a
 
 ### 4.9 Set Types - set, frozenset
 
-(Tipos conjunto - *set*, *frozenset*.)
+(Tipos conjunto - `set`, `frozenset`.)
 
 Un *set* es un tipo de objeto mutable, mientras que un *frozenset* es inmutable.
 

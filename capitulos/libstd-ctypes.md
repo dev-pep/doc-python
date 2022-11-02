@@ -1,6 +1,4 @@
-# 16.16 ctypes - A foreign function library for Python
-
-(***ctypes*** - Una biblioteca de funciones externas para *Python*.)
+# Biblioteca estándar: ctypes
 
 Esta funcionalidad específica de la biblioteca proporciona tipos de datos compatibles con *C* y permite ejecutar funciones residentes en bibliotecas compiladas compartidas (***.so*** en sistemas *Unix* y ***.dll*** en *Windows*).
 

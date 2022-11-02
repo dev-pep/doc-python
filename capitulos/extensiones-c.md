@@ -691,9 +691,9 @@ foo(4, 10, 70,
                 # y faltan argumentos
 ```
 
-Si queremos que a partir de cierto punto los argumentos solo se puedan indicar como *keyword* en la llamada (*keyword-only arguments*), se puede incluir el carácter ***$*** en la *format string*. Por ejemplo, siguiendo con el ejemplo anterior, ***iii$ii*** indicaría que los argumentos ***segundo*** y ***tercero*** son *keyword-only*.
+Si queremos que a partir de cierto punto los argumentos solo se puedan indicar como *keyword* en la llamada (*keyword-only arguments*), se puede incluir el carácter ***\$*** en la *format string*. Por ejemplo, siguiendo con el ejemplo anterior, ***iii$ii*** indicaría que los argumentos ***segundo*** y ***tercero*** son *keyword-only*.
 
-> Indicar **|** y **$** en el mismo punto puede dar problemas si se indica como **$|**. Mejor hacerlo como **|$**.
+> Indicar **|** y **\$** en el mismo punto puede dar problemas si se indica como **$|**. Mejor hacerlo como **|$**.
 
 ```c
 int PyArg_UnpackTuple(PyObject *args,

@@ -1,4 +1,4 @@
-# Biblioteca estándar de Python: formato
+# Biblioteca estándar: formato
 
 ## Specification
 

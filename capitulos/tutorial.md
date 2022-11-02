@@ -408,7 +408,7 @@ Introduce un entero: 42
 ... else:
 ...     print('Más')
 ...
-More
+Más
 ```
 
 El código asociado a la sentencia `if` se ejecuta solo si la condición (en este caso `x < 0`) es cierta. De lo contrario se irán evaluando las sentencias `elif` (puede haber cero o más de ellas), y si alguna de las condiciones es cierta se ejecutará. La sección `else`, opcional (solo puede haber una) se ejecutará si todas de las condiciones anteriores se han evaluado como falsas. Solo una de las secciones se ejecutará (ya sea la `if`, `elif` o `else`).
@@ -683,7 +683,7 @@ El valor por defecto se evalúa una sola vez. Si ese valor es mutable, irá acum
 def f(a, L=[]):
     L.append(a)
     return L
-    ```
+```
 
 En este caso, se irían añadiendo valores a la lista vacía inicial en las llamadas a la función. Si lo que queremos es que cada vez se empiece con una lista vacía, podríamos hacer algo así:
 
@@ -868,6 +868,8 @@ Consistirá en dos puntos (***:***) después del nombre del parámetro y antes d
 En caso de añadir anotaciones, no es necesario anotar cada parámetro y/o el valor de retorno.
 
 ### 4.9 Intermezzo: Coding Style
+
+(Intermiedio: estilo de codificación.)
 
 El estilo de *Python* definido en el *PEP 8* se toma como oficial:
 
@@ -1242,7 +1244,7 @@ Si encadenamos comparaciones que siguen un orden lógico, como por ejemplo `a < 
 
 Se pueden encadenar expresiones con `and`, `or` y `not`; `not` tiene la máxima prioridad, y `or` la mínima de los tres. Estos tienen menor prioridad que los operadores de comparación. Operadores `and` y `or` se evalúan de izquierda a derecha, y **cortocircuitan**: se evalúan las subexpresiones de izquierda a derecha, y termina la evaluación en el momento en que se puede determinar el resultado final. El resultado de una expresión lógica se puede asignar a una variable. No siempre retornarán ***True*** o ***False***: cuando se usan operandos no booleanos (***True***/***False***), el resultado es el último operando evaluado antes de terminar o cortocircuitar (`not` retorna siempre un valor booleano).
 
-Valores como 0 o *string* vacío se evalúan a ***False***, mientras un *string* no vacío o un número no cero evalúan a ***True***
+Valores como 0 o *string* vacío se evalúan a ***False***, mientras un *string* no vacío o un número no cero evalúan a ***True***:
 
 ```python
 >>> 5 and not 4

@@ -1,6 +1,6 @@
-# Biblioteca estándar de Python: *builtins*
+# Biblioteca estándar: *builtins*
 
-El presente capítulo es un resumen de una parte específica de la biblioteca estándar de *Python* 3.11 dedicada a las funciones, constantes y excepciones incorporadas.
+El presente capítulo es un resumen de la parte específica de la biblioteca estándar de *Python* 3.11 dedicada a las funciones, constantes y excepciones incorporadas.
 
 ## 2. BUILT-IN FUNCTIONS
 
@@ -762,7 +762,7 @@ Al imprimirlos o llamarlos dan información de copyright y de créditos respecti
 
 Al ser impreso muestra ***Type license() to see the full license text*** y al ser llamado muestra el texto íntegro de la licencia.
 
-### 5. BUILT-IN EXCEPTIONS
+## 5. BUILT-IN EXCEPTIONS
 
 (Excepciones incorporadas.)
 
@@ -770,12 +770,11 @@ Véase a continuación la jerarquía de los tipos de excepción incorporados en 
 
 ```
 BaseException
-    SystemExit
-    KeyboardInterrupt
+    BaseExceptionGroup
     GeneratorExit
+    KeyboardInterrupt
+    SystemExit
     Exception
-        StopIteration
-        StopAsyncIteration
         ArithmeticError
             FloatingPointError
             OverflowError
@@ -784,6 +783,7 @@ BaseException
         AttributeError
         BufferError
         EOFError
+        ExceptionGroup
         ImportError
             ModuleNotFoundError
         LookupError
@@ -812,6 +812,8 @@ BaseException
         RuntimeError
             NotImplementedError
             RecursionError
+        StopIteration
+        StopAsyncIteration
         SyntaxError
             IndentationError
                 TabError
@@ -823,15 +825,15 @@ BaseException
                 UnicodeEncodeError
                 UnicodeTranslateError
         Warning
+            BytesWarning
             DeprecationWarning
-            PendingDeprecationWarning
-            RuntimeWarning
-            SyntaxWarning
-            UserWarning
+            EncodingWarning
             FutureWarning
             ImportWarning
-            UnicodeWarning
-            BytesWarning
-            EncodingWarning
+            PendingDeprecationWarning
             ResourceWarning
+            RuntimeWarning
+            SyntaxWarning
+            UnicodeWarning
+            UserWarning
 ```

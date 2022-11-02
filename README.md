@@ -4,8 +4,6 @@ La intención del presente texto es dar una explicación exhaustiva de los detal
 
 Se incluye un resumen del tutorial y la referencia oficiales, así como de componentes básicos de de la biblioteca estándar. Para finalizar, se da una explicación del *API C*, utilizado para crear módulos *Python* en lenguaje *C*.
 
-> Por convenio, en la presentación de funciones y métodos en esta documentación, los argumentos opcionales se indican [entre corchetes].
-
 ## Copias y actualizaciones
 
 Este trabajo está en permanente actualización.
