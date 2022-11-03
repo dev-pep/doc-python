@@ -12,7 +12,7 @@ Este trabajo está en permanente actualización.
 
 Para obtener una copia impresa, o un *ebook* de estos apuntes (podría no ser la versión más actual):
 
-[Enlace pendiente]
+<https://www.amazon.es/dp/B0BL8LLJFX>
 
 Puede accederse de forma gratuita a la versión más actualizada de esta obra, visitando el siguiente repositorio en *GitHub*:
 
