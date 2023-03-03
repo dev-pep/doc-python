@@ -1097,6 +1097,17 @@ En algunos lugares es obligatorio indicar los paréntesis, como por ejemplo en l
 ('hello',)
 ```
 
+Al definir tuplas anidadas, hay que vigilar con los paréntesis:
+
+```python
+>>> ( (1, 2, 3) )
+(1, 2, 3)
+>>> ( (1, 2, 3), )
+((1, 2, 3),)
+```
+
+En el primer caso no conseguimos una tupla con un elemento tupla, que es lo que buscamos, sino que el intérprete considera que hemos indicado paréntesis redundantes, obteniendo finalmente una tupla de números. Para especificar que se trata de una tupla dentro de otra, se debe indicar esa coma final.
+
 Como vimos anteriormente, la sentencia `t = 12345, 67.5, 'hola'` es un caso de empaquetado de tupla (*tuple packing*), mientras que el caso contrario `x, y, z = t` es un desempaquetado de secuencia (*sequencie unpacking*). En la primera sentencia, la lista de valores separados por comas, a la derecha del operador de asignación, se empaquetan en una tupla (*tuple packing*). Cuando lo que tenemos es una lista de variables a la izquierda del operador de asignación, necesitamos tener a la derecha de dicho operador una secuencia (tupla, lista, etc.).
 
 Se pueden hacer ambas cosas a la vez:
