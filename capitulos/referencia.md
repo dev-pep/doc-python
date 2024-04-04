@@ -782,77 +782,202 @@ Los métodos especiales que hemos estado describiendo deben definirse en la clas
 
 (Corrutinas.)
 
-Este mecanismo se utiliza para la creación de código asíncrono. En esta sección veremos un breve resumen del documento ***PEP 492***.
+Aquí explicaremos los mecanismos que se utilizan para la ejecución de *código asíncrono*. Por lo tanto, tendremos que ampliar las explicaciones que aparecen en este apartado de la documentación oficial.
 
-En primer lugar, vamos a definir una función **corrutina** como una función en la que en algún momento de su ejecución se detiene momentáneamente en espera de que se produzca un evento. Esta parada momentánea la denominaremos una **espera**. La función que contiene esta esperas, la corrutina, se define como:
+#### 3.4.1. Awaitable Objects
+
+(Objetos esperables.)
+
+Un objeto esperable es aquél que puede utilizarse en una expresión `await`. Esta expresión indica que se puede ceder el control del procesador mientras se espera a que el objeto obtenga su resultado. La sentencia `await` retornará dicho resultado proporcionado por el objeto esperable.
+
+#### 3.4.2. Coroutine Objects
+
+(Objetos corrutina.)
+
+Los **objetos corrutina** son un tipo de objetos esperables. Su nombre indica que se trata de rutinas que pueden ejecutarse concurrentemente, es decir, se trata de un código cuya ejecución puede suspenderse y retomarse más tarde. Estos objetos se definen mediante una **función corrutina**, con `async def` (definición de función asíncrona):
 
 ```python
 async def miFuncion(parametros):
-    # sentencias
+    # código
+    return resul  # posible valor de retorno
 ```
 
-Estas funciones pueden contener la sentencia `await`, que es la sentencia que ejecuta la espera. Una función que no se declara como `async` no puede contener sentencias `await`. Por otro lado, del mismo modo que una invocación a un generador retorna un objeto generador, una invocación a una corrutina **retorna un objeto corrutina**.
+Esta función en sí no retorna el valor de la variable ***resul***, sino que retorna un **objeto corrutina**. Cuando esperamos a este objeto corrutina con `await` es cuando obtenemos el valor de ***resul***. Por lo tanto, no tiene sentido invocar una función de este tipo de la forma habitual. De hecho, esto provoca una excepción. Lo correcto es utilizar estas funciones en una expresión `await`:
 
 ```python
-async def lectura_datos(bd):
-    # ...
-    datos = await bd.fetch('SELECT * FROM coches')
-    # ...
+resultado = await miFuncion(50)
 ```
 
-En este caso, se realiza una lectura asíncrona a una base de datos mediante la sentencia `await`. La ejecución se suspende temporalmente hasta que se reciben los datos. La expresión `await` retorna los datos recibidos.
+Es importante tener en cuanta que una expresión `await` solo puede estar dentro de una función corrutina.
 
-La sentencia `await` acepta como único argumento un **objeto esperable** (***awaitable***). Un *awaitable* es un objeto que implementa el método `__await__()`, el cual debe retornar un iterador.
+Debemos tener en cuenta que el objetivo de `await` no es solo esperar a que la corrutina termine y recoger su valor (si retorna alguno). Además, `await` suspende la ejecución de la función actual para que el procesador pueda dedicarse a otra cosa mientras esperamos.
 
-En cuanto al **objeto corrutina** que retorna una llamada a una función corrutina, es un objeto *awaitable*.
+Es importante saber que la ejecución no se suspenderá por el mero hecho de encontrar un `await`: la ejecución se suspende en los puntos definidos por el objeto corrutina asociado a la expresión `await`. A efectos prácticos, se puede considerar que el código de la corrutina puede ser **bloqueante** (*blocking code*), en cuyo caso la ejecución proseguirá hasta que se encuentre una instrucción **no bloqueante** (*non-blocking code*). Dentro de la función corrutina, todas las expresiones que no van precedidas por `await` son bloqueantes. Las que van precedidas por `await` dependerán del objeto corrutina asociado.
 
-### *Context managers* asíncronos
+En este punto debemos introducir el concepto de **bucle de eventos asíncronos** (*asynchronous event-loop*). Se trata simplemente de una cola en memoria donde se almacenan todas las tareas suspendidas. En cuanto se suspende una tarea, se recoge la siguiente de este bucle.
 
-Un gestor de contexto asíncrono es un gestor de contexto que puede suspender su ejecución en sus métodos de entrada y salida. En este caso, estos tendrán los métodos `__aenter__()` y `__aexit__()`, equivalentes a los métodos `__enter__()` y `__exit__()` de los *context managers*, con la diferencia que estos nuevos métodos son corrutinas, y por lo tanto definidos mediante `def async`.
+Este *loop* se crea cuando entramos en el modo de ejecución asíncrona, y desaparece cuando regresamos a la ejecución síncrona normal.
 
-Para ejecutar el gestor de contexto, se utilizará `async with` en lugar de `with`. Hay que señalar que `async with` no acepta un *context manager* regular:
+Veamos un primer ejemplo: se trataría de tener dos funciones: ***tarea1()*** y ***tarea2()***. Ambas sufren una larga espera dentro de su ejecución. Tenemos, por otro lado, una función principal ***main()*** que invoca a las dos funciones anteriores. Si lo hiciese de la forma síncrona habitual, tendríamos un código similar a este:
 
 ```python
-async with obj as v:
-    # bloque de código
+import time
+
+def tarea1():
+    print("Iniciando tarea 1...")
+    time.sleep(2)  # pausa de 2 segundos
+    print("Fin tarea 1.")
+
+def tarea2():
+    print("Iniciando tarea 2...")
+    time.sleep(1)  # pausa de 2 segundos
+    print("Fin tarea 2.")
+
+def main():
+    tarea1()
+    tarea2()
+    print("Terminado.")
+
+main()
 ```
 
-Los *context managers* asíncronos solo pueden ejecutarse dentro de una *corrutina*.
+Obtendríamos la salida:
 
-### Iteradores asíncronos
+```
+Iniciando tarea 1...
+Fin tarea 1.
+Iniciando tarea 2...
+Fin tarea 2.
+Terminado.
+```
 
-Un iterable asíncrono es capaz de ejecutar código asíncrono dentro de su método *iter* (iteración), y un iterador asíncrono puede llamar código asíncrono en su método *next* (siguiente).
+La ejecución duraría por lo menos 3 segundos: los 2 de ***tarea1()*** más el de ***tarea2()***. Deberíamos ejecutar estas dos funciones de forma concurrente.
 
-Así, el iterable debe implementar un método `__aiter__()`, el cual debe retornar un iterador asíncrono. Por lo tanto el método no tiene por que ser asíncrono, pero el iterador retornado sí debe serlo. Que el iterador retornado sea asíncrono significa que contendrá un método (`async`) `__anext__()`. Dicho método `__anext__()` debe retornar un *awaitable*, y para señalar el fin de la iteración deberá levantar una excepción del tipo ***StopAsyncIteration***.
-
-Esto sería un ejemplo de iterable cuyo método `__aiter__()` se retorna a sí mismo (como es habitual):
+Lo primero que deberíamos hacer es permitir que cada una de las dos función se suspendiera en el mismo momento en que la pausa empieza. Esto se consigue con `await`, con lo que podríamos pensar en sustituir
 
 ```python
-class AsyncIterable:
-    def __aiter__(self):
-        return self
-
-    async def __anext__(self):
-        data = await self.fetch_data()
-        if data:
-            return data
-        else:
-            raise StopAsyncIteration
-
-    async def fetch_data(self):
-        # ...
+time.sleep(x)
 ```
 
-Como puede verse, el método `__aiter__()` retorna una instancia de sí mismo. Esta instancia es un iterador, pues define el método asíncrono `__anext__()`. Dicho método realiza una serie de acciones, básicamente obtener datos de una fuente específica a la que se accede de forma asíncrona a través del método concreto ***fetch_data()***, que es una corrutina. A cada iteración se retornará un dato. Cuando ***fetch_data()*** no retorne dato alguno (o un valor falso), el iterador levantará ***StopAsyncIteration***.
-
-Para ejecutar este iterable asíncrono, utilizaremos `async for` en lugar del habitual `for`. Hay que señalar que `async for` no acepta un iterable regular.
+por
 
 ```python
-async for v in iter:
-    # bloque de código
+await time.sleep(x)  # error
 ```
 
-La sentencia `async for` admite (al igual que `for`) una sentencia `else` opcional. Por otro lado solo puede usarse `async for` dentro de una función asíncrona.
+El problema es que la función `time.sleep()` no es una corrutina, es decir, no retorna un objeto esperable, por lo que se levantaría una excepción.
+
+Por suerte, disponemos del módulo estándar ***asyncio*** que tiene una función equivalente, pero en versión corrutina. Por lo tanto, las pausas se pueden hacer así:
+
+```python
+await asyncio.sleep(x)
+```
+
+Dado que ahora ***tarea1()*** y ***tarea2()*** contienen expresiones `await`, deben ser declaradas como funciones corrutina, mediante `async`.
+
+Por otro lado, ya no necesitamos el módulo ***time***, aunque sí debemos importar ***asyncio***.
+
+Dado que las dos tareas son ahora corrutinas, no podemos invocarlas de la forma habitual desde ***main()***: tenemos que invocarlas con `await`. Y eso significa que debemos declarar ***main()*** como corrutina también (con `async`).
+
+Ya solo queda invocar a ***main()***. Pero esto es un problema, ya que al ser una corrutina deberíamos hacerlo mediante `await`. Y no podemos porque estamos en código síncrono, no dentro de una función `async`. ¿Cómo lo solucionamos?
+
+Lo que hay que hacer es ejecutar una función que cambie el modo de ejecución a ejecución asíncrona. Por suerte, el módulo ***asyncio*** contiene dicha función: `run()`. Esta función crea el *event-loop* durante la ejecución de ***main()***, y se utiliza para todas las tareas que se van suspendiendo como resultado de esta ejecución. Al terminar la ejecución, se destruye el *event-loop* y regresamos a ejecución síncrona.
+
+La invocación a ***main()*** quedaría:
+
+```python
+asyncio.run(main())
+```
+
+En el caso que ***main()*** retornara un valor, dicho valor sería recogido y retornado a su vez por `run()`.
+
+Veamos ahora cómo quedaría el código:
+
+```python
+import asyncio
+
+async def tarea1():
+    print("Iniciando tarea 1...")
+    await asyncio.sleep(2)
+    print("Fin tarea 1.")
+
+async def tarea2():
+    print("Iniciando tarea 2...")
+    await asyncio.sleep(1)
+    print("Fin tarea 2.")
+
+async def main():
+    await tarea1()
+    await tarea2()
+    print("Terminado.")
+
+asyncio.run(main())  # no funciona como esperamos
+```
+
+Obtenemos la siguiente salida:
+
+```
+Iniciando tarea 1...
+Fin tarea 1.
+Iniciando tarea 2...
+Fin tarea 2.
+Terminado.
+```
+
+Curiosamente, el programa ha tardado lo mismo que antes. Además, no ha habido concurrencia alguna. ¿Por qué?
+
+El hecho es simple: en cuanto se encuentra con el primer `await`, debería suspender la ejecución y tomar la primera tarea de la cola. Pero el problema es que no hay ninguna tarea en el *event-loop*. Por lo tanto, no suspende la ejecución y sigue para adelante. Lo mismo sucede cuando encuentra el segundo `await`, y así sucesivamente.
+
+Lo que debemos hacer es crear directamente una tarea y enviarla al *event-loop*. Para ello existe la función `asyncio.create-task()`. La gracia aquí es crear la tarea, pero no ejecutarla, es decir, no esperarla con `await`. Así quedaría la función ***main()***:
+
+```python
+async def main():
+    tarea = asyncio.create_task(tarea1())
+    # await tarea  # esto rompería la concurrencia otra vez
+    await tarea2()
+    # await tarea  # aquí estaría bien
+    print("Terminado.")
+```
+
+Si tras enviar la ***tarea1()*** al *event-loop* hiciésemos `await tarea`, volveríamos a dejar vacío el *loop*, con lo que volveríamos a tener el problema inicial. Sin embargo, si necesitamos recoger el valor de retorno de esa tarea, lo podemos hacer al final.
+
+Tras ejecutar el código, obtenemos:
+
+```
+Iniciando tarea 2...
+Iniciando tarea 1...
+Fin tarea 2.
+Terminado.
+```
+
+En este caso sí se ha ejecutado todo concurrentemente. Sin embargo, ¿por qué no está el fin de la tarea 1?
+
+Veamos lo que sucede paso por paso:
+
+Lo primero que hace ***main()*** es colocar ***tarea1()*** en la cola. Después ejecuta ***tarea2()***, la cual empieza a ejecutarse, ya que tiene al principio una expresión bloqueante (`print()`) y muestra ***Iniciando tarea 2...***, tras lo cual encuentra una expresión `await` que acaba suspendiendo su ejecución. La suspende, ya que en el *loop* existe una tarea por retomar: ***tarea1()***. Así que la retoma: empieza por mostrar ***Iniciando tarea 1...***, pero inmediatamente después suspende la tarea por encontrar el perceptivo `await`. Ahora están ambas tareas en el *loop*. Aproximadamente un segundo más tarde, ***tarea2()*** ha terminado su `sleep()` y está lista para ser retomada. Entonces muestra ***Fin tarea 2.***, y termina su ejecución. Entonces, se acaba de evaluar la expresión de espera `await tarea2()` de la función ***main()***, que de hecho ya puede terminar tras mostrar ***Terminado***. La función termina, y con ello el `async.run(main())` termina también, quedando ya sin efecto el *loop*, en el que quedaba todavía ***tarea1()***, al que le quedaba todavía un segundo aproximadamente para terminar. Si hubiésemos querido que ***tarea1()*** terminara, tendríamos que haber incluído un `await tarea1()` al final de ***main()***.
+
+En todo caso, es posible crear tantas tareas como queramos con `asyncio.create_task()`. Luego, se pueden ir esperando objetos esperables, y/o tareas del *loop* directamente.
+
+Existe otra forma de crear tareas en el *loop*, mediante la función `gather()`:
+
+```python
+lista = await asyncio.gather(foo1(), foo2(25), foo2(50))
+```
+
+En este caso, las tres funciones empezarán a ejecutarse de forma concurrente. En ***lista*** se obtendrá una lista con los valores de retorno de estas.
+
+
+#### 3.4.3. Asynchronous Iterators
+
+(Iteradores asíncronos.)
+
+TO-DO
+
+#### 3.4.4. Asynchronous Context Managers
+
+(Gestores de contexto asíncronos.)
+
+TO-DO
 
 ## 4. EXECUTION MODEL
 
@@ -954,7 +1079,7 @@ Un generador retorna valores mediante `yield`, o `yield from expr`, donde ***exp
 
 El método `__next__()` de los iteradores y generadores es llamado implícitamente por una cláusula `for`, o directamente con la *built-in function* `next()`.
 
-## 6.3 Primaries
+### 6.3 Primaries
 
 (Primarias.)
 
@@ -965,6 +1090,16 @@ instancia.atributo  # referencia a atributos
 objeto[3]           # indexación
 lista[4:8]          # slice
 foo('hola', 3)      # llamada
+```
+
+### 6.4 Await expression
+
+(Expresión `await`.)
+
+Suspende la ejecución de la corrutina en un objeto esperable. Solo puede utilizarse dentro de una función corrutina, y solo puede utilizarse sobre objetos esperables.
+
+```python
+await objeto_esperable
 ```
 
 ### 6.10 Comparisons
