@@ -1042,13 +1042,20 @@ En este caso, las tres funciones empezarán a ejecutarse de forma concurrente. E
 
 (Iteradores asíncronos.)
 
-TO-DO
+De forma similar a los iteradores, que disponen de un método `__iter__()` y un método `__next__()`, los iteradores asíncronos disponen de:
+
+- Método `__aiter__()`, que debe retornar un objeto iterador asíncrono. Normalmente se limitará a retornar ***self***.
+- Método `__anext__()` debe retornar un objeto esperable (*awaitable*). Es por ello que el método debe ser asíncrono (`async`). Este objeto debe ir retornando (con `return`) los sucesivos valores del iterador. Al ser este método una función asíncrona, puede invocar código asíncrono (usar `await`). En caso de desear terminar las iteraciones, el método debe levantar la excepción ***StopAsyncIteration***.
+
+Un iterador de este tipo se utilizará con la sentencia `async for`. Dicha sentencia solo puede incluirse en código asíncrono (dentro de una corrutina).
 
 #### 3.4.4. Asynchronous Context Managers
 
-(Gestores de contexto asíncronos.)
+(Gestores de contexto asíncronos)
 
-TO-DO
+De forma similar a los gestores de contexto, que disponían de los métodos `__enter__()` y `__exit__()`, los gestores de contexto asíncronos disponen de  `__aenter__()` y `__aexit__()`. La única diferencia es que estos métodos deben retornar un objeto esperable, es decir, deben ser `async`. Como tal, pueden ejecutar código asíncrono (usar `await`). Por lo demás (parámetros, etc.), funcionan igual que un gestor de contexto normal.
+
+Un gestor de contexto asíncrono se debe usar con la sentencia `async with`, la cual solo puede utilizarse en código asíncrono (dentro de una corrutina).
 
 ## 4. EXECUTION MODEL
 
