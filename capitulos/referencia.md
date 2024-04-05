@@ -301,7 +301,7 @@ Tipos ***Callable*** (invocables): se pueden llamar o invocar, mediante la sinta
 - **Métodos** de una instancia: atributos especiales: ***\_\_self\_\_*** (instancia asociada), ***\_\_func\_\_*** (objeto función), ***\_\_doc\_\_*** (*docstring* de la función), ***\_\_name\_\_*** (nombre del método), ***\_\_module\_\_*** (módulo donde está definido). Los métodos pueden acceder (pero no modificar) a los atributos arbitrarios de la función a la que están vinculados.
 - **Generadores** (*generator functions*), vistas en el tutorial.
 - **Corrutinas** (*coroutine functions*). Se verán más adelante.
-- **Generadores asíncronos** (*asynchronous generator functions*): es como un generador pero definido con `async def`. Retorna un **iterador asíncrono** que puede utilizarse en una sentencia `async for`. El método `__anext__()` de dicho iterador retorna un *awaitable* (véase más adelante) que al ser esperado se ejecutará hasta que proporcione un valor mediante `yield`. Tras la última iteración levantará una excepción ***StopAsyncIteration***.
+- **Generadores asíncronos** (*asynchronous generator functions*): se verán también más adelante.
 - Funciones *built-in*: tienen los atributos ***\_\_doc\_\_***, ***\_\_name\_\_***, ***\_\_self\_\_*** (es ***None***) y ***\_\_module\_\_***.
 - **Métodos** ***built-in***: como una función *built-in*, pero además tienen un objeto pasado implícitamente a la función. En este caso, el atributo ***\_\_self\_\_*** (solo lectura) retorna ese objeto.
 - **Clases**: son invocables. Normalmente crean instancias de sí mismas, a no ser que definan el método `__new__()`. Inicialización es típicamente con `__init__()`.
@@ -493,7 +493,7 @@ __dir__(self)
 
 Retorna una secuencia, normalmente con el diccionario de nombres de la instancia. Es lo que retorna la función *builtin* `dir()`. Esta función convierte la secuencia en lista y la ordena.
 
-##### Customizing module attribute access
+##### 3.3.2.1 Customizing module attribute access
 
 (Personalización del acceso a los atributos de un módulo.)
 
@@ -501,7 +501,7 @@ Se puede definir la función `__getattr__()` dentro de un módulo, que se ejecut
 
 También se puede definir `__dir__()` de un módulo, que sustituye (*overrides*) completamente el comportamiento de `dir()` sobre el módulo. Si implementamos la función, no acepta argumentos, y debe retornar una lista de *strings* con los nombres de la tabla de nombres del módulo.
 
-##### Implementing Descriptors
+##### 3.3.2.2 Implementing Descriptors
 
 (Implementación de descriptores.)
 
@@ -527,7 +527,7 @@ __delete__(self, instancia)
 
 Se invoca cuando eliminamos el atributo (instancia del descriptor) de la instancia de la clase propietaria.
 
-##### Invoking Descriptors
+##### 3.3.2.3 Invoking Descriptors
 
 (Invocar descriptores.)
 
@@ -545,7 +545,7 @@ Si un descriptor define `__set__()` y/o `__delete__()`, es un *data descriptor*,
 
 Los *data descriptors* suelen definir `__get__()` y `__set__()`, mientras que los *non-data descriptors* solo suelen definir `__get__()`. Los *non-data descriptors* pueden ser redefinidos (*overriden*) por la instancia, mientras que los *data descriptors* no.
 
-##### \_\_slots\_\_
+##### 3.3.2.4 Slots
 
 (Ranuras.)
 
@@ -782,7 +782,7 @@ Los métodos especiales que hemos estado describiendo deben definirse en la clas
 
 (Corrutinas.)
 
-Aquí explicaremos los mecanismos que se utilizan para la ejecución de *código asíncrono*. Por lo tanto, tendremos que ampliar las explicaciones que aparecen en este apartado de la documentación oficial.
+Aquí explicaremos los mecanismos que se utilizan para la ejecución de **código asíncrono**. Por lo tanto, tendremos que ampliar las explicaciones que aparecen en este apartado de la documentación oficial.
 
 > En la ejecución asíncrona, a diferencia de la ejecución síncrona o secuencial, una función se suspende, ejecutándose en segundo plano, mientras se ejecuta otro código del programa. En este modelo asíncrono, pues, existe concurrencia: varias funciones pueden ejecutarse al mismo tiempo, de forma paralela. De ahí el nombre de corrutinas.
 
@@ -1051,7 +1051,7 @@ Un iterador de este tipo se utilizará con la sentencia `async for`. Dicha sente
 
 #### 3.4.4. Asynchronous Context Managers
 
-(Gestores de contexto asíncronos)
+(Gestores de contexto asíncronos.)
 
 De forma similar a los gestores de contexto, que disponían de los métodos `__enter__()` y `__exit__()`, los gestores de contexto asíncronos disponen de  `__aenter__()` y `__aexit__()`. La única diferencia es que estos métodos deben retornar un objeto esperable, es decir, deben ser `async`. Como tal, pueden ejecutar código asíncrono (usar `await`). Por lo demás (parámetros, etc.), funcionan igual que un gestor de contexto normal.
 
@@ -1113,6 +1113,8 @@ Los *displays* son las construcciones sintácticas que permiten construir listas
 
 En el caso concreto de una *comprehension*, la expresión inicial es evaluada en el *enclosing scope* (bloque de código que define la *comprehension*), y es pasada como argumento al *scope* anidado que forma la *comprehension*. El resto de expresiones (en los `if` y los `for`) pertenecen a ese *scope* anidado.
 
+Una *comprehension* definida dentro de una función `async def` puede contener tanto cláusulas `for` como `async for`, así como usar expresiones `await`. En ese caso, y/o en el caso que contenga otras *comprehensions* de este tipo, se denomina una *comprehension* asíncrona.
+
 #### 6.2.5 List displays
 
 (*Displays* de lista.)
@@ -1156,6 +1158,8 @@ Si el generador contiene cláusulas `async for` o expresiones `await`, la expres
 Un generador retorna valores mediante `yield`, o `yield from expr`, donde ***expr*** actúa como un subiterador del que va tomando valores para realizar los `yield`.
 
 El método `__next__()` de los iteradores y generadores es llamado implícitamente por una cláusula `for`, o directamente con la *built-in function* `next()`.
+
+En el caso de una función `async def`, se crearía un generador asíncrono, utilizado en `async for`.
 
 ### 6.3 Primaries
 
@@ -1384,7 +1388,9 @@ Retorna la expresión o lista de expresiones separadas por comas ***lista***. Si
 
 Si `return` abandona una cláusula `try` que contiene `finally`, antes de retornar se ejecuta el código de bloque `finally`.
 
-En un iterador, `return` indica que este ha terminado las iteraciones y levanta la excepción ***StopIteration***. Si retorna valor, este quedará en ***StopIteration.value***.
+En una función generador, `return` indica que este ha terminado las iteraciones y levanta la excepción ***StopIteration***. Si retorna valor, este quedará en ***StopIteration.value***.
+
+En una función de tipo iterador asíncrono, `return` indica que este ha terminado las iteraciones y levanta la excepción ***StopAsyncIteration***. Si retorna valor, se trata de un error de sintaxis.
 
 ### 7.7 The yield statement
 
