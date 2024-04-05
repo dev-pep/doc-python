@@ -784,6 +784,8 @@ Los métodos especiales que hemos estado describiendo deben definirse en la clas
 
 Aquí explicaremos los mecanismos que se utilizan para la ejecución de *código asíncrono*. Por lo tanto, tendremos que ampliar las explicaciones que aparecen en este apartado de la documentación oficial.
 
+> En la ejecución asíncrona, a diferencia de la ejecución síncrona o secuencial, una función se suspende, ejecutándose en segundo plano, mientras se ejecuta otro código del programa. En este modelo asíncrono, pues, existe concurrencia: varias funciones pueden ejecutarse al mismo tiempo, de forma paralela. De ahí el nombre de corrutinas.
+
 #### 3.4.1. Awaitable Objects
 
 (Objetos esperables.)
@@ -802,23 +804,29 @@ async def miFuncion(parametros):
     return resul  # posible valor de retorno
 ```
 
-Esta función en sí no retorna el valor de la variable ***resul***, sino que retorna un **objeto corrutina**. Cuando esperamos a este objeto corrutina con `await` es cuando obtenemos el valor de ***resul***. Por lo tanto, no tiene sentido invocar una función de este tipo de la forma habitual. De hecho, esto provoca una excepción. Lo correcto es utilizar estas funciones en una expresión `await`:
+Esta función en sí no retorna el valor de la variable ***resul***, sino que retorna un **objeto corrutina**. Cuando esperamos a este objeto corrutina con `await` es cuando obtenemos el valor de ***resul***. Por lo tanto, no tiene sentido invocar una función de este tipo de la forma habitual. De hecho, esto provoca una excepción. En todo caso, podríamos obtener el objeto corrutina retornado, mediante:
+
+```python
+v = miFuncion(50)
+```
+
+En todo caso, lo habitual es utilizar estas funciones en una expresión `await`:
 
 ```python
 resultado = await miFuncion(50)
 ```
 
-Es importante tener en cuanta que una expresión `await` solo puede estar dentro de una función corrutina.
+Es importante tener en cuenta que una expresión `await` **solo puede estar dentro de una función corrutina**.
 
-Debemos tener en cuenta que el objetivo de `await` no es solo esperar a que la corrutina termine y recoger su valor (si retorna alguno). Además, `await` suspende la ejecución de la función actual para que el procesador pueda dedicarse a otra cosa mientras esperamos.
+Por otro lado, el objetivo de `await` no es solo esperar a que la corrutina termine y recoger su valor (si retorna alguno), ya que `await` suspende la ejecución de la función actual para que el procesador pueda dedicarse a otra cosa mientras esperamos.
 
-Es importante saber que la ejecución no se suspenderá por el mero hecho de encontrar un `await`: la ejecución se suspende en los puntos definidos por el objeto corrutina asociado a la expresión `await`. A efectos prácticos, se puede considerar que el código de la corrutina puede ser **bloqueante** (*blocking code*), en cuyo caso la ejecución proseguirá hasta que se encuentre una instrucción **no bloqueante** (*non-blocking code*). Dentro de la función corrutina, todas las expresiones que no van precedidas por `await` son bloqueantes. Las que van precedidas por `await` dependerán del objeto corrutina asociado.
+De todas formas, la ejecución no se suspenderá por el mero hecho de encontrar una expresión `await`: la ejecución se suspende en los puntos definidos por el objeto corrutina asociado a la expresión `await`. A efectos prácticos, se puede considerar que el código de la corrutina puede ser **bloqueante** (*blocking code*), en cuyo caso la ejecución proseguirá hasta que se encuentre una instrucción **no bloqueante** (*non-blocking code*). Dicha instrucción no bloqueante es la que voluntaria y explícitamente cede la ejecución a otra función. Dentro de la función corrutina, todas las expresiones que no van precedidas por `await` son bloqueantes. Las que van precedidas por `await` dependerán del objeto corrutina asociado, que puede contener código bloqueante o no bloqueante, es decir, que define los puntos en los que puede suspenderse.
 
-En este punto debemos introducir el concepto de **bucle de eventos asíncronos** (*asynchronous event-loop*). Se trata simplemente de una cola en memoria donde se almacenan todas las tareas suspendidas. En cuanto se suspende una tarea, se recoge la siguiente de este bucle.
+En este punto debemos introducir el concepto de **bucle de eventos asíncronos** (*asynchronous event loop*). Se trata simplemente de una cola en memoria donde se almacenan todas las tareas suspendidas, esperando a ser retomadas. En cuanto se suspende la tarea actual, se recoge la siguiente de esta cola.
 
-Este *loop* se crea cuando entramos en el modo de ejecución asíncrona, y desaparece cuando regresamos a la ejecución síncrona normal.
+Este *loop* se crea cuando entramos en el modo de ejecución asíncrona, y desaparece cuando regresamos a la ejecución secuencial normal.
 
-Veamos un primer ejemplo: se trataría de tener dos funciones: ***tarea1()*** y ***tarea2()***. Ambas sufren una larga espera dentro de su ejecución. Tenemos, por otro lado, una función principal ***main()*** que invoca a las dos funciones anteriores. Si lo hiciese de la forma síncrona habitual, tendríamos un código similar a este:
+Veamos un primer ejemplo: se trataría de tener dos funciones: ***tarea1()*** y ***tarea2()***. Ambas sufren una larga pausa dentro de su ejecución. Tenemos, por otro lado, una función principal ***main()*** que invoca a las dos funciones anteriores. Si lo hiciese de la forma síncrona habitual, tendríamos un código similar a este:
 
 ```python
 import time
@@ -830,7 +838,7 @@ def tarea1():
 
 def tarea2():
     print("Iniciando tarea 2...")
-    time.sleep(1)  # pausa de 2 segundos
+    time.sleep(1)  # pausa de 1 segundo
     print("Fin tarea 2.")
 
 def main():
@@ -851,9 +859,9 @@ Fin tarea 2.
 Terminado.
 ```
 
-La ejecución duraría por lo menos 3 segundos: los 2 de ***tarea1()*** más el de ***tarea2()***. Deberíamos ejecutar estas dos funciones de forma concurrente.
+Debido a las pausas de estas funciones, la ejecución completa duraría por lo menos 3 segundos: los 2 de ***tarea1()*** más el de ***tarea2()***. ¿Cómo podríamos ejecutar estas dos funciones de forma concurrente?
 
-Lo primero que deberíamos hacer es permitir que cada una de las dos función se suspendiera en el mismo momento en que la pausa empieza. Esto se consigue con `await`, con lo que podríamos pensar en sustituir
+Lo primero que deberíamos hacer es permitir que cada una de las dos funciones se suspendiera en el mismo momento en que empezara su pausa, de tal modo que mientras se procesara dicha pausa en segundo plano, se ejecutara la otra función. Esto se consigue con `await`, con lo que podríamos pensar en sustituir
 
 ```python
 time.sleep(x)
@@ -865,9 +873,9 @@ por
 await time.sleep(x)  # error
 ```
 
-El problema es que la función `time.sleep()` no es una corrutina, es decir, no retorna un objeto esperable, por lo que se levantaría una excepción.
+El problema es que la función `time.sleep()` no retorna una corrutina, es decir, no retorna un objeto esperable, por lo que se levantaría una excepción.
 
-Por suerte, disponemos del módulo estándar ***asyncio*** que tiene una función equivalente, pero en versión corrutina. Por lo tanto, las pausas se pueden hacer así:
+Por suerte, disponemos del módulo estándar ***asyncio*** que tiene una función equivalente, pero en versión asíncrona. Por lo tanto, las pausas se pueden hacer así:
 
 ```python
 await asyncio.sleep(x)
@@ -879,17 +887,19 @@ Por otro lado, ya no necesitamos el módulo ***time***, aunque sí debemos impor
 
 Dado que las dos tareas son ahora corrutinas, no podemos invocarlas de la forma habitual desde ***main()***: tenemos que invocarlas con `await`. Y eso significa que debemos declarar ***main()*** como corrutina también (con `async`).
 
-Ya solo queda invocar a ***main()***. Pero esto es un problema, ya que al ser una corrutina deberíamos hacerlo mediante `await`. Y no podemos porque estamos en código síncrono, no dentro de una función `async`. ¿Cómo lo solucionamos?
+Ya solo queda invocar a ***main()***. Pero esto es un problema, ya que al ser una corrutina deberíamos hacerlo mediante `await`. Y no podemos hacerlo porque estamos en código síncrono, no dentro de una función `async`. ¿Cómo lo solucionamos?
 
-Lo que hay que hacer es ejecutar una función que cambie el modo de ejecución a ejecución asíncrona. Por suerte, el módulo ***asyncio*** contiene dicha función: `run()`. Esta función crea el *event-loop* durante la ejecución de ***main()***, y se utiliza para todas las tareas que se van suspendiendo como resultado de esta ejecución. Al terminar la ejecución, se destruye el *event-loop* y regresamos a ejecución síncrona.
+Lo que hay que hacer es ejecutar una función que establezca un entorno de ejecución asíncrono para la función ***main()***. Por suerte, el módulo ***asyncio*** contiene dicha función: `asyncio.run()`.
 
-La invocación a ***main()*** quedaría:
+Esta función crea el *event loop* durante la ejecución de ***main()***, y se utiliza para todas las tareas que se van suspendiendo como resultado de esta ejecución. Al terminar la ejecución de `asyncio.run()` (y por tanto de ***main()***), se destruye el *event loop* y regresamos al modo de ejecución secuencial.
+
+La invocación a ***main()*** quedaría pues:
 
 ```python
 asyncio.run(main())
 ```
 
-En el caso que ***main()*** retornara un valor, dicho valor sería recogido y retornado a su vez por `run()`.
+Esto, como hemos dicho, crea el *event loop*, pero además añade en esta cola una primera tarea: la correspondiente a la corrutina ***main()***. Por otro lado, en el caso que ***main()*** retornara un valor, dicho valor sería recogido y retornado a su vez por `asyncio.run()`.
 
 Veamos ahora cómo quedaría el código:
 
@@ -926,20 +936,20 @@ Terminado.
 
 Curiosamente, el programa ha tardado lo mismo que antes. Además, no ha habido concurrencia alguna. ¿Por qué?
 
-El hecho es simple: en cuanto se encuentra con el primer `await`, debería suspender la ejecución y tomar la primera tarea de la cola. Pero el problema es que no hay ninguna tarea en el *event-loop*. Por lo tanto, no suspende la ejecución y sigue para adelante. Lo mismo sucede cuando encuentra el segundo `await`, y así sucesivamente.
+Es muy simple: la base de la concurrencia es la alternancia entre las tareas del *event loop*. Pero en nuestro caso, solo hay una tarea: la de la corrutina ***main()*** (creada por `asyncio.run()`). A pesar de que esta función llame a ***tarea1()*** y ***tarea2()***, a nivel práctico estas funciones forman parte de la pila de llamadas (*call stack*) de ***main()***, es decir, forman parte de la ejecución de esta función.
 
-Lo que debemos hacer es crear directamente una tarea y enviarla al *event-loop*. Para ello existe la función `asyncio.create-task()`. La gracia aquí es crear la tarea, pero no ejecutarla, es decir, no esperarla con `await`. Así quedaría la función ***main()***:
+Para que dos (o más) tareas se ejecuten concurrentemente, será necesario que estas tareas estén creadas en el *loop*.
+
+Por lo tanto, lo que debemos hacer es crear explícitamente esa segunda tarea y añadirla a la cola. Para ello existe la función `asyncio.create-task()`. Así quedaría pues la función ***main()***:
 
 ```python
 async def main():
     tarea = asyncio.create_task(tarea1())
-    # await tarea  # esto rompería la concurrencia otra vez
     await tarea2()
-    # await tarea  # aquí estaría bien
     print("Terminado.")
 ```
 
-Si tras enviar la ***tarea1()*** al *event-loop* hiciésemos `await tarea`, volveríamos a dejar vacío el *loop*, con lo que volveríamos a tener el problema inicial. Sin embargo, si necesitamos recoger el valor de retorno de esa tarea, lo podemos hacer al final.
+Lo primero que hace ***main()*** es crear una tarea correspondiente al ***tarea1()***. Es decir **no está invocando (esperando)** esa corrutina, sino que simplemente la envía al *loop*. Es decir, el *pool* contendrá ***dos tareas***: la tarea ***main()*** (creada por `asyncio.run()`) y la tarea ***tarea1()***, creada por ***main()***.
 
 Tras ejecutar el código, obtenemos:
 
@@ -950,22 +960,83 @@ Fin tarea 2.
 Terminado.
 ```
 
-En este caso sí se ha ejecutado todo concurrentemente. Sin embargo, ¿por qué no está el fin de la tarea 1?
+En este caso sí se ha ejecutado todo concurrentemente. Sin embargo, ¿por qué no se muestra el fin de la tarea 1? Veámoslo.
 
-Veamos lo que sucede paso por paso:
+Tras enviar la tarea al *loop*, la ejecución de ***main()*** ha seguido con la espera (ejecución) de ***tarea2()***, que ha mostrado ***Iniciando tarea 2...***, tras lo cual se ha encontrado con una instrucción no bloqueante, y se ha suspendido. Ahora, el control pasa a la otra tarea: la correpondiente a ***tarea1()***. Entonces dicha función ha empezado a ejecutarse, mostrando ***Iniciando tarea 1...***, suspendiéndose acto seguido al encontrar la instrucción de pausa. En ese momento, ambas tareas se encuentran suspendidas. Aproximadamente un segundo después, la tarea ***main()***, que estaba ejecutando la pausa de un segundo de ***tarea2()***, pasa a estar lista, con lo que se activa y prosigue su ejecución, mostrando ***Fin tarea 2.***, la cual cosa termina la ejecución de ***tarea2()***. Por lo tanto termina también la ejecución de la expresión `await tarea2()` de ***main()***, y por lo tanto termina también la ejecución de la función ***main()***. Como esta era la función principal que habíamos pasado a `asyncio.run()`, termina también `asyncio.run()`, y con ello se desecha el entorno asíncrono, con su *loop* (en el que ***tarea1()*** seguía a la espera de ser retomada).
 
-Lo primero que hace ***main()*** es colocar ***tarea1()*** en la cola. Después ejecuta ***tarea2()***, la cual empieza a ejecutarse, ya que tiene al principio una expresión bloqueante (`print()`) y muestra ***Iniciando tarea 2...***, tras lo cual encuentra una expresión `await` que acaba suspendiendo su ejecución. La suspende, ya que en el *loop* existe una tarea por retomar: ***tarea1()***. Así que la retoma: empieza por mostrar ***Iniciando tarea 1...***, pero inmediatamente después suspende la tarea por encontrar el perceptivo `await`. Ahora están ambas tareas en el *loop*. Aproximadamente un segundo más tarde, ***tarea2()*** ha terminado su `sleep()` y está lista para ser retomada. Entonces muestra ***Fin tarea 2.***, y termina su ejecución. Entonces, se acaba de evaluar la expresión de espera `await tarea2()` de la función ***main()***, que de hecho ya puede terminar tras mostrar ***Terminado***. La función termina, y con ello el `async.run(main())` termina también, quedando ya sin efecto el *loop*, en el que quedaba todavía ***tarea1()***, al que le quedaba todavía un segundo aproximadamente para terminar. Si hubiésemos querido que ***tarea1()*** terminara, tendríamos que haber incluído un `await tarea1()` al final de ***main()***.
+> Las tareas creadas con `asyncio.create_task()` y funciones similares, son de hecho objetos esperables, con lo que es posible hacer `await tarea`, que lo que hace es ejecutar (esperar) esa tarea (de forma asíncrona, como siempre).
 
-En todo caso, es posible crear tantas tareas como queramos con `asyncio.create_task()`. Luego, se pueden ir esperando objetos esperables, y/o tareas del *loop* directamente.
-
-Existe otra forma de crear tareas en el *loop*, mediante la función `gather()`:
+Si hubiésemos querido recoger el resultado de ***tarea1()***, podríamos haber añadido `await tarea` antes de terminar ***main()***:
 
 ```python
-lista = await asyncio.gather(foo1(), foo2(25), foo2(50))
+async def main():
+    tarea = asyncio.create_task(tarea1())
+    await tarea2()
+    await tarea
+    print("Terminado.")
+```
+
+Resultado (con concurrencia correcta):
+
+```
+Iniciando tarea 2...
+Iniciando tarea 1...
+Fin tarea 2.
+Fin tarea 1.
+Terminado.
+```
+
+Debemos tener cuidado, ya que si añadimos `await tarea` justo antes de esperar ***tarea2()***, volvemos a eliminar la concurrencia:
+
+```python
+async def main():
+    tarea = asyncio.create_task(tarea1())
+    await tarea
+    await tarea2()
+    print("Terminado.")
+```
+
+Resultado (sin concurrencia):
+
+```
+Iniciando tarea 1:
+Fin tarea 1:
+Iniciando tarea 2:
+Fin tarea 2:
+Terminado.
+```
+
+Veamos lo que sucede: como antes, ***main()*** añade la tarea ***tarea1()*** al *pool*. Sin embargo, justo después activa esa tarea, con lo cual la tarea correpondiente a ***main()*** queda suspendida, y se ejecuta la tarea de ***tarea1()***. Esta muestra ***Iniciando tarea 2...***, y llega después a la pausa. Lo normal sería que se suspendiese y activase ***main()***, pero no puede hacerlo ya que la tarea ***main()*** se halla **esperando** a la tarea ***tarea1()***. La concurrencia se realiza entre tareas que no se estén esperando entre sí, es decir, entre tareas independientes. Si no fuese así, se produciría un bucle de ejecución infinito. Con lo cual, en este caso, ***tarea1()*** sigue su ejecución (hace la pausa en primer plano) hasta terminar. Cuando ha terminado desaparece del *pool* y solo queda una tarea en él (la de ***main()***), que termina su ejecución, también de forma síncrona.
+
+En todo caso, se podrían haber creado las dos tareas: ***tarea1()*** y ***tarea2()*** (a parte de la tarea de ***main()***), y esperar a ambas:
+
+```python
+async def main():
+    t1 = asyncio.create_task(tarea1())
+    t2 = asyncio.create_task(tarea2())
+    await t1
+    await t2
+    print("Terminado.")
+```
+
+Resultado (con concurrencia correcta):
+
+```
+Iniciando tarea 1...
+Iniciando tarea 2...
+Fin tarea 2.
+Fin tarea 1.
+Terminado.
+```
+
+Existe una forma más útil de crear múltiples tareas en el *loop*, mediante la función `asyncio.gather()`:
+
+```python
+tareas = asyncio.gather(foo1(), foo2(25), foo2(50))
+lista = await tareas
 ```
 
 En este caso, las tres funciones empezarán a ejecutarse de forma concurrente. En ***lista*** se obtendrá una lista con los valores de retorno de estas.
-
 
 #### 3.4.3. Asynchronous Iterators
 
