@@ -750,17 +750,21 @@ with open('/tmp/workfile', 'r') as f:
 
 Cuando termina la sentencia `with`, cierra el archivo automáticamente, con lo que no hay que hacer `f.close()`.
 
+El objeto retornado por la función *builtin* `open()` debe definir un método `__enter__()`:
+
 ```python
 __enter__(self)
 ```
 
-Lo que ejecutará la sentencia `with` al principio, si la usamos con nuestra clase. Lo que retorne este método será asignado a la variable después de `as`.
+Este es el método que ejecutará la sentencia `with` al principio. Lo que retorne este método será asignado a la variable después de `as`.
+
+Por otro lado, dicho objeto debe definir también el método `__exit__()`:
 
 ```python
 __exit__(self, exc_type, exc_val, traceback)
 ```
 
-Es lo que se ejecutará al terminar el código del bloque `with`. Los parámetros extra reciben la causa de salida de `with`. Si no se produjo excepción, `__exit__()` será llamada con tres ***None***. Si se produjo excepción durante la ejecución del bloque `with`, se llamará con tres valores correspondientes a la excepción, su valor y el objeto de tipo *traceback* asociado (que tiene la información de dónde se produjo el error). Si deseamos que no se propague la excepción después de la cláusula `with`, `__exit__()` debería retornar un valor verdadero (p.e. ***True***), de lo contrario la excepción se recogerá tras `__exit__()`.
+Es lo que se ejecutará al terminar el código del bloque dentro de `with`. Los parámetros extra reciben la causa de salida de `with`. Si no se produjo excepción, `__exit__()` será llamada con tres ***None***. Si se produjo excepción durante la ejecución del bloque `with`, se llamará con tres valores correspondientes a la excepción, su valor y el objeto de tipo *traceback* asociado (que tiene la información de dónde se produjo el error). Si deseamos que no se propague la excepción después de la cláusula `with`, `__exit__()` debería retornar un valor verdadero (p.e. ***True***), de lo contrario la excepción se recogerá tras `__exit__()`.
 
 #### 3.3.10 Customizing positional arguments in class pattern matching
 
@@ -1042,20 +1046,24 @@ En este caso, las tres funciones empezarán a ejecutarse de forma concurrente. E
 
 (Iteradores asíncronos.)
 
-De forma similar a los iteradores, que disponen de un método `__iter__()` y un método `__next__()`, los iteradores asíncronos disponen de:
+A nivel práctico, `async for` se utiliza sobre objetos iterables asíncronos, es decir, iterables que en su código se incluyen esperas asíncronas, y que por lo tanto pueden suspender su ejecución. En definitiva, si un iterador utiliza la sentencia `await`, no puede usarse con `for`, sino que debe hacerse con `async for`.
+
+A nivel de implementación de los iteradores asíncronos, estos son similares a los iteradores convencionales (síncronos), que disponen de un método `__iter__()` y un método `__next__()`. En cambio, los iteradores asíncronos disponen de:
 
 - Método `__aiter__()`, que debe retornar un objeto iterador asíncrono. Normalmente se limitará a retornar ***self***.
 - Método `__anext__()` debe retornar un objeto esperable (*awaitable*). Es por ello que el método debe ser asíncrono (`async`). Este objeto debe ir retornando (con `return`) los sucesivos valores del iterador. Al ser este método una función asíncrona, puede invocar código asíncrono (usar `await`). En caso de desear terminar las iteraciones, el método debe levantar la excepción ***StopAsyncIteration***.
 
-Un iterador de este tipo se utilizará con la sentencia `async for`. Dicha sentencia solo puede incluirse en código asíncrono (dentro de una corrutina).
+Por otro lado, la sentencia `async for` solo puede incluirse en código asíncrono (dentro de una corrutina).
 
 #### 3.4.4. Asynchronous Context Managers
 
 (Gestores de contexto asíncronos.)
 
-De forma similar a los gestores de contexto, que disponían de los métodos `__enter__()` y `__exit__()`, los gestores de contexto asíncronos disponen de  `__aenter__()` y `__aexit__()`. La única diferencia es que estos métodos deben retornar un objeto esperable, es decir, deben ser `async`. Como tal, pueden ejecutar código asíncrono (usar `await`). Por lo demás (parámetros, etc.), funcionan igual que un gestor de contexto normal.
+A nivel práctico, un gestor de contexto asíncrono es aquél que puede incluir esperas asíncronas (`await`) dentro del bloque de código asociado. Si deseamos escribir un bloque de código asíncrono asociado a un gestor de contexto, no podemos hacerlo con `with`, sino con `async with`.
 
-Un gestor de contexto asíncrono se debe usar con la sentencia `async with`, la cual solo puede utilizarse en código asíncrono (dentro de una corrutina).
+De forma similar a los gestores de contexto convencionales (síncronos), que disponen de los métodos `__enter__()` y `__exit__()`, los gestores de contexto asíncronos disponen en su lugar de  `__aenter__()` y `__aexit__()`. La única diferencia es que estos métodos deben retornar un objeto esperable, es decir, deben ser `async`. Como tal, pueden ejecutar código asíncrono (usar `await`). Es decir, los procesos de apertura y cierre del recurso pueden incluir esperas asíncronas. Por lo demás (parámetros, etc.), funcionan igual que un gestor de contexto normal.
+
+La sentencia `async with` solo puede utilizarse en código asíncrono (dentro de una corrutina).
 
 ## 4. EXECUTION MODEL
 
