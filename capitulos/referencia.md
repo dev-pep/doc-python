@@ -826,7 +826,9 @@ Por otro lado, el objetivo de `await` no es solo esperar a que la corrutina term
 
 En todo caso, la ejecución se suspende en cuanto encontramos una expresión `await` (hasta que se resuelve el objeto esperado).
 
-En este punto debemos introducir el concepto de **bucle de eventos asíncronos** (*asynchronous event loop*). Se trata simplemente de una cola en memoria donde se almacenan todas las tareas suspendidas, esperando a ser retomadas, **mientras siguen en ejecución**, en segundo plano, hasta resolver su ejecución. En cuanto se suspende la tarea actual, se recoge la siguiente de esta cola.
+En este punto debemos introducir el concepto de **bucle de eventos asíncronos** (*asynchronous event loop*). Se trata simplemente de una cola en memoria donde se almacenan todas las tareas suspendidas, esperando a ser retomadas, **mientras siguen en ejecución**, en segundo plano, hasta resolver su ejecución (durante esa ejecución en segundo plano pueden encontrarse con otras sentencias `await`, que tendrán que ejecutar también). En cuanto se suspende la tarea actual, se recoge la siguiente tarea resuelta (o rechazada) de esta cola.
+
+Una tarea del *loop* puede estar resuelta (se puede retomar), rechazada (se puede retomar) o pendiente (no se puede retomar, está ejecutándose a la espera de ser resuelta o rechazada).
 
 Este *loop* se crea cuando entramos en el modo de ejecución asíncrona, y desaparece cuando regresamos a la ejecución secuencial normal.
 
@@ -953,7 +955,7 @@ async def main():
     print("Terminado.")
 ```
 
-Lo primero que hace ***main()*** es crear una tarea correspondiente al ***tarea1()***. Es decir **no está invocando (esperando)** esa corrutina, sino que simplemente la envía al *loop*. Es decir, el *pool* contendrá ***dos tareas***: la tarea ***main()*** (creada por `asyncio.run()`) y la tarea ***tarea1()***, creada por ***main()***.
+Lo primero que hace ***main()*** es crear una tarea correspondiente al ***tarea1()***. Es decir **no está invocando (esperando)** esa corrutina, sino que simplemente la envía al *loop*. Es decir, el *event loop* contendrá ***dos tareas***: la tarea ***main()*** (creada por `asyncio.run()`) y la tarea ***tarea1()***, creada por ***main()***.
 
 Tras ejecutar el código, obtenemos:
 
@@ -1010,7 +1012,7 @@ Fin tarea 2:
 Terminado.
 ```
 
-Veamos lo que sucede: como antes, ***main()*** añade la tarea ***tarea1()*** al *pool*. Sin embargo, justo después activa esa tarea, con lo cual la tarea correpondiente a ***main()*** queda suspendida, y se ejecuta la tarea de ***tarea1()***. Esta muestra ***Iniciando tarea 2...***, y llega después a la pausa. Lo normal sería que se suspendiese y activase ***main()***, pero no puede hacerlo ya que la tarea ***main()*** se halla **esperando** a la tarea ***tarea1()***. La concurrencia se realiza entre tareas que no se estén esperando entre sí, es decir, entre tareas independientes. Si no fuese así, se produciría un bucle de ejecución infinito. Con lo cual, en este caso, ***tarea1()*** sigue su ejecución (hace la pausa en primer plano) hasta terminar. Cuando ha terminado desaparece del *pool* y solo queda una tarea en él (la de ***main()***), que termina su ejecución, también de forma síncrona.
+Veamos lo que sucede: como antes, ***main()*** añade la tarea ***tarea1()*** al *loop*. Sin embargo, justo después activa esa tarea, con lo cual la tarea correpondiente a ***main()*** queda suspendida, y se ejecuta la tarea de ***tarea1()***. Esta muestra ***Iniciando tarea 2...***, y llega después a la pausa. Lo normal sería que se suspendiese y activase ***main()***, pero no puede hacerlo ya que la tarea ***main()*** se halla **esperando** a la tarea ***tarea1()***. La concurrencia se realiza entre tareas que no se estén esperando entre sí, es decir, entre tareas independientes. Si no fuese así, se produciría un bucle de ejecución infinito. Con lo cual, en este caso, ***tarea1()*** sigue su ejecución (hace la pausa en primer plano) hasta terminar. Cuando ha terminado desaparece del *loop* y solo queda una tarea en él (la de ***main()***), que termina su ejecución, también de forma síncrona.
 
 En todo caso, se podrían haber creado las dos tareas: ***tarea1()*** y ***tarea2()*** (a parte de la tarea de ***main()***), y esperar a ambas:
 
