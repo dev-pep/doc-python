@@ -826,7 +826,7 @@ Por otro lado, el objetivo de `await` no es solo esperar a que la corrutina term
 
 En todo caso, la ejecución se suspende en cuanto encontramos una expresión `await` (hasta que se resuelve el objeto esperado).
 
-En este punto debemos introducir el concepto de **bucle de eventos asíncronos** (*asynchronous event loop*). Se trata simplemente de una cola en memoria donde se almacenan todas las tareas suspendidas, esperando a ser retomadas. En cuanto se suspende la tarea actual, se recoge la siguiente de esta cola.
+En este punto debemos introducir el concepto de **bucle de eventos asíncronos** (*asynchronous event loop*). Se trata simplemente de una cola en memoria donde se almacenan todas las tareas suspendidas, esperando a ser retomadas, **mientras siguen en ejecución**, en segundo plano, hasta resolver su ejecución. En cuanto se suspende la tarea actual, se recoge la siguiente de esta cola.
 
 Este *loop* se crea cuando entramos en el modo de ejecución asíncrona, y desaparece cuando regresamos a la ejecución secuencial normal.
 
@@ -942,7 +942,7 @@ Curiosamente, el programa ha tardado lo mismo que antes. Además, no ha habido c
 
 Es muy simple: la base de la concurrencia es la alternancia entre las tareas del *event loop*. Pero en nuestro caso, solo hay una tarea: la de la corrutina ***main()*** (creada por `asyncio.run()`). A pesar de que esta función llame a ***tarea1()*** y ***tarea2()***, a nivel práctico estas funciones forman parte de la pila de llamadas (*call stack*) de ***main()***, es decir, forman parte de la ejecución de esta función.
 
-Para que dos (o más) tareas se ejecuten concurrentemente, será necesario que estas tareas estén creadas en el *loop*.
+Para que dos (o más) tareas se ejecuten concurrentemente, será necesario que estas tareas estén creadas en el *loop*, donde proseguirán su ejecución en segundo plano, hasta su resolución.
 
 Por lo tanto, lo que debemos hacer es crear explícitamente esa segunda tarea y añadirla a la cola. Para ello existe la función `asyncio.create-task()`. Así quedaría pues la función ***main()***:
 
