@@ -1046,20 +1046,22 @@ En este caso, las tres funciones empezarán a ejecutarse de forma concurrente. E
 
 (Iteradores asíncronos.)
 
-A nivel práctico, `async for` se utiliza sobre objetos iterables asíncronos, es decir, iterables que en su código se incluyen esperas asíncronas, y que por lo tanto pueden suspender su ejecución. En definitiva, si un iterador utiliza la sentencia `await`, no puede usarse con `for`, sino que debe hacerse con `async for`.
+A nivel práctico, `async for` se utiliza sobre objetos iterables asíncronos, es decir, iterables que en su código se incluyen esperas asíncronas, y que por lo tanto pueden suspender su ejecución. En definitiva, si un iterador utiliza la sentencia `await` dentro de su método `__anext__()`, no puede usarse con `for`, sino que debe hacerse con `async for`.
 
 A nivel de implementación de los iteradores asíncronos, estos son similares a los iteradores convencionales (síncronos), que disponen de un método `__iter__()` y un método `__next__()`. En cambio, los iteradores asíncronos disponen de:
 
-- Método `__aiter__()`, que debe retornar un objeto iterador asíncrono. Normalmente se limitará a retornar ***self***.
-- Método `__anext__()` debe retornar un objeto esperable (*awaitable*). Es por ello que el método debe ser asíncrono (`async`). Este objeto debe ir retornando (con `return`) los sucesivos valores del iterador. Al ser este método una función asíncrona, puede invocar código asíncrono (usar `await`). En caso de desear terminar las iteraciones, el método debe levantar la excepción ***StopAsyncIteration***.
+- Método `__aiter__()`, que debe retornar un objeto iterador asíncrono. Normalmente se limitará a retornar ***self***, con lo que normalmente no se debe declarar como `async`. Si declaráramos `__aiter__()` como `async`, el método retornaría un *awaitable*, con lo que para iterar deberíamos escribir `async for await objeto:`.
+- Método `__anext__()` sí debe retornar un objeto esperable (*awaitable*), con lo que el método debe ser asíncrono (`async`). Este objeto debe ir retornando (con `return`) los sucesivos valores del iterador. Al ser este método una función asíncrona, puede invocar código asíncrono (usar `await`). En caso de desear terminar las iteraciones, el método debe levantar la excepción ***StopAsyncIteration***.
 
 Por otro lado, la sentencia `async for` solo puede incluirse en código asíncrono (dentro de una corrutina).
+
+En cuanto al cuerpo, tanto de un `async for` como de un `for` convencional (síncrono), puede haber código asíncrono. En todo caso, si es un `for`, este deberá estar dentro de una función `async` (el `async for` ya sabemos que lo está).
 
 #### 3.4.4. Asynchronous Context Managers
 
 (Gestores de contexto asíncronos.)
 
-A nivel práctico, un gestor de contexto asíncrono es aquél que puede incluir esperas asíncronas (`await`) dentro del bloque de código asociado. Si deseamos escribir un bloque de código asíncrono asociado a un gestor de contexto, no podemos hacerlo con `with`, sino con `async with`.
+A nivel práctico, un gestor de contexto asíncrono es aquél que puede incluir esperas asíncronas (`await`) dentro del bloque de código asociado, y/o dentro de sus métodos internos. Si deseamos escribir un bloque de código asíncrono asociado a un gestor de contexto, no podemos hacerlo con `with`, sino con `async with`.
 
 De forma similar a los gestores de contexto convencionales (síncronos), que disponen de los métodos `__enter__()` y `__exit__()`, los gestores de contexto asíncronos disponen en su lugar de  `__aenter__()` y `__aexit__()`. La única diferencia es que estos métodos deben retornar un objeto esperable, es decir, deben ser `async`. Como tal, pueden ejecutar código asíncrono (usar `await`). Es decir, los procesos de apertura y cierre del recurso pueden incluir esperas asíncronas. Por lo demás (parámetros, etc.), funcionan igual que un gestor de contexto normal.
 
